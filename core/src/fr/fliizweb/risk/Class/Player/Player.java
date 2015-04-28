@@ -10,6 +10,10 @@ public class Player {
 
     private PlayerColor color;
 
+    public Player(String username, PlayerColor color) {
+        this.username = username;
+        this.color = color;
+    }
 
     public String getUsername() {
         return username;
