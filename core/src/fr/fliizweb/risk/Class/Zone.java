@@ -2,6 +2,8 @@ package fr.fliizweb.risk.Class;
 
 import java.util.ArrayList;
 
+import fr.fliizweb.risk.Class.Unit.Unit;
+
 /**
  * Created by rcdsm on 28/04/15.
  */
