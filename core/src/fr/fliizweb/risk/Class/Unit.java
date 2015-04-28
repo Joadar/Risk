@@ -13,14 +13,14 @@ public class Unit {
     protected int value = 1;
 
     /**
-     * Variable : attacke
+     * Variable : attack
      * Type : int
      * Description : valeur de l'unité en attaque
      */
     protected int attack = 1;
 
     /**
-     * Variable : attacke
+     * Variable : def
      * Type : int
      * Description : valeur de l'unité en défense
      */
