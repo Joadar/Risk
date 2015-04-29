@@ -32,12 +32,7 @@ public class Map {
         return null;
     }
 
-    public void generateMap(){
-        Json obj = new Json();
-        obj.fromJson(Map.class, loadJSON());
-    }
-
-    public String loadJSON() {
+    public void loadJSON() {
         String content = null;
 
         FileHandle handle = Gdx.files.internal("Maps/default.json");
@@ -50,10 +45,10 @@ public class Map {
         Gdx.app.log("Map", "Map details sizex = " + data.map.sizex);
         for(Object e :data.zones){
             ZonePrototype p = (ZonePrototype)e;
+            Zone zone = new Zone(p.x, p.y, p.sizex, p.sizey);
+            Zones.add(zone);
             Gdx.app.log("Map", "color = " + p.color + "x = " + p.x + "y =" + p.y);
         }
-
-        return content;
     }
 
 }
