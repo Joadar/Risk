@@ -16,10 +16,8 @@ public class Zone {
     private PlayerColor     color;
 
     public Zone(int x, int y, int sizex, int sizey) {
-        position.setX(x);
-        position.setY(y);
-        size.setX(sizex);
-        size.setY(sizey);
+        position = new Position(x, y);
+        size = new Size(sizex, sizey);
     }
 
     public String toString() {
@@ -31,7 +29,7 @@ public class Zone {
         return output;
     }
 
-    class Position {
+    public class Position {
         private int x, y;
 
         public Position(int x, int y) {
@@ -56,7 +54,7 @@ public class Zone {
         }
     }
 
-    class Size {
+    public class Size {
         private int x, y;
 
         public Size(int x, int y) {
