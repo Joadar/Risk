@@ -2,6 +2,7 @@ package fr.fliizweb.risk.Class;
 
 import java.util.ArrayList;
 
+import fr.fliizweb.risk.Class.Player.PlayerColor;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
@@ -11,6 +12,7 @@ public class Zone {
 
     private ArrayList<Unit> Units;
     private Position        position;
+    private PlayerColor     color;
 
     public Zone(int x, int y) {
         position.setX(x);
