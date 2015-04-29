@@ -29,6 +29,30 @@ public class Zone {
         return output;
     }
 
+    
+
+    /**
+     * GETTERS
+     */
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public PlayerColor getColor() {
+        return color;
+    }
+
+
+
+    /**
+     * CLASSES
+     */
+
     public class Position {
         private int x, y;
 
@@ -54,7 +78,7 @@ public class Zone {
         }
     }
 
-    public class Size {
+    class Size {
         private int x, y;
 
         public Size(int x, int y) {

@@ -26,24 +26,6 @@ public class Map {
 
     public ArrayList getTexture() { return texture; }
 
-    public void setTexture(ArrayList texture) { this.texture = texture; }
-
-    public int getX() { return x; }
-
-    public void setX(int x) { this.x = x; }
-
-    public int getY() { return y; }
-
-    public void setY(int y) { this.y = y; }
-
-    public int getSizex() { return sizex; }
-
-    public void setSizex(int sizex) { this.sizex = sizex; }
-
-    public int getSizey() { return sizey; }
-
-    public void setSizey(int sizey) { this.sizey = sizey; }
-
 
     public Map() {
         Zones = new ArrayList<Zone>();
@@ -93,5 +75,28 @@ public class Map {
 
         }
     }
+
+
+    /**
+     * GETTERS
+     */
+
+    public void setTexture(ArrayList texture) { this.texture = texture; }
+
+    public int getX() { return x; }
+
+    public void setX(int x) { this.x = x; }
+
+    public int getY() { return y; }
+
+    public void setY(int y) { this.y = y; }
+
+    public int getSizex() { return sizex; }
+
+    public void setSizex(int sizex) { this.sizex = sizex; }
+
+    public int getSizey() { return sizey; }
+
+    public void setSizey(int sizey) { this.sizey = sizey; }
 
 }

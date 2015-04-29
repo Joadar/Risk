@@ -18,6 +18,8 @@ public class Game extends ApplicationAdapter {
 	private TextureRegion region;
 	private Sprite sprite;
 
+	Vector3 touchPoint = new Vector3();
+
 	Map map;
 
 	@Override
@@ -36,8 +38,12 @@ public class Game extends ApplicationAdapter {
 
 		batch.begin();
 		batch.setColor(1, 0, 0, 1);
+
 		for(int i = 0; i < map.getZones().size(); i++) {
 			Zone zone = map.getZone(i);
+			batch.draw(texture, zone.getPosition().getX(), zone.getPosition().getY());
+			sprite.setColor(1, 0, 0, 1);
+			sprite.draw(batch);
 		}
 		batch.end();
 	}
