@@ -7,7 +7,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,7 @@ import fr.fliizweb.risk.Class.Zone;
  * Created by rcdsm on 29/04/15.
  */
 public class ZoneActor extends Actor {
+
     private ShapeRenderer shape;
 
     Zone zone;
@@ -27,8 +34,15 @@ public class ZoneActor extends Actor {
 
     public ZoneActor(Zone zone) {
         super();
+
         shape = new ShapeRenderer();
         this.zone = zone;
+        setWidth(zone.getSize().getX());
+        setHeight(zone.getSize().getY());
+        this.setBounds(0, 0, getWidth(), getHeight());
+        Gdx.app.log("Zone", String.valueOf(getWidth()));
+        Gdx.app.log("Zone", String.valueOf(getHeight()));
+        this.addListener(zoneInputListener);
     }
 
     public void setPlayers(ArrayList<Player> players) {
@@ -43,6 +57,10 @@ public class ZoneActor extends Actor {
         return null;
     }
 
+    public ShapeRenderer getShape() {
+        return shape;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -55,4 +73,13 @@ public class ZoneActor extends Actor {
         shape.end();
         batch.begin();
     }
+
+    private static InputListener zoneInputListener = new InputListener() {
+        public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            //Actor z = (Actor) event.getRelatedActor();
+            Gdx.app.log("Zone", "TOUCH DOWN !");
+            return true; //or false
+        }
+    };
+
 }
