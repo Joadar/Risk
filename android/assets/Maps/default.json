@@ -1,0 +1,56 @@
+{
+  "name": "Default",
+  "map": {
+    "texture": {},
+    "x": 0,
+    "y": 0,
+    "sizex": 1000,
+    "sizey": 1500
+  },
+  "zones": [
+    {
+      "id": 1,
+      "name": "{Name}",
+      "color": "RED",
+      "texture": {},
+      "units": {},
+      "x": 0,
+      "y": 0,
+      "sizex": 100,
+      "sizey": 100
+    },
+    {
+      "id": 2,
+      "name": "{Name}",
+      "color": "GREEN",
+      "texture": {},
+      "units": {},
+      "x": 1400,
+      "y": 0,
+      "sizex": 100,
+      "sizey": 100
+    },
+    {
+      "id": 3,
+      "name": "{Name}",
+      "color": "BLUE",
+      "texture": {},
+      "units": {},
+      "x": 0,
+      "y": 900,
+      "sizex": 100,
+      "sizey": 100
+    },
+    {
+      "id": 4,
+      "name": "{Name}",
+      "color": "YELLOW",
+      "texture": {},
+      "units": {},
+      "x": 1400,
+      "y": 900,
+      "sizex": 100,
+      "sizey": 100
+    }
+  ]
+}
