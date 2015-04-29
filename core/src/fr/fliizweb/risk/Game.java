@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import fr.fliizweb.risk.Class.Map;
+
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
@@ -14,6 +16,7 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		Map map = new Map();
 	}
 
 	@Override
