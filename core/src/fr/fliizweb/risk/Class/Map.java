@@ -17,36 +17,28 @@ public class Map {
 
     private ArrayList<Zone> Zones;
 
-    public Map(){
-
-        //Zones = new Zone[this.sizeX][this.sizeY];
-
+    public Map() {
         loadJSON();
+    }
+    
+    public ArrayList<Zone> getZones() {
+        return this.Zones;
+    }
 
+    public Zone getZone(int idx) {
+        Zone zone = null;
+        if((zone = this.Zones.get(idx)) != null)
+            return zone;
+        return null;
     }
 
     public void generateMap(){
-        /*for(int y = 0; y < this.sizeY; y++ ){
-            for(int x = 0; x < this.sizeX; x++){
-                Zone zone = new Zone(x, y);
-                Zones[x][y] = zone;
-            }
-        }*/
         Json obj = new Json();
         obj.fromJson(Map.class, loadJSON());
-
     }
 
     public String loadJSON() {
         String content = null;
-        /*FileHandle handle = Gdx.files.internal("Maps/default.json");
-        content = handle.readString();
-        Gdx.app.log("Map", "Json = " + content);
-        Json json = new Json();
-        String test = json.toJson(content);
-        //json.readField(json, "zones", test);
-        json.fromJson(Zone.class, content);
-        Gdx.app.log("Map", "Json = " + json.toJson(content));*/
 
         FileHandle handle = Gdx.files.internal("Maps/default.json");
         String fileContent = handle.readString();
@@ -61,9 +53,7 @@ public class Map {
             Gdx.app.log("Map", "color = " + p.color + "x = " + p.x + "y =" + p.y);
         }
 
-
         return content;
-
     }
 
 }
