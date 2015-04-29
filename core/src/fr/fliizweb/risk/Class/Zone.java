@@ -1,7 +1,11 @@
 package fr.fliizweb.risk.Class;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 
+import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
@@ -44,7 +48,37 @@ public class Zone {
     }
 
     public PlayerColor getColor() {
-        return color;
+        return this.color;
+    }
+
+    public Color getRGBColor() {
+        Color c = null;
+        switch (this.color) {
+            case RED:
+                c = new Color(255, 0, 0, 1);
+            break;
+            case GREEN:
+                c = new Color(0, 255, 0, 1);
+            break;
+            case BLUE:
+                c = new Color(0, 0, 255, 1);
+            break;
+            case YELLOW:
+                c = new Color(255, 255, 0, 1);
+            break;
+            case MAJENTA:
+                c = new Color(255, 0, 255, 1);
+            break;
+            case PURPLE:
+                c = new Color(128, 0, 128, 1);
+            break;
+        }
+
+        return c;
+    }
+
+    public void setColor(String color) {
+        this.color = PlayerColor.valueOf(color.toUpperCase());
     }
 
 

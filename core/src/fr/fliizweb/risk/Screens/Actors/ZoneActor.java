@@ -9,7 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
+import java.util.ArrayList;
+
 import fr.fliizweb.risk.Class.Map;
+import fr.fliizweb.risk.Class.Player.Player;
+import fr.fliizweb.risk.Class.Player.PlayerColor;
 import fr.fliizweb.risk.Class.Zone;
 
 /**
@@ -18,27 +22,37 @@ import fr.fliizweb.risk.Class.Zone;
 public class ZoneActor extends Actor {
     private ShapeRenderer shape;
 
-    Map map;
+    Zone zone;
+    ArrayList<Player> players;
 
-    public ZoneActor() {
+    public ZoneActor(Zone zone) {
         super();
         shape = new ShapeRenderer();
+        this.zone = zone;
     }
 
-    public  void setMap(Map map) {
-        this.map = map;
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public Player getZonePlayer(Zone zone) {
+        for(Player p: players) {
+            if(p.getColor() == zone.getColor())
+                return p;
+        }
+        return null;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+        batch.end();
 
-        for(int i = 0; i < map.getZones().size(); i++) {
-            Zone zone = map.getZone(i);
-            shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.rect(zone.getPosition().getX(), zone.getPosition().getY(), zone.getSize().getX(), zone.getSize().getY());
-            shape.setColor(1, 1f, 1f, 1f);
-            shape.end();
-        }
+        Player p = getZonePlayer(zone);
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.rect(zone.getPosition().getX(), zone.getPosition().getY(), zone.getSize().getX(), zone.getSize().getY());
+        shape.setColor(zone.getRGBColor());
+        shape.end();
+        batch.begin();
     }
 }

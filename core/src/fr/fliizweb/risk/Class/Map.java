@@ -69,10 +69,8 @@ public class Map {
         for(Object e :data.zones){
             ZonePrototype p = (ZonePrototype)e;
             Zone zone = new Zone(p.x, p.y, p.sizex, p.sizey);
+            zone.setColor(p.color);
             Zones.add(zone);
-            Gdx.app.log("Map", "color = " + p.color + "x = " + p.x + "y =" + p.y);
-            Gdx.app.log("Map", "sizex = " + p.sizex + "sizey =" + p.sizey);
-
         }
     }
 

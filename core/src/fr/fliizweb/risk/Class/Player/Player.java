@@ -15,12 +15,22 @@ public class Player {
         this.color = color;
     }
 
+    public String toString() {
+        String output = "Player\n";
+        output += "Username:" + username + "\n";
+        return output;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public PlayerColor getColor() {
+        return color;
     }
 
 }

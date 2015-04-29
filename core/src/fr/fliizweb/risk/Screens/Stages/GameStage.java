@@ -33,12 +33,7 @@ public class GameStage extends Stage {
     public GameStage() {
         map = new Map();
         //zoneShape = new ZoneActor();
-        zoneShape = new ZoneActor();
         players = new ArrayList<Player>();
-
-        zoneShape.setMap(map);
-
-        addActor(zoneShape);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -48,6 +43,12 @@ public class GameStage extends Stage {
         players.add(new Player("Joadar", PlayerColor.GREEN));
         players.add(new Player("Thierry", PlayerColor.BLUE));
         players.add(new Player("Peric", PlayerColor.YELLOW));
+
+        for(int i = 0; i < map.getZones().size(); i++) {
+            zoneShape = new ZoneActor(map.getZone(i));
+            zoneShape.setPlayers(players);
+            addActor(zoneShape);
+        }
     }
 
     @Override
