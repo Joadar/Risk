@@ -1,10 +1,13 @@
 package fr.fliizweb.risk.Screens.Stages;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -35,8 +38,10 @@ public class GameStage extends Stage {
         //zoneShape = new ZoneActor();
         players = new ArrayList<Player>();
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
+
+        //addActor(zoneShape);
+        Gdx.app.log("GameStage", "GetCamera = " + this.getViewport().getCamera());
+        camera = new OrthographicCamera(100, 100);
         camera.update();
 
         players.add(new Player("g0rp", PlayerColor.RED));
@@ -63,5 +68,4 @@ public class GameStage extends Stage {
         camera.update();
 
     }
-
 }

@@ -2,12 +2,13 @@ package fr.fliizweb.risk.Class;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 
+import fr.fliizweb.risk.Class.Listener.RiskListener;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
-import fr.fliizweb.risk.Class.Prototype.MapPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
 
 /**
@@ -30,6 +31,7 @@ public class Map {
     public Map() {
         Zones = new ArrayList<Zone>();
         loadJSON();
+        Gdx.input.setInputProcessor(new GestureDetector(new RiskListener()));
     }
     
     public ArrayList<Zone> getZones() {
