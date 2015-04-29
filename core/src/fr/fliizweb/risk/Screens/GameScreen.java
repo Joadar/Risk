@@ -33,6 +33,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     private GameStage stage;
     private Texture background;
     private SpriteBatch batch;
+
     private OrthographicCamera camera;
 
     public GameScreen() {
@@ -41,35 +42,35 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         Gdx.input.isTouched();
         Gdx.input.setInputProcessor(new GestureDetector(this));
 
+        //camera
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 800, 640);
+        camera.position.set(stage.getHeight() / 2, stage.getWidth() / 2, 0);
+        stage.getViewport().setCamera(camera);
     }
 
     @Override
     public void show() {
         background = new Texture(Gdx.files.internal("badlogic.jpg"));
         batch = new SpriteBatch();
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800,640);
-        camera.position.set(1000 / 2, 400 / 2, 0);
-        Gdx.app.log("Screen", "Show");
-
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
-        stage.act(delta);
-
 
         batch.setProjectionMatrix(camera.combined);//permet d'activer les input
         batch.begin();
-        batch.draw(background, 0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+        camera.setToOrtho(false, width, height);
         stage.getViewport().update(width, height, true);
     }
 
@@ -117,9 +118,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Gdx.app.log("Screen", "x = " + String.valueOf(x) + "y = " + String.valueOf(y) + "deltax = " + String.valueOf(deltaX) + "deltay = " + String.valueOf(deltaY));
 
-        camera.position.set(x, y, 0);
+        camera.position.set(camera.position.x - deltaX, camera.position.y + deltaY, 0);
         camera.update();
-
         return false;
     }
 
@@ -132,9 +132,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public boolean zoom(float initialDistance, float distance) {
 
         if(distance < initialDistance){
-            camera.zoom += 0.01;
+            camera.zoom += 0.02;
         } else {
-            camera.zoom -= 0.01;
+            camera.zoom -= 0.02;
         }
         camera.update();
         Gdx.app.log("Screen", "initialDistance = " + initialDistance + " || distance = " + distance);
