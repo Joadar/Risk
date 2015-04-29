@@ -26,7 +26,7 @@ public class Map {
     }
 
     public Zone getZone(int idx) {
-        Zone zone = null;
+        Zone zone;
         if((zone = this.Zones.get(idx)) != null)
             return zone;
         return null;
