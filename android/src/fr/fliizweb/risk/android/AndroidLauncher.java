@@ -16,8 +16,6 @@ public class AndroidLauncher extends AndroidApplication {
 		Game game = new Game();
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
-		game.setHeight(display.getHeight());
-		game.setWidth(display.getWidth());
 		initialize(game, config);
 	}
 }
