@@ -1,6 +1,8 @@
 package fr.fliizweb.risk.android;
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -11,6 +13,11 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Game(), config);
+		Game game = new Game();
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		game.setHeight(display.getHeight());
+		game.setWidth(display.getWidth());
+		initialize(game, config);
 	}
 }

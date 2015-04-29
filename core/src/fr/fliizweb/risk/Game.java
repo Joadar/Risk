@@ -13,10 +13,13 @@ import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Zone;
 
 public class Game extends ApplicationAdapter {
-	SpriteBatch batch;
-	private Texture texture;
-	private TextureRegion region;
-	private Sprite sprite;
+	SpriteBatch 			batch;
+	private Texture 		texture;
+	private TextureRegion 	region;
+	private Sprite	 		sprite;
+
+	private int 			height;
+	private int 			width;
 
 	Vector3 touchPoint = new Vector3();
 
@@ -27,8 +30,6 @@ public class Game extends ApplicationAdapter {
 		map = new Map();
 		batch = new SpriteBatch();
 		texture = new Texture(Gdx.files.internal("badlogic.jpg"));
-		region = new TextureRegion(texture, 20, 20, 50, 50);
-		sprite = new Sprite(texture, 20, 20, 50, 50);
 	}
 
 	@Override
@@ -41,10 +42,29 @@ public class Game extends ApplicationAdapter {
 
 		for(int i = 0; i < map.getZones().size(); i++) {
 			Zone zone = map.getZone(i);
-			batch.draw(texture, zone.getPosition().getX(), zone.getPosition().getY());
+			sprite = new Sprite(texture, 20, 20, zone.getSize().getX(), zone.getSize().getY());
+
+			batch.draw(sprite, zone.getPosition().getX(), zone.getPosition().getY());
 			sprite.setColor(1, 0, 0, 1);
 			sprite.draw(batch);
 		}
 		batch.end();
 	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 }

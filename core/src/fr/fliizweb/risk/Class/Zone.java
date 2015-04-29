@@ -78,7 +78,7 @@ public class Zone {
         }
     }
 
-    class Size {
+    public class Size {
         private int x, y;
 
         public Size(int x, int y) {
