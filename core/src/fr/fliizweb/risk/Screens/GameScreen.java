@@ -35,6 +35,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private OrthographicCamera camera;
 
+    private float origDistance, baseDistance, origZoom;
+
+
     Map map;
     ArrayList<Player> players;
 
@@ -62,6 +65,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         vp.setScreenHeight(map.getSizey());
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
+
 
         batch = new SpriteBatch();
 
@@ -143,7 +147,37 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        Gdx.app.log("Stage", "x = " + String.valueOf(x) + "y = " + String.valueOf(y) + "deltax = " + String.valueOf(deltaX) + "deltay = " + String.valueOf(deltaY));
+        Gdx.app.log("Stage", "x = " + String.valueOf(x) + " || y = " + String.valueOf(y) + " || deltax = " + String.valueOf(deltaX) + " || deltay = " + String.valueOf(deltaY));
+
+        Gdx.app.log("Stage", "Pan CameraPositionX = " + camera.position.x + " ||  CameraPositionY = " + camera.position.y + " || mapSixeX = " + map.getSizex() + " || mapSixeY = " + map.getSizey());
+
+
+        /*if((camera.position.y - Gdx.graphics.getHeight() / 2) < 0){
+            if(deltaY < 0){
+                deltaY = 0;
+            }
+        }
+
+        if((camera.position.x - Gdx.graphics.getWidth() / 2) < 0){
+            if(deltaX > 0){
+                deltaX = 0;
+            }
+        }
+
+        if((camera.position.y + Gdx.graphics.getHeight() / 2) >= map.getSizey()){
+            if(deltaY > 0){
+                deltaY = 0;
+            }
+        }
+
+        if((camera.position.x + Gdx.graphics.getWidth() / 2) >= map.getSizex()){
+            if(deltaX < 0){
+                deltaX = 0;
+            }
+        }*/
+
+        moveCamera(true, camera.zoom * -deltaX, camera.zoom * deltaY);
+
 
         camera.position.set(camera.position.x - deltaX, camera.position.y + deltaY, 0);
         camera.update();
@@ -159,19 +193,32 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public boolean zoom(float initialDistance, float distance) {
         Gdx.app.log("Stage", "Zoom = " + camera.zoom + " ||  initialDistance = " + initialDistance + " || distance = " + distance);
 
-        if(camera.zoom <= 0.5) {
-            camera.zoom = 0.501f;
-            return false;
-        } else if (camera.zoom >= 1.5){
-            camera.zoom = 1.499f;
-            return false;
+        if(origDistance != initialDistance){
+            origDistance = initialDistance;
+            baseDistance = initialDistance;
+            origZoom = camera.zoom;
         }
 
-        if(distance < initialDistance){
+        float ratio = baseDistance/distance;
+        float newZoom = origZoom*ratio;
+
+        if(newZoom <= 0.5) {
+            camera.zoom = 0.501f;
+            return false;
+        } else if (newZoom >= 1.5){
+            camera.zoom = 1.499f;
+            return false;
+        } else {
+            camera.zoom = newZoom;
+        }
+
+        /*if(distance < initialDistance){
             camera.zoom += 0.1;
         } else {
             camera.zoom -= 0.1;
-        }
+        }*/
+
+        moveCamera(true, 0, 0);
         camera.update();
         return false;
     }
@@ -179,6 +226,33 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
         return false;
+    }
+
+    public void moveCamera (boolean add, float x, float y)
+    {
+        float newX, newY;
+
+        if (add)
+        {
+            newX = camera.position.x + x;
+            newY = camera.position.y + y;
+        } else
+        {
+            newX = x;
+            newY = y;
+        }
+
+        if (newX - camera.viewportWidth/2*camera.zoom < 0)
+            newX = 0 + camera.viewportWidth/2*camera.zoom;
+        if (newX + camera.viewportWidth/2*camera.zoom > map.getSizex())
+            newX = map.getSizex() - camera.viewportWidth/2*camera.zoom;
+        if (newY + camera.viewportHeight/2*camera.zoom > map.getSizey())
+            newY = map.getSizey() - camera.viewportHeight/2*camera.zoom;
+        if (newY - camera.viewportHeight/2*camera.zoom < 0)
+            newY = 0 + camera.viewportHeight/2*camera.zoom;
+
+        camera.position.x = newX;
+        camera.position.y = newY;
     }
 
 }
