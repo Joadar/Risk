@@ -64,6 +64,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public void show() {
         //camera
         camera = new OrthographicCamera();
+        camera.zoom = 2;
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
         camera.update();
 
@@ -110,6 +111,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        moveCamera(true, 0, 0);
+        camera.update();
     }
 
     @Override
@@ -157,15 +160,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        Gdx.app.log("Stage", "x = " + String.valueOf(x) + " || y = " + String.valueOf(y) + " || deltax = " + String.valueOf(deltaX) + " || deltay = " + String.valueOf(deltaY));
-
-        Gdx.app.log("Stage", "Pan CameraPositionX = " + camera.position.x + " ||  CameraPositionY = " + camera.position.y + " || mapSixeX = " + map.getSizex() + " || mapSixeY = " + map.getSizey());
 
         moveCamera(true, camera.zoom * -deltaX, camera.zoom * deltaY);
-
-
-        camera.position.set(camera.position.x - deltaX, camera.position.y + deltaY, 0);
         camera.update();
+
         return true;
     }
 
@@ -176,8 +174,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
-        Gdx.app.log("Stage", "Zoom = " + camera.zoom + " ||  initialDistance = " + initialDistance + " || distance = " + distance);
-
         if(origDistance != initialDistance){
             origDistance = initialDistance;
             baseDistance = initialDistance;
@@ -187,21 +183,17 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         float ratio = baseDistance/distance;
         float newZoom = origZoom*ratio;
 
-        if(newZoom <= 0.5) {
-            camera.zoom = 0.501f;
-            return false;
-        } else if (newZoom >= 1.5){
-            camera.zoom = 1.499f;
-            return false;
+        if (newZoom >= 2) {
+            camera.zoom = 2;
+            origZoom = 2;
+            baseDistance = distance;
+        } else if (newZoom <= 1.4) {
+            camera.zoom = (float) 1.4;
+            origZoom = (float) 1.4;
+            baseDistance = distance;
         } else {
             camera.zoom = newZoom;
         }
-
-        /*if(distance < initialDistance){
-            camera.zoom += 0.1;
-        } else {
-            camera.zoom -= 0.1;
-        }*/
 
         moveCamera(true, 0, 0);
         camera.update();
