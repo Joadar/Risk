@@ -41,12 +41,21 @@ public class Zone {
      * GETTERS
      */
 
+
+    public void setID(int id) {
+        this.id = id;
+    }
+
     public int getID() {
         return id;
     }
 
     public int[] getNextZones() {
-        return next;
+        return this.next;
+    }
+
+    public void setNextZones(int[] zones) {
+        this.next = zones;
     }
 
     public int getNextZone(int id) {

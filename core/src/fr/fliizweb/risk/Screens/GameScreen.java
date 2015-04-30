@@ -13,9 +13,12 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -79,14 +82,32 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         batch = new SpriteBatch();
 
-        BackgroundActor background = new BackgroundActor(map);
-        stage.addActor(background);
-
         for(int i = 0; i < map.getZones().size(); i++) {
-            Zone zone = map.getZone(i);
-            ZoneActor zoneShape = new ZoneActor(zone);
+            final Zone zone = map.getZone(i);
+            final ZoneActor zoneShape = new ZoneActor(zone);
             zoneShape.setPlayers(players);
             zoneShape.setName(String.valueOf(zone.getID()));
+            zoneShape.addListener(new ActorGestureListener() {
+                @Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    super.tap(event, x, y, count, button);
+                    Boolean loop = false;
+                    int[] zones = zone.getNextZones();
+                    ArrayList<Zone> nextZones = new ArrayList<Zone>();
+                    Array<Actor> stageActors = stage.getActors();
+                    for(int i = 0; i < stageActors.size; i++) {
+                        Actor zoneActor = stageActors.get(i);
+                        for (int j = 0; j < zones.length; j++) {
+                            if(zoneActor.getName().equals(String.valueOf(zones[j]))) {
+                                Zone z = map.getZoneByID(zones[j]);
+                                PlayerColor c = zone.getColor();
+                                z.setColor(c.toString());
+                            }
+                        }
+                    }
+
+                }
+            });
             stage.addActor(zoneShape);
         }
 
@@ -181,7 +202,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         }
 
         float ratio = baseDistance/distance;
-        float newZoom = origZoom*ratio;
+        float newZoom = origZoom * ratio;
 
         if (newZoom >= 2) {
             camera.zoom = 2;

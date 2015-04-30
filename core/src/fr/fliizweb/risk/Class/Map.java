@@ -43,6 +43,14 @@ public class Map {
         return null;
     }
 
+    public Zone getZoneByID(int id) {
+        for(Zone z: Zones) {
+            if((z.getID() > 0) && z.getID() == id)
+                return z;
+        }
+        return null;
+    }
+
     public void loadJSON() {
         String content = null;
 
@@ -70,6 +78,8 @@ public class Map {
             ZonePrototype p = (ZonePrototype)e;
             Zone zone = new Zone(p.x, p.y, p.sizex, p.sizey);
             zone.setColor(p.color);
+            zone.setID(p.id);
+            zone.setNextZones(p.next);
             Zones.add(zone);
         }
     }
