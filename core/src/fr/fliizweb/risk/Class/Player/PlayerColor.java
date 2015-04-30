@@ -9,5 +9,7 @@ public enum PlayerColor {
     BLUE,
     YELLOW,
     MAJENTA,
-    PURPLE
+    PURPLE,
+    NEUTRAL,
+    WHITE
 }

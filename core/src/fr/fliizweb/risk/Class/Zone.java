@@ -15,6 +15,7 @@ import fr.fliizweb.risk.Class.Unit.Unit;
 public class Zone {
 
     private ArrayList<Unit> Units;
+    private int[]           next;
     private Position        position;
     private Size            size;
     private PlayerColor     color;
@@ -72,6 +73,12 @@ public class Zone {
             case PURPLE:
                 c = new Color(128, 0, 128, 1);
             break;
+            case NEUTRAL:
+                c = Color.LIGHT_GRAY;
+                break;
+            case WHITE:
+                c = Color.WHITE;
+                break;
         }
 
         return c;
@@ -80,7 +87,6 @@ public class Zone {
     public void setColor(String color) {
         this.color = PlayerColor.valueOf(color.toUpperCase());
     }
-
 
 
     /**

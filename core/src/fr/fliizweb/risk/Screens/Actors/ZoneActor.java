@@ -42,8 +42,8 @@ public class ZoneActor extends Actor {
         this.zone = zone;
         setWidth(zone.getSize().getX());
         setHeight(zone.getSize().getY());
-        this.setBounds(0, 0, getWidth(), getHeight());
-        this.addListener(zoneInputListener);
+        this.setBounds(zone.getPosition().getX(), zone.getPosition().getY(), getWidth(), getHeight());
+        this.addListener(inputListener);
     }
 
     public void setPlayers(ArrayList<Player> players) {
@@ -67,11 +67,25 @@ public class ZoneActor extends Actor {
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
 
-    private static InputListener zoneInputListener = new InputListener() {
+
+    private InputListener inputListener = new InputListener() {
         public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            //Actor z = (Actor) event.getRelatedActor();
-            Gdx.app.log("Zone", "TOUCH DOWN !");
+            ZoneActor z = (ZoneActor) event.getRelatedActor();
+            zone.setColor("WHITE");
+            Gdx.app.log("Zone", "TOUCH DOWN ! X : " + zone.getPosition().getX());
+            if(z != null) {
+                Gdx.app.log("Zone", "NOT NULL ! ");
+            }
             return true; //or false
         }
+
+        @Override
+        public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            super.touchUp(event, x, y, pointer, button);
+        }
+
     };
+
+
+
 }

@@ -1,6 +1,8 @@
 package fr.fliizweb.risk.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +13,8 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -34,6 +38,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     private SpriteBatch batch;
 
     private OrthographicCamera camera;
+    InputMultiplexer inputMultiplexer;
 
     private float origDistance, baseDistance, origZoom;
 
@@ -49,6 +54,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         players.add(new Player("Joadar", PlayerColor.GREEN));
         players.add(new Player("Thierry", PlayerColor.BLUE));
         players.add(new Player("Peric", PlayerColor.YELLOW));
+
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(new GestureDetector(this));
     }
 
     @Override
@@ -79,7 +87,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         }
 
         Gdx.input.isTouched();
-        Gdx.input.setInputProcessor(new GestureDetector(this));
+
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -88,7 +98,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
         batch.end();
 
         stage.act(delta);
@@ -121,8 +130,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     }
 
 
-
-
     /* MOUVEMENTS */
 
     @Override
@@ -150,31 +157,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         Gdx.app.log("Stage", "x = " + String.valueOf(x) + " || y = " + String.valueOf(y) + " || deltax = " + String.valueOf(deltaX) + " || deltay = " + String.valueOf(deltaY));
 
         Gdx.app.log("Stage", "Pan CameraPositionX = " + camera.position.x + " ||  CameraPositionY = " + camera.position.y + " || mapSixeX = " + map.getSizex() + " || mapSixeY = " + map.getSizey());
-
-
-        /*if((camera.position.y - Gdx.graphics.getHeight() / 2) < 0){
-            if(deltaY < 0){
-                deltaY = 0;
-            }
-        }
-
-        if((camera.position.x - Gdx.graphics.getWidth() / 2) < 0){
-            if(deltaX > 0){
-                deltaX = 0;
-            }
-        }
-
-        if((camera.position.y + Gdx.graphics.getHeight() / 2) >= map.getSizey()){
-            if(deltaY > 0){
-                deltaY = 0;
-            }
-        }
-
-        if((camera.position.x + Gdx.graphics.getWidth() / 2) >= map.getSizex()){
-            if(deltaX < 0){
-                deltaX = 0;
-            }
-        }*/
 
         moveCamera(true, camera.zoom * -deltaX, camera.zoom * deltaY);
 

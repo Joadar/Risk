@@ -14,10 +14,11 @@
       "color": "RED",
       "texture": [{}],
       "units": [{}],
+      "next": [5, 6],
       "x": 0,
       "y": 0,
-      "sizex": 300,
-      "sizey": 300
+      "sizex": 370,
+      "sizey": 370
     },
     {
       "id": 2,
@@ -25,10 +26,11 @@
       "color": "GREEN",
       "texture": [{}],
       "units": [{}],
-      "x": 2260,
+      "next": [7, 8],
+      "x": 2190,
       "y": 0,
-      "sizex": 300,
-      "sizey": 300
+      "sizex": 370,
+      "sizey": 370
     },
     {
       "id": 3,
@@ -36,10 +38,11 @@
       "color": "BLUE",
       "texture": [{}],
       "units": [{}],
+      "next": [11, 12],
       "x": 0,
-      "y": 1140,
-      "sizex": 300,
-      "sizey": 300
+      "y": 1070,
+      "sizex": 370,
+      "sizey": 370
     },
     {
       "id": 4,
@@ -47,10 +50,107 @@
       "color": "YELLOW",
       "texture": [{}],
       "units": [{}],
-      "x": 2260,
-      "y": 1140,
-      "sizex": 300,
-      "sizey": 300
+      "next": [10, 12],
+      "x": 2190,
+      "y": 1070,
+      "sizex": 370,
+      "sizey": 370
+    },
+    {
+      "id": 5,
+      "name": "{Name}",
+      "color": "RED",
+      "texture": [{}],
+      "units": [{}],
+      "next": [1, 7, 6],
+      "x": 0,
+      "y": 370,
+      "sizex": 370,
+      "sizey": 350
+    },
+    {
+      "id": 6,
+      "name": "{Name}",
+      "color": "RED",
+      "texture": [{}],
+      "units": [{}],
+      "next": [1, 5, 8, 9],
+      "x": 370,
+      "y": 0,
+      "sizex": 600,
+      "sizey": 720
+    },
+    {
+      "id": 7,
+      "name": "{Name}",
+      "color": "BLUE",
+      "texture": [{}],
+      "units": [{}],
+      "next": [2, 5, 8],
+      "x": 0,
+      "y": 720,
+      "sizex": 370,
+      "sizey": 350
+    },
+    {
+      "id": 8,
+      "name": "{Name}",
+      "color": "BLUE",
+      "texture": [{}],
+      "units": [{}],
+      "next": [2, 7, 6, 9],
+      "x": 370,
+      "y": 720,
+      "sizex": 600,
+      "sizey": 720
+    },
+    {
+      "id": 9,
+      "name": "{Name}",
+      "color": "NEUTRAL",
+      "texture": [{}],
+      "units": [{}],
+      "next": [6, 8, 10, 11],
+      "x": 970,
+      "y": 0,
+      "sizex": 800,
+      "sizey": 1440
+    },
+    {
+      "id": 10,
+      "name": "{Name}",
+      "color": "YELLOW",
+      "texture": [{}],
+      "units": [{}],
+      "next": [4, 9, 11, 12],
+      "x": 1770,
+      "y": 720,
+      "sizex": 420,
+      "sizey": 720
+    },
+    {
+      "id": 11,
+      "name": "{Name}",
+      "color": "GREEN",
+      "texture": [{}],
+      "units": [{}],
+      "next": [3, 9, 10, 12],
+      "x": 1770,
+      "y": 0,
+      "sizex": 420,
+      "sizey": 720
+    },
+    {
+      "id": 12,
+      "name": "{Name}",
+      "color": "GREEN",
+      "texture": [{}],
+      "units": [{}],
+      "next": [4, 11, 3],
+      "x": 2190,
+      "y": 370,
+      "sizex": 370,
+      "sizey": 700
     }
   ]
 }
