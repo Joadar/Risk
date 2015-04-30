@@ -162,6 +162,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         if(camera.zoom <= 0.5) {
             camera.zoom = 0.501f;
             return false;
+        } else if (camera.zoom >= 1.5){
+            camera.zoom = 1.499f;
+            return false;
         }
 
         if(distance < initialDistance){
