@@ -9,68 +9,95 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
-import fr.fliizweb.risk.Class.Zone;
+import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
-import fr.fliizweb.risk.Screens.Stages.GameStage;
+
 
 /**
  * Created by rcdsm on 29/04/15.
  */
 public class GameScreen implements Screen, GestureDetector.GestureListener {
 
-    private GameStage stage;
-    private Texture background;
+    private Stage stage;
+    private FitViewport vp;
     private SpriteBatch batch;
 
     private OrthographicCamera camera;
 
-    public GameScreen() {
-        stage = new GameStage();
-        Gdx.input.setInputProcessor(stage);
-        Gdx.input.isTouched();
-        Gdx.input.setInputProcessor(new GestureDetector(this));
+    Map map;
+    ArrayList<Player> players;
 
-        //camera
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 640);
-        camera.position.set(stage.getHeight() / 2, stage.getWidth() / 2, 0);
-        stage.getViewport().setCamera(camera);
+    public GameScreen() {
+        map = new Map();
+        players = new ArrayList<Player>();
+
+        players.add(new Player("g0rp", PlayerColor.RED));
+        players.add(new Player("Joadar", PlayerColor.GREEN));
+        players.add(new Player("Thierry", PlayerColor.BLUE));
+        players.add(new Player("Peric", PlayerColor.YELLOW));
     }
 
     @Override
     public void show() {
+        /*
         background = new Texture(Gdx.files.internal("badlogic.jpg"));
         batch = new SpriteBatch();
+        */
+
+        //camera
+        camera = new OrthographicCamera();
+        camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
+        camera.update();
+
+
+        //viewport & stage
+        vp = new FitViewport( map.getSizex(), map.getSizey(), camera );
+        stage = new Stage( vp );
+        stage.getViewport().setCamera(camera);
+
+        batch = new SpriteBatch();
+
+        BackgroundActor background = new BackgroundActor(map);
+        stage.addActor(background);
+
+        for(int i = 0; i < map.getZones().size(); i++) {
+            ZoneActor zoneShape = new ZoneActor(map.getZone(i));
+            zoneShape.setPlayers(players);
+            stage.addActor(zoneShape);
+        }
+
+        Gdx.input.isTouched();
+        Gdx.input.setInputProcessor(new GestureDetector(this));
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.setProjectionMatrix(camera.combined);//permet d'activer les input
+
+        //this.batch.setProjectionMatrix(camera.combined);//permet d'activer les input
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         batch.end();
 
+        stage.getCamera().update();
         stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, width, height);
         stage.getViewport().update(width, height, true);
     }
 
@@ -94,6 +121,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         stage.dispose();
     }
 
+
+
+
+    /* MOUVEMENTS */
+
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         return false;
@@ -116,11 +148,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        Gdx.app.log("Screen", "x = " + String.valueOf(x) + "y = " + String.valueOf(y) + "deltax = " + String.valueOf(deltaX) + "deltay = " + String.valueOf(deltaY));
+        Gdx.app.log("Stage", "x = " + String.valueOf(x) + "y = " + String.valueOf(y) + "deltax = " + String.valueOf(deltaX) + "deltay = " + String.valueOf(deltaY));
 
-        camera.position.set(camera.position.x - deltaX, camera.position.y + deltaY, 0);
+        camera.translate(camera.position.x + deltaX, camera.position.y + deltaY, 0);
         camera.update();
-        return false;
+        return true;
     }
 
     @Override
@@ -130,14 +162,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
-
         if(distance < initialDistance){
-            camera.zoom += 0.02;
+            camera.translate(0, 0, distance);
         } else {
-            camera.zoom -= 0.02;
+            camera.translate(0, 0, distance);
         }
         camera.update();
-        Gdx.app.log("Screen", "initialDistance = " + initialDistance + " || distance = " + distance);
+        Gdx.app.log("Stage", "initialDistance = " + initialDistance + " || distance = " + distance);
         return false;
     }
 
@@ -145,4 +176,5 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
         return false;
     }
+
 }

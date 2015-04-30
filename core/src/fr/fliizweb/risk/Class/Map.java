@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 
-import fr.fliizweb.risk.Class.Listener.RiskListener;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
 
@@ -31,7 +30,6 @@ public class Map {
     public Map() {
         Zones = new ArrayList<Zone>();
         loadJSON();
-        Gdx.input.setInputProcessor(new GestureDetector(new RiskListener()));
     }
     
     public ArrayList<Zone> getZones() {

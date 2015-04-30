@@ -27,51 +27,26 @@ import fr.fliizweb.risk.Class.Zone;
 /**
  * Created by rcdsm on 29/04/15.
  */
-public class ZoneActor extends Actor {
+public class BackgroundActor extends Actor {
 
     TextureRegion region;
 
-    Zone zone;
-    ArrayList<Player> players;
 
-    public ZoneActor(Zone zone) {
+    public BackgroundActor(Map map) {
         super();
 
         region = new TextureRegion( new Texture("blank.jpg") );
 
-        this.zone = zone;
-        setWidth(zone.getSize().getX());
-        setHeight(zone.getSize().getY());
+        setWidth(map.getSizex());
+        setHeight(map.getSizey());
         this.setBounds(0, 0, getWidth(), getHeight());
-        this.addListener(zoneInputListener);
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public Player getZonePlayer(Zone zone) {
-        for(Player p: players) {
-            if(p.getColor() == zone.getColor())
-                return p;
-        }
-        return null;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         //super.draw(batch, parentAlpha);
-        Player p = getZonePlayer(zone);
-        batch.setColor(zone.getRGBColor());
-        batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
+        batch.setColor( new Color(255, 255, 255, 1));
+        batch.draw(region, 0, 0, getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
-
-    private static InputListener zoneInputListener = new InputListener() {
-        public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            //Actor z = (Actor) event.getRelatedActor();
-            Gdx.app.log("Zone", "TOUCH DOWN !");
-            return true; //or false
-        }
-    };
 }
