@@ -71,8 +71,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         //viewport & stage
         vp = new ScreenViewport( camera );
-        vp.setScreenWidth(map.getSizex());
-        vp.setScreenHeight(map.getSizey());
+        vp.setScreenWidth(Gdx.graphics.getWidth());
+        vp.setScreenHeight(Gdx.graphics.getHeight());
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
 
