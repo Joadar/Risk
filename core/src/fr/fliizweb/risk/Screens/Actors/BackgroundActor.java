@@ -31,7 +31,6 @@ public class BackgroundActor extends Actor {
 
     TextureRegion region;
 
-
     public BackgroundActor(Map map) {
         super();
 

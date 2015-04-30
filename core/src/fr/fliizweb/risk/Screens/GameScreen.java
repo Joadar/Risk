@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private Stage stage;
-    private FitViewport vp;
+    private ScreenViewport vp;
     private SpriteBatch batch;
 
     private OrthographicCamera camera;
@@ -49,11 +50,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public void show() {
-        /*
-        background = new Texture(Gdx.files.internal("badlogic.jpg"));
-        batch = new SpriteBatch();
-        */
-
         //camera
         camera = new OrthographicCamera();
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
@@ -61,7 +57,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
 
         //viewport & stage
-        vp = new FitViewport( map.getSizex(), map.getSizey(), camera );
+        vp = new ScreenViewport( camera );
+        vp.setScreenWidth(map.getSizex());
+        vp.setScreenHeight(map.getSizey());
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
 
@@ -84,14 +82,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-        //this.batch.setProjectionMatrix(camera.combined);//permet d'activer les input
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         batch.end();
 
-        stage.getCamera().update();
         stage.act(delta);
         stage.draw();
     }
