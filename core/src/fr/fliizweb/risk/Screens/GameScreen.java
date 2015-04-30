@@ -150,7 +150,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Gdx.app.log("Stage", "x = " + String.valueOf(x) + "y = " + String.valueOf(y) + "deltax = " + String.valueOf(deltaX) + "deltay = " + String.valueOf(deltaY));
 
-        camera.translate(camera.position.x + deltaX, camera.position.y + deltaY, 0);
+        camera.position.set(camera.position.x - deltaX, camera.position.y + deltaY, 0);
         camera.update();
         return true;
     }
@@ -162,13 +162,19 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
+        Gdx.app.log("Stage", "Zoom = " + camera.zoom + " ||  initialDistance = " + initialDistance + " || distance = " + distance);
+
+        if(camera.zoom <= 0.5) {
+            camera.zoom = 0.501f;
+            return false;
+        }
+
         if(distance < initialDistance){
-            camera.translate(0, 0, distance);
+            camera.zoom += 0.1;
         } else {
-            camera.translate(0, 0, distance);
+            camera.zoom -= 0.1;
         }
         camera.update();
-        Gdx.app.log("Stage", "initialDistance = " + initialDistance + " || distance = " + distance);
         return false;
     }
 
