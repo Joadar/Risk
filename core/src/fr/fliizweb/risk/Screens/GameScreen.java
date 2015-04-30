@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
+import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
@@ -81,8 +82,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         stage.addActor(background);
 
         for(int i = 0; i < map.getZones().size(); i++) {
-            ZoneActor zoneShape = new ZoneActor(map.getZone(i));
+            Zone zone = map.getZone(i);
+            ZoneActor zoneShape = new ZoneActor(zone);
             zoneShape.setPlayers(players);
+            zoneShape.setName(String.valueOf(zone.getID()));
             stage.addActor(zoneShape);
         }
 

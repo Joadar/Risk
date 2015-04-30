@@ -14,6 +14,7 @@ import fr.fliizweb.risk.Class.Unit.Unit;
  */
 public class Zone {
 
+    private int             id;
     private ArrayList<Unit> Units;
     private int[]           next;
     private Position        position;
@@ -39,6 +40,22 @@ public class Zone {
     /**
      * GETTERS
      */
+
+    public int getID() {
+        return id;
+    }
+
+    public int[] getNextZones() {
+        return next;
+    }
+
+    public int getNextZone(int id) {
+        for(int i = 0; i < next.length; i++) {
+            if(id == next[i])
+                return i;
+        }
+        return -1;
+    }
 
     public Position getPosition() {
         return position;
