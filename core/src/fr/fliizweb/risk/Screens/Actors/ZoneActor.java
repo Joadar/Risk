@@ -68,15 +68,11 @@ public class ZoneActor extends Actor {
     }
 
 
-    private InputListener inputListener = new InputListener() {
-        public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            ZoneActor z = (ZoneActor) event.getRelatedActor();
-            zone.setColor("WHITE");
-            Gdx.app.log("Zone", "TOUCH DOWN ! X : " + zone.getPosition().getX());
-            if(z != null) {
-                Gdx.app.log("Zone", "NOT NULL ! ");
-            }
-            return true; //or false
+    private ActorGestureListener inputListener = new ActorGestureListener() {
+
+        @Override
+        public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            super.touchDown(event, x, y, pointer, button);
         }
 
         @Override
@@ -84,6 +80,11 @@ public class ZoneActor extends Actor {
             super.touchUp(event, x, y, pointer, button);
         }
 
+        @Override
+        public void tap(InputEvent event, float x, float y, int count, int button) {
+            super.tap(event, x, y, count, button);
+            zone.setColor("WHITE");
+        }
     };
 
 
