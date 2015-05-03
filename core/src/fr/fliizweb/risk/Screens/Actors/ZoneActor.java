@@ -64,12 +64,12 @@ public class ZoneActor extends Actor {
         //super.draw(batch, parentAlpha);
         Player p = getZonePlayer(zone);
         CharSequence str = String.valueOf(zone.getID());
-        BitmapFont font = new BitmapFont();
+        //BitmapFont font = new BitmapFont();
         batch.setColor(zone.getRGBColor());
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
+        //font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        //font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
     }
 
 

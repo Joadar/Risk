@@ -67,7 +67,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     public void show() {
         //camera
         camera = new OrthographicCamera();
-        camera.zoom = 2;
+        camera.zoom = 1.693f;
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
         camera.update();
 
@@ -78,6 +78,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         vp.setScreenHeight(Gdx.graphics.getHeight());
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
+
+        Gdx.app.log("GameScreen", "Camera = " + camera.toString() + " || Width Screen = " + Gdx.graphics.getWidth() + " Height Screen = " + Gdx.graphics.getHeight());
+
 
 
         batch = new SpriteBatch();
@@ -95,10 +98,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     int[] zones = zone.getNextZones();
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
-                    for(int i = 0; i < stageActors.size; i++) {
+                    for (int i = 0; i < stageActors.size; i++) {
                         Actor zoneActor = stageActors.get(i);
                         for (int j = 0; j < zones.length; j++) {
-                            if(zoneActor.getName().equals(String.valueOf(zones[j]))) {
+                            if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
                                 Zone z = map.getZoneByID(zones[j]);
                                 PlayerColor c = zone.getColor();
                                 z.setColor(c.toString());
@@ -204,9 +207,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         float ratio = baseDistance/distance;
         float newZoom = origZoom * ratio;
 
-        if (newZoom >= 2) {
-            camera.zoom = 2;
-            origZoom = 2;
+        if (newZoom >= 1.693f) {
+            camera.zoom = 1.693f;
+            origZoom = 1.693f;
             baseDistance = distance;
         } else if (newZoom <= 1.4) {
             camera.zoom = (float) 1.4;
@@ -248,6 +251,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             newY = map.getSizey() - camera.viewportHeight/2*camera.zoom;
         if (newY - camera.viewportHeight/2*camera.zoom < 0)
             newY = 0 + camera.viewportHeight/2*camera.zoom;
+
+        Gdx.app.log("GameScreen", "Camera Width = " + camera.viewportWidth + " || camera height = " + camera.viewportHeight + " || Screen Width = " + Gdx.graphics.getWidth() + " || Screen Height = " + Gdx.graphics.getHeight());
 
         camera.position.x = newX;
         camera.position.y = newY;
