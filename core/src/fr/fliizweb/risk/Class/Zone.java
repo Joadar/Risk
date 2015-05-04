@@ -83,31 +83,35 @@ public class Zone {
     }
 
     public Color getRGBColor() {
+        return getRGBColor(1.0f);
+    }
+
+    public Color getRGBColor(float alpha) {
         Color c = null;
         switch (this.color) {
             case RED:
-                c = new Color(255, 0, 0, 1);
-            break;
+                c = new Color(255, 0, 0, alpha);
+                break;
             case GREEN:
-                c = new Color(0, 255, 0, 1);
-            break;
+                c = new Color(0, 255, 0, alpha);
+                break;
             case BLUE:
-                c = new Color(0, 0, 255, 1);
-            break;
+                c = new Color(0, 0, 255, alpha);
+                break;
             case YELLOW:
-                c = new Color(255, 255, 0, 1);
-            break;
+                c = new Color(255, 255, 0, alpha);
+                break;
             case MAJENTA:
-                c = new Color(255, 0, 255, 1);
-            break;
+                c = new Color(255, 0, 255, alpha);
+                break;
             case PURPLE:
-                c = new Color(128, 0, 128, 1);
-            break;
+                c = new Color(128, 0, 128, alpha);
+                break;
             case NEUTRAL:
-                c = Color.LIGHT_GRAY;
+                c = new Color(200, 200, 200, alpha);
                 break;
             case WHITE:
-                c = Color.WHITE;
+                c = new Color(255, 255, 255, alpha);
                 break;
         }
 

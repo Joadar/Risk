@@ -68,9 +68,12 @@ public class ZoneActor extends Actor {
         //super.draw(batch, parentAlpha);
         Player p = getZonePlayer(zone);
         CharSequence str = String.valueOf(zone.getID());
-        batch.setColor(zone.getRGBColor());
+        batch.setColor(zone.getRGBColor(0.3f));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        batch.setColor(zone.getRGBColor(0.7f));
+        batch.draw(region, zone.getPosition().getX() + 10, zone.getPosition().getY() + 10, getOriginX(), getOriginY(),
+                getWidth() - 10, getHeight() - 10, getScaleX(), getScaleY(), getRotation());
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
     }
