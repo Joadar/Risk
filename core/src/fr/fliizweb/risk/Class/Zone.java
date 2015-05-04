@@ -20,10 +20,14 @@ public class Zone {
     private Position        position;
     private Size            size;
     private PlayerColor     color;
+    private Color           defaultColor;
+
+    private Boolean         selected;
 
     public Zone(int x, int y, int sizex, int sizey) {
         position = new Position(x, y);
         size = new Size(sizex, sizey);
+        selected = false;
     }
 
     public String toString() {
@@ -112,6 +116,14 @@ public class Zone {
 
     public void setColor(String color) {
         this.color = PlayerColor.valueOf(color.toUpperCase());
+    }
+
+    public Boolean isSelected() {
+        return this.selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 
 

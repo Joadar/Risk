@@ -31,6 +31,8 @@ import fr.fliizweb.risk.Class.Zone;
 public class ZoneActor extends Actor {
 
     TextureRegion region;
+    CharSequence str;
+    BitmapFont font;
 
     Zone zone;
     ArrayList<Player> players;
@@ -44,7 +46,9 @@ public class ZoneActor extends Actor {
         setWidth(zone.getSize().getX());
         setHeight(zone.getSize().getY());
         this.setBounds(zone.getPosition().getX(), zone.getPosition().getY(), getWidth(), getHeight());
-        this.addListener(inputListener);
+        str = String.valueOf(zone.getID());
+        font = new BitmapFont();
+        //this.addListener(inputListener);
     }
 
     public void setPlayers(ArrayList<Player> players) {
@@ -64,12 +68,11 @@ public class ZoneActor extends Actor {
         //super.draw(batch, parentAlpha);
         Player p = getZonePlayer(zone);
         CharSequence str = String.valueOf(zone.getID());
-        //BitmapFont font = new BitmapFont();
         batch.setColor(zone.getRGBColor());
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        //font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        //font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
     }
 
 

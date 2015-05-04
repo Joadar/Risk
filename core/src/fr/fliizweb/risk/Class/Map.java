@@ -22,6 +22,8 @@ public class Map {
     private int sizex;
     private int sizey;
 
+    private Boolean zoneSelected;
+
     public void setZones(ArrayList<Zone> zones) { Zones = zones; }
 
     public ArrayList getTexture() { return texture; }
@@ -29,6 +31,7 @@ public class Map {
 
     public Map() {
         Zones = new ArrayList<Zone>();
+        zoneSelected = false;
         loadJSON();
     }
     
@@ -49,6 +52,14 @@ public class Map {
                 return z;
         }
         return null;
+    }
+
+    public Boolean isZoneSelected() {
+        return this.zoneSelected;
+    }
+
+    public void setZoneSelected(Boolean selected) {
+        this.zoneSelected = selected;
     }
 
     public void loadJSON() {
