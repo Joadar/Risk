@@ -33,6 +33,7 @@ public class ZoneActor extends Actor {
     TextureRegion region;
     CharSequence str;
     BitmapFont font;
+    Color color;
 
     Zone zone;
     ArrayList<Player> players;
@@ -68,10 +69,11 @@ public class ZoneActor extends Actor {
         //super.draw(batch, parentAlpha);
         Player p = getZonePlayer(zone);
         CharSequence str = String.valueOf(zone.getID());
-        batch.setColor(zone.getRGBColor(0.3f));
+
+        batch.setColor(new Color(0, 0, 0, 1));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        batch.setColor(zone.getRGBColor(0.7f));
+        batch.setColor(zone.getColor());
         batch.draw(region, zone.getPosition().getX() + 10, zone.getPosition().getY() + 10, getOriginX(), getOriginY(),
                 getWidth() - 10, getHeight() - 10, getScaleX(), getScaleY(), getRotation());
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

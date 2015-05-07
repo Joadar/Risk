@@ -1,5 +1,7 @@
 package fr.fliizweb.risk.Class.Player;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * Created by rcdsm on 29/04/15.
  */
@@ -8,9 +10,9 @@ public class Player {
 
     private String      username;
 
-    private PlayerColor color;
+    private Color color;
 
-    public Player(String username, PlayerColor color) {
+    public Player(String username, Color color) {
         this.username = username;
         this.color = color;
     }
@@ -29,7 +31,7 @@ public class Player {
         this.username = username;
     }
 
-    public PlayerColor getColor() {
+    public Color getColor() {
         return color;
     }
 

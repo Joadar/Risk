@@ -22,7 +22,7 @@ public class Map {
     private int sizex;
     private int sizey;
 
-    private Boolean zoneSelected;
+    private int zoneSelected;
 
     public void setZones(ArrayList<Zone> zones) { Zones = zones; }
 
@@ -31,7 +31,7 @@ public class Map {
 
     public Map() {
         Zones = new ArrayList<Zone>();
-        zoneSelected = false;
+        zoneSelected = 0;
         loadJSON();
     }
     
@@ -55,11 +55,16 @@ public class Map {
     }
 
     public Boolean isZoneSelected() {
+        if(this.zoneSelected > 0) return true;
+        return false;
+    }
+
+    public int getZoneSelected() {
         return this.zoneSelected;
     }
 
-    public void setZoneSelected(Boolean selected) {
-        this.zoneSelected = selected;
+    public void setZoneSelected(int ID) {
+        this.zoneSelected = ID;
     }
 
     public void loadJSON() {
@@ -89,6 +94,7 @@ public class Map {
             ZonePrototype p = (ZonePrototype)e;
             Zone zone = new Zone(p.x, p.y, p.sizex, p.sizey);
             zone.setColor(p.color);
+            zone.setDefaultColor(zone.getColor());
             zone.setID(p.id);
             zone.setNextZones(p.next);
             Zones.add(zone);

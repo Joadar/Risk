@@ -19,7 +19,7 @@ public class Zone {
     private int[]           next;
     private Position        position;
     private Size            size;
-    private PlayerColor     color;
+    private Color           color;
     private Color           defaultColor;
 
     private Boolean         selected;
@@ -78,48 +78,42 @@ public class Zone {
         return size;
     }
 
-    public PlayerColor getColor() {
+    public Color getDefaultColor() {
+        return this.defaultColor;
+    }
+    public void setDefaultColor(Color color) {
+        this.defaultColor = color;
+    }
+
+    public Color getColor() {
         return this.color;
     }
 
-    public Color getRGBColor() {
-        return getRGBColor(1.0f);
-    }
-
-    public Color getRGBColor(float alpha) {
-        Color c = null;
-        switch (this.color) {
-            case RED:
-                c = new Color(255, 0, 0, alpha);
-                break;
-            case GREEN:
-                c = new Color(0, 255, 0, alpha);
-                break;
-            case BLUE:
-                c = new Color(0, 0, 255, alpha);
-                break;
-            case YELLOW:
-                c = new Color(255, 255, 0, alpha);
-                break;
-            case MAJENTA:
-                c = new Color(255, 0, 255, alpha);
-                break;
-            case PURPLE:
-                c = new Color(128, 0, 128, alpha);
-                break;
-            case NEUTRAL:
-                c = new Color(200, 200, 200, alpha);
-                break;
-            case WHITE:
-                c = new Color(255, 255, 255, alpha);
-                break;
-        }
-
-        return c;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public void setColor(String color) {
-        this.color = PlayerColor.valueOf(color.toUpperCase());
+        setColor(color, 1.0f);
+    }
+
+    public void setColor(String color, float alpha) {
+        if(color.equals("RED"))
+            this.color = new Color(255, 0, 0, alpha);
+        else if(color.equals("GREEN"))
+            this.color = new Color(0, 255, 0, alpha);
+        else if (color.equals("BLUE"))
+            this.color = new Color(0, 0, 255, alpha);
+        else if (color.equals("YELLOW"))
+            this.color = new Color(255, 255, 0, alpha);
+        else if (color.equals("MAJENTA"))
+            this.color = new Color(255, 0, 255, alpha);
+        else if (color.equals("PURPLE"))
+            this.color = new Color(128, 0, 128, alpha);
+        else if (color.equals("NEUTRAL"))
+            this.color = new Color(200, 200, 200, alpha);
+        else if (color.equals("WHITE"))
+            this.color = new Color(255, 255, 255, alpha);
     }
 
     public Boolean isSelected() {

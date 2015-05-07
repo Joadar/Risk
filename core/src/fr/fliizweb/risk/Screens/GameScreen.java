@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,7 +39,7 @@ import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private Stage stage;
-    private ScreenViewport vp;
+    private FitViewport vp;
     private SpriteBatch batch;
 
     private OrthographicCamera camera;
@@ -54,10 +55,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         map = new Map();
         players = new ArrayList<Player>();
 
-        players.add(new Player("g0rp", PlayerColor.RED));
-        players.add(new Player("Joadar", PlayerColor.GREEN));
-        players.add(new Player("Thierry", PlayerColor.BLUE));
-        players.add(new Player("Peric", PlayerColor.YELLOW));
+        players.add(new Player("g0rp", Color.RED));
+        players.add(new Player("Joadar", Color.GREEN));
+        players.add(new Player("Thierry", Color.BLUE));
+        players.add(new Player("Peric", Color.YELLOW));
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
@@ -73,9 +74,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
 
         //viewport & stage
-        vp = new ScreenViewport( camera );
-        vp.setScreenWidth(Gdx.graphics.getWidth());
-        vp.setScreenHeight(Gdx.graphics.getHeight());
+        vp = new FitViewport( 1024, 576, camera );
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
 
@@ -97,15 +96,28 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
                     if(!map.isZoneSelected()) {
-                        map.setZoneSelected(true);
+                        map.setZoneSelected(zone.getID());
                         for (int i = 0; i < stageActors.size; i++) {
                             Actor zoneActor = stageActors.get(i);
                             for (int j = 0; j < zones.length; j++) {
                                 if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
                                     Zone z = map.getZoneByID(zones[j]);
                                     z.setSelected(true);
-                                    PlayerColor c = zone.getColor();
-                                    z.setColor(c.toString());
+                                    z.setColor(zone.getColor());
+                                }
+                            }
+                        }
+                    } else {
+                        if(zone.getID() == map.getZoneSelected()) {
+                            map.setZoneSelected(0);
+                            for (int i = 0; i < stageActors.size; i++) {
+                                Actor zoneActor = stageActors.get(i);
+                                for (int j = 0; j < zones.length; j++) {
+                                    if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
+                                        Zone z = map.getZoneByID(zones[j]);
+                                        z.setSelected(false);
+                                        z.setColor(zone.getDefaultColor());
+                                    }
                                 }
                             }
                         }
@@ -209,13 +221,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         float ratio = baseDistance/distance;
         float newZoom = origZoom * ratio;
 
-        if (newZoom >= 1.693f) {
-            camera.zoom = 1.693f;
-            origZoom = 1.693f;
+        if (newZoom >= 2.0f) {
+            camera.zoom = 2.0f;
+            origZoom = 2.0f;
             baseDistance = distance;
-        } else if (newZoom <= 1.4) {
-            camera.zoom = (float) 1.4;
-            origZoom = (float) 1.4;
+        } else if (newZoom <= 1.0) {
+            camera.zoom = (float) 1.0;
+            origZoom = (float) 1.0;
             baseDistance = distance;
         } else {
             camera.zoom = newZoom;
