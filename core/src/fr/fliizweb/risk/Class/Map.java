@@ -67,6 +67,12 @@ public class Map {
         this.zoneSelected = ID;
     }
 
+    public void desactiveZones() {
+        for(Zone z: Zones) {
+            z.setActive(false);
+        }
+    }
+
     public void loadJSON() {
         String content = null;
 

@@ -95,6 +95,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     int[] zones = zone.getNextZones();
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
+
+                    //Si aucune zone n'est selectionnée
                     if(!map.isZoneSelected()) {
                         zone.setSelected(true);
                         map.setZoneSelected(zone.getID());
@@ -107,8 +109,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 }
                             }
                         }
-                    } else {
-                        if(zone.getID() == map.getZoneSelected()) {
+                    } else { //Dans le cas où une zone est selectionnée
+                        if(zone.getID() == map.getZoneSelected()) { //Si la zone tapée est la même que celle selectionnée
+                            //On désélectionne toutes les zones actives
                             map.setZoneSelected(0);
                             zone.setSelected(false);
                             zone.setColor(zone.getDefaultColor());
@@ -121,9 +124,20 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     }
                                 }
                             }
+                        } else if(zone.isActive()) { //Si la zone selectionnée est une zone active
+                            //On met la zone tapée de la couleur de la zone selectionnée au préalable.
+                            //Puis on désactive toutes les zones.
+                            Zone z = map.getZoneByID(map.getZoneSelected());
+                            zone.setColor(z.getColor());
+                            zone.setDefaultColor(zone.getColor());
+                            z.setActive(false);
+                            z.setSelected(false);
+                            zone.setActive(false);
+                            zone.setSelected(false);
+                            map.desactiveZones();
+                            map.setZoneSelected(0);
                         }
                     }
-
                 }
             });
             stage.addActor(zoneShape);
