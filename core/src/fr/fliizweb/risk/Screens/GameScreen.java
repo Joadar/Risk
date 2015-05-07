@@ -96,27 +96,28 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
                     if(!map.isZoneSelected()) {
+                        zone.setSelected(true);
                         map.setZoneSelected(zone.getID());
                         for (int i = 0; i < stageActors.size; i++) {
                             Actor zoneActor = stageActors.get(i);
                             for (int j = 0; j < zones.length; j++) {
                                 if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
                                     Zone z = map.getZoneByID(zones[j]);
-                                    z.setSelected(true);
-                                    z.setColor(zone.getColor());
+                                    z.setActive(true);
                                 }
                             }
                         }
                     } else {
                         if(zone.getID() == map.getZoneSelected()) {
                             map.setZoneSelected(0);
+                            zone.setSelected(false);
+                            zone.setColor(zone.getDefaultColor());
                             for (int i = 0; i < stageActors.size; i++) {
                                 Actor zoneActor = stageActors.get(i);
                                 for (int j = 0; j < zones.length; j++) {
                                     if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
                                         Zone z = map.getZoneByID(zones[j]);
-                                        z.setSelected(false);
-                                        z.setColor(zone.getDefaultColor());
+                                        z.setActive(false);
                                     }
                                 }
                             }

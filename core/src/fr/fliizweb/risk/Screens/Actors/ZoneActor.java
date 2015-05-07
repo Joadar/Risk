@@ -73,7 +73,15 @@ public class ZoneActor extends Actor {
         batch.setColor(new Color(0, 0, 0, 1));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        batch.setColor(zone.getColor());
+        if(zone.isActive()) {
+            Color c = zone.getColor();
+            c.a = 0.7f;
+            batch.setColor(c);
+        } else {
+            Color c = zone.getColor();
+            c.a = 1.0f;
+            batch.setColor(zone.getColor());
+        }
         batch.draw(region, zone.getPosition().getX() + 10, zone.getPosition().getY() + 10, getOriginX(), getOriginY(),
                 getWidth() - 10, getHeight() - 10, getScaleX(), getScaleY(), getRotation());
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

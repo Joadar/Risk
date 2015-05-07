@@ -23,11 +23,13 @@ public class Zone {
     private Color           defaultColor;
 
     private Boolean         selected;
+    private Boolean         active;
 
     public Zone(int x, int y, int sizex, int sizey) {
         position = new Position(x, y);
         size = new Size(sizex, sizey);
         selected = false;
+        active = false;
     }
 
     public String toString() {
@@ -123,6 +125,9 @@ public class Zone {
     public void setSelected(Boolean selected) {
         this.selected = selected;
     }
+
+    public Boolean isActive() { return this.active; }
+    public void setActive(Boolean active) { this.active = active; }
 
 
     /**
