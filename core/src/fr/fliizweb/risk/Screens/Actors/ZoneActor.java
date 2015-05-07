@@ -38,6 +38,8 @@ public class ZoneActor extends Actor {
     Zone zone;
     ArrayList<Player> players;
 
+    private static final int BORDERSIZE = 5;
+
     public ZoneActor(Zone zone) {
         super();
 
@@ -73,17 +75,17 @@ public class ZoneActor extends Actor {
         batch.setColor(new Color(0, 0, 0, 1));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        if(zone.isActive()) {
-            Color c = zone.getColor();
-            c.a = 0.7f;
-            batch.setColor(c);
-        } else {
-            Color c = zone.getColor();
+
+        Color c = zone.getColor();
+
+        if(zone.isActive())
+            c.a = 0.6f;
+        else
             c.a = 1.0f;
-            batch.setColor(zone.getColor());
-        }
-        batch.draw(region, zone.getPosition().getX() + 10, zone.getPosition().getY() + 10, getOriginX(), getOriginY(),
-                getWidth() - 10, getHeight() - 10, getScaleX(), getScaleY(), getRotation());
+
+        batch.setColor(c);
+        batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
+                getWidth() - BORDERSIZE, getHeight() - BORDERSIZE, getScaleX(), getScaleY(), getRotation());
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
     }
