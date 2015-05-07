@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 import java.util.ArrayList;
 
@@ -128,14 +129,22 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             //On met la zone tapée de la couleur de la zone selectionnée au préalable.
                             //Puis on désactive toutes les zones.
                             Zone z = map.getZoneByID(map.getZoneSelected());
-                            zone.setColor(z.getColor());
-                            zone.setDefaultColor(zone.getColor());
-                            z.setActive(false);
-                            z.setSelected(false);
-                            zone.setActive(false);
-                            zone.setSelected(false);
-                            map.desactiveZones();
-                            map.setZoneSelected(0);
+
+                            Color colorNeutral = new Color(200,200,200,0.6f);
+
+                            // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
+                            if((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))){
+                                zone.setColor(z.getColor());
+                                zone.setDefaultColor(zone.getColor());
+                                z.setActive(false);
+                                z.setSelected(false);
+                                zone.setActive(false);
+                                zone.setSelected(false);
+                                map.desactiveZones();
+                                map.setZoneSelected(0);
+                            } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
+
+                            }
                         }
                     }
                 }
