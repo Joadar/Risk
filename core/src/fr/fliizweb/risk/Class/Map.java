@@ -8,7 +8,11 @@ import com.badlogic.gdx.utils.Json;
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
+import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
+import fr.fliizweb.risk.Class.Unit.Cavalry;
+import fr.fliizweb.risk.Class.Unit.Infantry;
+import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
  * Created by rcdsm on 28/04/15.
@@ -79,8 +83,9 @@ public class Map {
         FileHandle handle = Gdx.files.internal("Maps/default.json");
         String fileContent = handle.readString(); // Lecture du fichier
 
-        Json  json = new Json();
+        Json json = new Json();
         json.setElementType(MapFilePrototype.class, "zones", ZonePrototype.class);
+        json.setElementType(ZonePrototype.class, "units", UnitPrototype.class);
 
         MapFilePrototype data;
         data = json.fromJson(MapFilePrototype.class, fileContent);
@@ -103,6 +108,25 @@ public class Map {
             zone.setDefaultColor(zone.getColor());
             zone.setID(p.id);
             zone.setNextZones(p.next);
+
+            ArrayList<Unit> listUnits = new ArrayList<Unit>();
+
+            for(Object u :p.units){
+                UnitPrototype anUnit = (UnitPrototype)u;
+
+                for(int z = 0; z < anUnit.number; z++){
+
+                    if(anUnit.type.equals("infantry")){
+                        Infantry unit = new Infantry();
+                        listUnits.add(unit);
+                    } else if(anUnit.type.equals("cavalry")) {
+                        Cavalry unit = new Cavalry();
+                        listUnits.add(unit);
+                    }
+                }
+            }
+            Gdx.app.log("Map", "Value of listUnits = " + listUnits);
+            zone.setUnits(listUnits);
             Zones.add(zone);
         }
     }

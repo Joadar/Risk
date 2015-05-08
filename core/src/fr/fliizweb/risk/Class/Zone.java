@@ -47,6 +47,10 @@ public class Zone {
      * GETTERS
      */
 
+    public void setUnits(ArrayList<Unit> units) { this.Units = units; }
+    public ArrayList<Unit> getUnits() { return this.Units; }
+    public Unit getUnit(int index) { return this.Units.get(index); }
+
 
     public void setID(int id) {
         this.id = id;

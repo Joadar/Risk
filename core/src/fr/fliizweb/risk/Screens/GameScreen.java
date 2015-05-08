@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
+import fr.fliizweb.risk.Class.Unit.Infantry;
+import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
@@ -97,8 +99,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
 
+
                     //Si aucune zone n'est selectionnée
-                    if(!map.isZoneSelected()) {
+                    if (!map.isZoneSelected()) {
                         zone.setSelected(true);
                         map.setZoneSelected(zone.getID());
                         for (int i = 0; i < stageActors.size; i++) {
@@ -111,7 +114,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             }
                         }
                     } else { //Dans le cas où une zone est selectionnée
-                        if(zone.getID() == map.getZoneSelected()) { //Si la zone tapée est la même que celle selectionnée
+                        if (zone.getID() == map.getZoneSelected()) { //Si la zone tapée est la même que celle selectionnée
                             //On désélectionne toutes les zones actives
                             map.setZoneSelected(0);
                             zone.setSelected(false);
@@ -125,15 +128,41 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     }
                                 }
                             }
-                        } else if(zone.isActive()) { //Si la zone selectionnée est une zone active
+                        } else if (zone.isActive()) { //Si la zone selectionnée est une zone active
                             //On met la zone tapée de la couleur de la zone selectionnée au préalable.
                             //Puis on désactive toutes les zones.
                             Zone z = map.getZoneByID(map.getZoneSelected());
 
-                            Color colorNeutral = new Color(200,200,200,0.6f);
+                            Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
                             // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                            if((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))){
+                            if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))) {
+
+                                // Pour le test on fait une liste d'unités à déplacer
+                                ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
+                                Infantry infantry = new Infantry();
+                                unitsToMove.add(infantry);
+
+
+                                ArrayList<Unit> totalUnitsZone = new ArrayList<Unit>();
+
+                                // On récupère les unités dans la zone d'origine
+                                totalUnitsZone = z.getUnits();
+                                Unit unitToRemove = new Infantry(); // L'unité à supprimer
+
+                                // Parmi toutes les unités de la zone d'origine
+                                for (int in = 0; in < z.getUnits().size(); in++) {
+                                    unitToRemove = z.getUnit(in);
+                                    // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
+                                    if(unitToRemove.getClass().equals(infantry.getClass())){
+                                        break;
+                                    }
+                                }
+
+                                totalUnitsZone.remove(unitToRemove); // Nombre d'unité restante
+
+                                z.setUnits(totalUnitsZone);
+                                zone.setUnits(unitsToMove);
                                 zone.setColor(z.getColor());
                                 zone.setDefaultColor(zone.getColor());
                                 z.setActive(false);
@@ -142,6 +171,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 zone.setSelected(false);
                                 map.desactiveZones();
                                 map.setZoneSelected(0);
+
                             } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
 
                             }
