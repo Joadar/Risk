@@ -141,7 +141,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 // Pour le test on fait une liste d'unités à déplacer
                                 ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
                                 Infantry infantry = new Infantry();
-                                unitsToMove.add(infantry);
+
+                                unitsToMove.addAll(zone.getUnits()); // On récupère toutes les unités de la zone selectionné
+                                unitsToMove.add(infantry); // On ajoute nos unités à déplacer
 
 
                                 ArrayList<Unit> totalUnitsZone = new ArrayList<Unit>();
@@ -149,6 +151,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 // On récupère les unités dans la zone d'origine
                                 totalUnitsZone = z.getUnits();
                                 Unit unitToRemove = new Infantry(); // L'unité à supprimer
+
+                                int totalUnitStay = z.getUnits().size() - 1;
+                                Color originColor = z.getColor();
+                                if(totalUnitStay == 0){
+                                    z.setColor(colorNeutral);
+                                }
+
 
                                 // Parmi toutes les unités de la zone d'origine
                                 for (int in = 0; in < z.getUnits().size(); in++) {
@@ -163,7 +172,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                                 z.setUnits(totalUnitsZone);
                                 zone.setUnits(unitsToMove);
-                                zone.setColor(z.getColor());
+                                zone.setColor(originColor);
                                 zone.setDefaultColor(zone.getColor());
                                 z.setActive(false);
                                 z.setSelected(false);
