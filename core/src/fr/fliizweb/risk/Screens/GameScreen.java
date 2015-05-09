@@ -146,11 +146,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             // Parmi toutes les unités de la zone d'origine
                             for (int in = 0; in < z.getUnits().size(); in++) {
                                 Unit unitDetail = z.getUnit(in);
-                                // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
                                 if(unitDetail.getClass().getSimpleName().equals("Infantry")){
-                                    numberInfantry++;
+                                    numberInfantry++; // On récupère le nombre d'infanterie
                                 } else if (unitDetail.getClass().getSimpleName().equals("Cavalry")){
-                                    numberCavalry++;
+                                    numberCavalry++; // On récupère le nombre de cavalerie
                                 }
                             }
 
