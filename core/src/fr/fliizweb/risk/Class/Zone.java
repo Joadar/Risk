@@ -1,19 +1,10 @@
 package fr.fliizweb.risk.Class;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Player.PlayerColor;
-import fr.fliizweb.risk.Class.Unit.GroundUnit;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
@@ -51,7 +42,7 @@ public class Zone {
         return output;
     }
 
-    
+
 
     /**
      * GETTERS

@@ -2,37 +2,38 @@ package fr.fliizweb.risk.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Player.PlayerColor;
 import fr.fliizweb.risk.Class.Unit.Infantry;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
-import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
 
@@ -138,12 +139,85 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             //Puis on désactive toutes les zones.
                             Zone z = map.getZoneByID(map.getZoneSelected());
 
-                            Gdx.app.log("GameScreen", "ZONE SELECTIONNEE");
-
                             Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
+                            int numberInfantry = 0, numberCavalry = 0;
+
+                            // Parmi toutes les unités de la zone d'origine
+                            for (int in = 0; in < z.getUnits().size(); in++) {
+                                Unit unitDetail = z.getUnit(in);
+                                // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
+                                if(unitDetail.getClass().getSimpleName().equals("Infantry")){
+                                    numberInfantry++;
+                                } else if (unitDetail.getClass().getSimpleName().equals("Cavalry")){
+                                    numberCavalry++;
+                                }
+                            }
+
+                            // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
+                            Skin skin = new Skin( Gdx.files.internal( "ui/defaultskin.json" ));
+
+                            final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
+                            table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
+                            table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // On met la taille de la table à celle de l'écran
+                            Gdx.app.log("GameScreen", "W = " + Gdx.graphics.getWidth() + " || H = " + Gdx.graphics.getHeight());
+                            camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+
+                            // Pixmap ? C'est une bonne question ^
+                            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+                            pm1.setColor(Color.GREEN);
+                            pm1.fill();
+                            table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+
+                            // Le label Infanterie
+                            Label labelInfantry=new Label("Infanterie",skin);
+                            table.add(labelInfantry).width(150).padTop(10).padBottom(3);
+
+                            // Le champ text pour le nombre d'infanterie à déplacer (trouver le moyen pour afficher un keyboard numeric)
+                            TextField textInfantry=new TextField("",skin);
+                            table.add(textInfantry).width(200).height(50);
+
+                            // Nombre total d'infanterie sur la zone
+                            Label totalInfantry=new Label("/" + numberInfantry, skin);
+                            table.add(totalInfantry).width(50).height(50);
+
+                            table.row(); // On revient à la ligne dans le tableau
+
+                            // Le label Cavalerie
+                            Label labelCavalry=new Label("Cavalerie",skin);
+                            table.add(labelCavalry).width(150).padTop(10).padBottom(3);
+
+                            // Le champ text pour le nombre de cavalerie à déplacer (trouver le moyen pour afficher un keyboard numeric)
+                            TextField textCavalry=new TextField("",skin);
+                            table.add(textCavalry).width(200).height(50);
+
+                            // Nombre total d'infanterie sur la zone
+                            Label totalCavalry=new Label("/" + numberCavalry, skin);
+                            table.add(totalCavalry).width(50).height(50);
+
+                            table.row(); // On revient à la ligne dans le tableau
+
+                            // Le bouton valider
+                            TextButton valid=new TextButton("Valider",skin);
+                            valid.addListener(new ClickListener(){
+                                @Override
+                                public void clicked(InputEvent event, float x, float y) {
+                                    table.addAction(Actions.fadeOut(0.7f));
+                                    table.remove();
+                                    camera.zoom = 2.0f;
+                                }
+                            });
+
+                            table.add(valid).width(400).height(80).padTop(10);
+
+                            // On ajoute le formulaire au stage
+                            stage.addActor(table);
+
+
+
+
                             // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                            if ((zone.getColor() == z.getColor()) || (zone.getPlayer() == null)) {
+                            if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))) {
 
                                 // Pour le test on fait une liste d'unités à déplacer
                                 ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
@@ -179,8 +253,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 zone.setUnits(unitsToMove);
                                 zone.setColor(originColor);
                                 zone.setDefaultColor(zone.getColor());
-
-                                z.setPlayer(zone.getPlayer());
                                 z.setActive(false);
                                 z.setSelected(false);
                                 zone.setActive(false);
