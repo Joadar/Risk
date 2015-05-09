@@ -212,6 +212,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             });
 
                             table.add(valid).width(400).height(80).padTop(10);
+                            table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
 
                             // On ajoute le formulaire au stage
                             stage.addActor(table);
@@ -359,10 +360,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-
-        moveCamera(true, -deltaX, deltaY);
-        camera.update();
-
+        if(!showForm){
+            moveCamera(true, -deltaX, deltaY);
+            camera.update();
+        }
         return true;
     }
 
