@@ -28,6 +28,7 @@ public class Zone {
     private Size            size;
     private Color           color;
     private Color           defaultColor;
+    private Player          player;
 
     private Boolean         selected;
     private Boolean         active;
@@ -37,6 +38,7 @@ public class Zone {
         size = new Size(sizex, sizey);
         selected = false;
         active = false;
+        player = null;
         Units = new ArrayList<Unit>();
     }
 
@@ -58,6 +60,9 @@ public class Zone {
     public void setUnits(ArrayList<Unit> units) { this.Units = units; }
     public ArrayList<Unit> getUnits() { return this.Units; }
     public Unit getUnit(int index) { return (Unit)this.Units.get(index); }
+
+    public void setPlayer(Player player) { this.player = player; }
+    public Player getPlayer() { return this.player; }
 
     public void setID(int id) {
         this.id = id;

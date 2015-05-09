@@ -87,7 +87,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         for(int i = 0; i < map.getZones().size(); i++) {
             final Zone zone = map.getZone(i);
             final ZoneActor zoneShape = new ZoneActor(zone);
-            zoneShape.setPlayers(players);
+
+            //On associe un joueur à une zone en fonction de la couleur
+            for(Player player: players) {
+                if(zone.getColor() == player.getColor())
+                    zone.setPlayer(player);
+            }
+
             zoneShape.setName(String.valueOf(zone.getID()));
             zoneShape.addListener(new ActorGestureListener() {
                 @Override
@@ -132,10 +138,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             //Puis on désactive toutes les zones.
                             Zone z = map.getZoneByID(map.getZoneSelected());
 
+                            Gdx.app.log("GameScreen", "ZONE SELECTIONNEE");
+
                             Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
                             // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                            if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))) {
+                            if ((zone.getColor() == z.getColor()) || (zone.getPlayer() == null)) {
 
                                 // Pour le test on fait une liste d'unités à déplacer
                                 ArrayList<Unit> unitsToMove = new ArrayList<Unit>();

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -35,6 +36,8 @@ public class ZoneActor extends Actor {
     BitmapFont font;
     Color color;
 
+    float cosX;
+
     Zone zone;
     ArrayList<Player> players;
 
@@ -51,37 +54,29 @@ public class ZoneActor extends Actor {
         this.setBounds(zone.getPosition().getX(), zone.getPosition().getY(), getWidth(), getHeight());
         str = String.valueOf(zone.getID());
         font = new BitmapFont();
+        cosX = 0f;
         //this.addListener(inputListener);
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public Player getZonePlayer(Zone zone) {
-        for(Player p: players) {
-            if(p.getColor() == zone.getColor())
-                return p;
-        }
-        return null;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        cosX += 0.05f;
         //super.draw(batch, parentAlpha);
-        Player p = getZonePlayer(zone);
+        Player p = zone.getPlayer();
         CharSequence str = String.valueOf(zone.getID());
 
-        batch.setColor(new Color(0, 0, 0, 1));
+        batch.setColor(new Color(0, 0, 0, parentAlpha));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 
         Color c = zone.getColor();
+        c.a = 1.0f;
 
         if(zone.isActive())
-            c.a = 0.6f;
-        else
-            c.a = 1.0f;
+            c.a = Math.abs(MathUtils.cos(cosX)) / 4 + 0.75f;
+
+        if(zone.isSelected())
+            c.a = Math.abs(MathUtils.cos(cosX)) / 2 + 0.5f;
 
         batch.setColor(c);
         batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
