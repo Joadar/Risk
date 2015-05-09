@@ -6,7 +6,12 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void create () {
-		GameScreen screen = new GameScreen();
+		GameScreen screen = null;
+		try {
+			screen = new GameScreen();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		setScreen(screen);
 	}
 

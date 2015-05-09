@@ -50,11 +50,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private float origDistance, baseDistance, origZoom;
 
-
     Map map;
     ArrayList<Player> players;
 
-    public GameScreen() {
+    public GameScreen() throws ClassNotFoundException {
         map = new Map();
         players = new ArrayList<Player>();
 
@@ -145,7 +144,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 unitsToMove.addAll(zone.getUnits()); // On récupère toutes les unités de la zone selectionné
                                 unitsToMove.add(infantry); // On ajoute nos unités à déplacer
 
-
                                 ArrayList<Unit> totalUnitsZone = new ArrayList<Unit>();
 
                                 // On récupère les unités dans la zone d'origine
@@ -157,7 +155,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 if(totalUnitStay == 0){
                                     z.setColor(colorNeutral);
                                 }
-
 
                                 // Parmi toutes les unités de la zone d'origine
                                 for (int in = 0; in < z.getUnits().size(); in++) {
@@ -262,7 +259,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
 
-        moveCamera(true, camera.zoom * -deltaX, camera.zoom * deltaY);
+        moveCamera(true, -deltaX, deltaY);
         camera.update();
 
         return true;

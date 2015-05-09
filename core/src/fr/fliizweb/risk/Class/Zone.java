@@ -2,11 +2,18 @@ package fr.fliizweb.risk.Class;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
+import fr.fliizweb.risk.Class.Unit.GroundUnit;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
@@ -15,7 +22,7 @@ import fr.fliizweb.risk.Class.Unit.Unit;
 public class Zone {
 
     private int             id;
-    private ArrayList<Unit> Units;
+    private ArrayList       Units;
     private int[]           next;
     private Position        position;
     private Size            size;
@@ -30,6 +37,7 @@ public class Zone {
         size = new Size(sizex, sizey);
         selected = false;
         active = false;
+        Units = new ArrayList<Unit>();
     }
 
     public String toString() {
@@ -49,8 +57,7 @@ public class Zone {
 
     public void setUnits(ArrayList<Unit> units) { this.Units = units; }
     public ArrayList<Unit> getUnits() { return this.Units; }
-    public Unit getUnit(int index) { return this.Units.get(index); }
-
+    public Unit getUnit(int index) { return (Unit)this.Units.get(index); }
 
     public void setID(int id) {
         this.id = id;

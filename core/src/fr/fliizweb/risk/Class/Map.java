@@ -5,6 +5,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.Json;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
@@ -33,10 +35,10 @@ public class Map {
     public ArrayList getTexture() { return texture; }
 
 
-    public Map() {
+    public Map() throws ClassNotFoundException {
         Zones = new ArrayList<Zone>();
         zoneSelected = 0;
-        loadJSON();
+        this.loadJSON();
     }
     
     public ArrayList<Zone> getZones() {
@@ -77,7 +79,7 @@ public class Map {
         }
     }
 
-    public void loadJSON() {
+    public void loadJSON() throws ClassNotFoundException {
         String content = null;
 
         FileHandle handle = Gdx.files.internal("Maps/default.json");
@@ -89,9 +91,6 @@ public class Map {
 
         MapFilePrototype data;
         data = json.fromJson(MapFilePrototype.class, fileContent);
-
-        Gdx.app.log("Map", "Data name = " + data.name);
-        Gdx.app.log("Map", "Map details sizex = " + data.map.sizex);
 
         // Implementation des données de map
         this.setTexture(data.map.texture);
@@ -116,12 +115,27 @@ public class Map {
 
                 for(int z = 0; z < anUnit.number; z++){
 
-                    if(anUnit.type.equals("infantry")){
-                        Infantry unit = new Infantry();
-                        listUnits.add(unit);
-                    } else if(anUnit.type.equals("cavalry")) {
-                        Cavalry unit = new Cavalry();
-                        listUnits.add(unit);
+                    /*
+                    *
+                    * GENERATION AUTOMATIQUE DES CLASSES D'UNITES
+                    * Methode appelée "Reflection"
+                    *
+                    */
+                    Class test = Class.forName("fr.fliizweb.risk.Class.Unit." + anUnit.type);
+                    Class[] types = {};
+                    try {
+                        Constructor constructor = test.getConstructor(types);
+                        Object[] params = {};
+                        Object instanceOfUnit = constructor.newInstance(params);
+                        listUnits.add((Unit)instanceOfUnit);
+                    } catch (NoSuchMethodException e1) {
+                        e1.printStackTrace();
+                    } catch (InvocationTargetException e1) {
+                        e1.printStackTrace();
+                    } catch (InstantiationException e1) {
+                        e1.printStackTrace();
+                    } catch (IllegalAccessException e1) {
+                        e1.printStackTrace();
                     }
                 }
             }

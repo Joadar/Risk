@@ -15,10 +15,10 @@
       "texture": [{}],
       "units": [
         {
-          "type":"infantry",
+          "type":"Infantry",
           "number": 3
         },
-        { "type":"cavalry",
+        { "type":"Cavalry",
           "number":1
         }
       ],
