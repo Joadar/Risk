@@ -2,7 +2,6 @@ package fr.fliizweb.risk.Class;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.Json;
 
 import java.lang.reflect.Constructor;
@@ -12,8 +11,6 @@ import java.util.ArrayList;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
 import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
-import fr.fliizweb.risk.Class.Unit.Cavalry;
-import fr.fliizweb.risk.Class.Unit.Infantry;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
@@ -139,7 +136,6 @@ public class Map {
                     }
                 }
             }
-            Gdx.app.log("Map", "Value of listUnits = " + listUnits);
             zone.setUnits(listUnits);
             Zones.add(zone);
         }

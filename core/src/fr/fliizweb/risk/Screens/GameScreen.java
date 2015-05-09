@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -103,7 +104,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                     ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
 
-
                     //Si aucune zone n'est selectionnée
                     if (!map.isZoneSelected() && !showForm) {
                         zone.setSelected(true);
@@ -117,6 +117,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 }
                             }
                         }
+
                     } else { //Dans le cas où une zone est selectionnée
                         if (zone.getID() == map.getZoneSelected() && !showForm) { //Si la zone tapée est la même que celle selectionnée
                             //On désélectionne toutes les zones actives
@@ -139,9 +140,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             if(!showForm) {
                                 z = map.getZoneByID(map.getZoneSelected());
                             }
+
                             Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
-                            int numberInfantry = 0, numberCavalry = 0;
+                            int numberInfantry = 0, numberCavalry = 0, numberArtillery = 0;
 
                             // Parmi toutes les unités de la zone d'origine
                             for (int in = 0; in < z.getUnits().size(); in++) {
@@ -150,6 +152,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     numberInfantry++; // On récupère le nombre d'infanterie
                                 } else if (unitDetail.getClass().getSimpleName().equals("Cavalry")) {
                                     numberCavalry++; // On récupère le nombre de cavalerie
+                                } else if (unitDetail.getClass().getSimpleName().equals("Artillery")){
+                                    numberArtillery++; // On récupère le nombre d'artillerie
                                 }
                             }
 
@@ -172,34 +176,61 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                             // Le label Infanterie
                             Label labelInfantry = new Label("Infanterie", skin);
+                            labelInfantry.setFontScale(2);
                             table.add(labelInfantry).width(150).padTop(10).padBottom(3);
 
                             // Le champ text pour le nombre d'infanterie à déplacer (trouver le moyen pour afficher un keyboard numeric)
                             TextField textInfantry = new TextField("", skin);
-                            table.add(textInfantry).width(200).height(50);
+                            table.add(textInfantry).width(50).height(50);
 
                             // Nombre total d'infanterie sur la zone
                             Label totalInfantry = new Label("/" + numberInfantry, skin);
+                            totalInfantry.setFontScale(2);
                             table.add(totalInfantry).width(50).height(50);
 
                             table.row(); // On revient à la ligne dans le tableau
 
                             // Le label Cavalerie
                             Label labelCavalry = new Label("Cavalerie", skin);
+                            labelCavalry.setFontScale(2);
                             table.add(labelCavalry).width(150).padTop(10).padBottom(3);
 
                             // Le champ text pour le nombre de cavalerie à déplacer (trouver le moyen pour afficher un keyboard numeric)
                             TextField textCavalry = new TextField("", skin);
-                            table.add(textCavalry).width(200).height(50);
+                            table.add(textCavalry).width(50).height(50);
 
-                            // Nombre total d'infanterie sur la zone
+                            // Nombre total de cavalerie sur la zone
                             Label totalCavalry = new Label("/" + numberCavalry, skin);
+                            totalCavalry.setFontScale(2);
                             table.add(totalCavalry).width(50).height(50);
 
                             table.row(); // On revient à la ligne dans le tableau
 
+                            // Le label Artillerie
+                            Label labelArtillery = new Label("Artillerie", skin);
+                            labelArtillery.setFontScale(2);
+                            table.add(labelArtillery).width(150).padTop(10).padBottom(3);
+
+                            // Le champ text pour le nombre de cavalerie à déplacer (trouver le moyen pour afficher un keyboard numeric)
+                            TextField textArtillerie = new TextField("", skin);
+                            table.add(textArtillerie).width(50).height(50);
+
+                            // Nombre total de cavalerie sur la zone
+                            Label totalArtillerie = new Label("/" + numberArtillery, skin);
+                            totalArtillerie.setFontScale(2);
+                            table.add(totalArtillerie).width(50).height(50);
+
+                            table.row(); // On revient à la ligne dans le tableau
+
                             // Le bouton valider
+                            BitmapFont font = new BitmapFont();
+                            font.getData().scale(1.7f);
+                            TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+                            style.font = font;
+                            style.fontColor = new Color(z.getColor());
+
                             TextButton valid = new TextButton("Valider", skin);
+                            valid.setStyle(style);
                             valid.addListener(new ClickListener() {
                                 @Override
                                 public void clicked(InputEvent event, float x, float y) {
@@ -212,18 +243,32 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             });
 
                             table.add(valid).width(400).height(80).padTop(10);
+
+                            TextButton close = new TextButton("Annuler", skin);
+                            close.setStyle(style);
+                            close.addListener(new ClickListener() {
+                                @Override
+                                public void clicked(InputEvent event, float x, float y) {
+                                    table.remove();
+                                    camera.zoom = 2.0f;
+                                    showForm = false;
+                                    Gdx.input.setOnscreenKeyboardVisible(false);
+                                }
+                            });
+                            table.add(close).width(80).height(80).padTop(10);
+
                             table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
 
                             // On ajoute le formulaire au stage
                             stage.addActor(table);
                             Gdx.app.log("GameScreen", "validForm = " + validForm);
 
-                            // Si le formulaire a été validé
+                            // Si on a cliqué sur le bouton "valider"
                             if (validForm) {
                                 validForm = false;
-                                Gdx.app.log("GameScreen", "Code ?");
+                                Gdx.app.log("GameScreen", "zone.getColor = " + zone.getColor() + " || z.getColor = " + z.getColor() + " || getDefaultColor = " + zone.getDefaultColor() + " || colorNeutral = " + colorNeutral);
                                 // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                                if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral))) {
+                                if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral) || zone.getDefaultColor().equals(colorNeutral))) {
 
                                     // Pour le test on fait une liste d'unités à déplacer
                                     ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
@@ -282,6 +327,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
 
                                 }
+                            } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
+
                             }
                         }
                     }
@@ -310,9 +357,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-        moveCamera(true, 0, 0);
-        camera.update();
+        if(!showForm){
+            stage.getViewport().update(width, height, true);
+            moveCamera(true, 0, 0);
+            camera.update();
+        }
     }
 
     @Override
@@ -374,29 +423,31 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean zoom(float initialDistance, float distance) {
-        if(origDistance != initialDistance){
-            origDistance = initialDistance;
-            baseDistance = initialDistance;
-            origZoom = camera.zoom;
+        if(!showForm) {
+            if(origDistance != initialDistance){
+                origDistance = initialDistance;
+                baseDistance = initialDistance;
+                origZoom = camera.zoom;
+            }
+
+            float ratio = baseDistance/distance;
+            float newZoom = origZoom * ratio;
+
+            if (newZoom >= 2.0f) {
+                camera.zoom = 2.0f;
+                origZoom = 2.0f;
+                baseDistance = distance;
+            } else if (newZoom <= 1.0) {
+                camera.zoom = (float) 1.0;
+                origZoom = (float) 1.0;
+                baseDistance = distance;
+            } else {
+                camera.zoom = newZoom;
+            }
+
+            moveCamera(true, 0, 0);
+            camera.update();
         }
-
-        float ratio = baseDistance/distance;
-        float newZoom = origZoom * ratio;
-
-        if (newZoom >= 2.0f) {
-            camera.zoom = 2.0f;
-            origZoom = 2.0f;
-            baseDistance = distance;
-        } else if (newZoom <= 1.0) {
-            camera.zoom = (float) 1.0;
-            origZoom = (float) 1.0;
-            baseDistance = distance;
-        } else {
-            camera.zoom = newZoom;
-        }
-
-        moveCamera(true, 0, 0);
-        camera.update();
         return false;
     }
 
