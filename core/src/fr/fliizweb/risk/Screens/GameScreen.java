@@ -179,6 +179,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 zone.setUnits(unitsToMove);
                                 zone.setColor(originColor);
                                 zone.setDefaultColor(zone.getColor());
+
+                                z.setPlayer(zone.getPlayer());
                                 z.setActive(false);
                                 z.setSelected(false);
                                 zone.setActive(false);
