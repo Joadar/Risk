@@ -386,76 +386,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                             // Si on a cliqué sur le bouton "valider"
                             if (validForm) {
-                                /*validForm = false;
 
-                                // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                                if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral) || (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b))) {
-
-                                    // Pour le test on fait une liste d'unités à déplacer
-                                    ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
-                                    Infantry infantry = new Infantry();
-
-                                    unitsToMove.addAll(zone.getUnits()); // On récupère toutes les unités de la zone selectionné
-                                    unitsToMove.add(infantry); // On ajoute nos unités à déplacer
-
-                                    ArrayList<Unit> totalUnitsZone = new ArrayList<Unit>();
-
-                                    // On récupère les unités dans la zone d'origine
-                                    totalUnitsZone = z.getUnits();
-                                    Unit unitToRemove = new Infantry(); // L'unité à supprimer
-
-                                    int totalUnitStay = z.getUnits().size() - 1;
-                                    Color originColor = z.getColor();
-                                    if (totalUnitStay == 0) {
-                                        z.setColor(colorNeutral);
-                                    }
-
-
-                                    int inf = 0, cav = 0, art = 0;
-
-                                    // Parmi toutes les unités de la zone d'origine
-                                    for (int in = 0; in < z.getUnits().size(); in++) {
-                                        unitToRemove = z.getUnit(in);
-                                        // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
-                                        if (unitToRemove.getClass().getSimpleName().equals("Infantry")) {
-                                            Gdx.app.log("GameScreen", "Value of textInfantry = " + textInfantry.getText().toString());
-                                            if (inf == Integer.parseInt(textInfantry.getText().toString())) {
-                                                continue;
-                                            }
-                                            inf++;
-                                            totalUnitsZone.remove(unitToRemove);
-                                        } else if (unitsToMove.getClass().getSimpleName().equals("Cavalry")) {
-                                            if (cav == Integer.parseInt(textCavalry.getText().toString())) {
-                                                continue;
-                                            }
-                                            cav++;
-                                            totalUnitsZone.remove(unitToRemove);
-                                        } else if (unitsToMove.getClass().getSimpleName().equals("Artillery")) {
-                                            if (art == Integer.parseInt(textArtillery.getText().toString())) {
-                                                continue;
-                                            }
-                                            art++;
-                                            totalUnitsZone.remove(unitToRemove);
-                                        }
-                                    }
-
-
-                                    //totalUnitsZone.remove(unitToRemove); // Nombre d'unité restante
-
-                                    z.setUnits(totalUnitsZone);
-                                    zone.setUnits(unitsToMove);
-                                    zone.setColor(originColor);
-                                    zone.setDefaultColor(zone.getColor());
-                                    z.setActive(false);
-                                    z.setSelected(false);
-                                    zone.setActive(false);
-                                    zone.setSelected(false);
-                                    map.desactiveZones();
-                                    map.setZoneSelected(0);
-
-                                } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
-
-                                }*/
                             } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
 
                             }
