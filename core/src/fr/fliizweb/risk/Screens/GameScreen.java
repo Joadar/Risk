@@ -31,6 +31,8 @@ import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
+import fr.fliizweb.risk.Class.Unit.Artillery;
+import fr.fliizweb.risk.Class.Unit.Cavalry;
 import fr.fliizweb.risk.Class.Unit.Infantry;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
@@ -137,11 +139,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             //On met la zone tapée de la couleur de la zone selectionnée au préalable.
                             //Puis on désactive toutes les zones.
                             Zone z = map.getZone(0);
-                            if(!showForm) {
+                            if (!showForm) {
                                 z = map.getZoneByID(map.getZoneSelected());
                             }
+                            final Zone finalZ = z;
 
-                            Color colorNeutral = new Color(200, 200, 200, 0.6f);
+                            final Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
                             int numberInfantry = 0, numberCavalry = 0, numberArtillery = 0;
 
@@ -152,10 +155,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     numberInfantry++; // On récupère le nombre d'infanterie
                                 } else if (unitDetail.getClass().getSimpleName().equals("Cavalry")) {
                                     numberCavalry++; // On récupère le nombre de cavalerie
-                                } else if (unitDetail.getClass().getSimpleName().equals("Artillery")){
+                                } else if (unitDetail.getClass().getSimpleName().equals("Artillery")) {
                                     numberArtillery++; // On récupère le nombre d'artillerie
                                 }
                             }
+
+                            // Nombre d'unité de chaque catégorie final
+                            final int numInf = numberInfantry, numCav = numberCavalry, numArt = numberArtillery;
 
                             showForm = true;
 
@@ -180,7 +186,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             table.add(labelInfantry).width(150).padTop(10).padBottom(3);
 
                             // Le champ text pour le nombre d'infanterie à déplacer (trouver le moyen pour afficher un keyboard numeric)
-                            TextField textInfantry = new TextField("", skin);
+                            final TextField textInfantry = new TextField("0", skin);
                             table.add(textInfantry).width(50).height(50);
 
                             // Nombre total d'infanterie sur la zone
@@ -196,7 +202,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             table.add(labelCavalry).width(150).padTop(10).padBottom(3);
 
                             // Le champ text pour le nombre de cavalerie à déplacer (trouver le moyen pour afficher un keyboard numeric)
-                            TextField textCavalry = new TextField("", skin);
+                            final TextField textCavalry = new TextField("0", skin);
                             table.add(textCavalry).width(50).height(50);
 
                             // Nombre total de cavalerie sur la zone
@@ -212,13 +218,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             table.add(labelArtillery).width(150).padTop(10).padBottom(3);
 
                             // Le champ text pour le nombre de cavalerie à déplacer (trouver le moyen pour afficher un keyboard numeric)
-                            TextField textArtillerie = new TextField("", skin);
-                            table.add(textArtillerie).width(50).height(50);
+                            final TextField textArtillery = new TextField("0", skin);
+                            table.add(textArtillery).width(50).height(50);
 
                             // Nombre total de cavalerie sur la zone
-                            Label totalArtillerie = new Label("/" + numberArtillery, skin);
-                            totalArtillerie.setFontScale(2);
-                            table.add(totalArtillerie).width(50).height(50);
+                            Label totalArtillery = new Label("/" + numberArtillery, skin);
+                            totalArtillery.setFontScale(2);
+                            table.add(totalArtillery).width(50).height(50);
 
                             table.row(); // On revient à la ligne dans le tableau
 
@@ -234,10 +240,124 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             valid.addListener(new ClickListener() {
                                 @Override
                                 public void clicked(InputEvent event, float x, float y) {
-                                    table.remove();
-                                    camera.zoom = 2.0f;
-                                    showForm = false;
-                                    validForm = true;
+                                    // Si aucune unité n'est rentrée, on affiche un message au joueur
+                                    if (textInfantry.getText().toString().equals("0") && textCavalry.getText().toString().equals("0") && textArtillery.getText().toString().equals("0")) {
+
+                                    } // Si le nombre  d'unités rentrées dépasse le nombre d'unité disponible dans la zone, on affiche un message au joueur comme quoi sa zone va devenir neutre
+                                    else if (Integer.parseInt(textInfantry.getText().toString()) > numInf || Integer.parseInt(textArtillery.getText().toString()) > numCav || Integer.parseInt(textArtillery.getText().toString()) > numArt) {
+
+                                    } else { // Sinon, on retire le formulaire et on peut valider le formulaire
+                                        table.remove();
+                                        camera.zoom = 2.0f;
+                                        showForm = false;
+                                        validForm = true;
+
+
+                                        // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
+                                        if ((zone.getColor() == finalZ.getColor()) || (zone.getColor().equals(colorNeutral) || (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b))) {
+
+                                            // Pour le test on fait une liste d'unités à déplacer
+                                            ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
+                                            // On fait la liste des unités remplis par le formulaire
+                                            ArrayList<Unit> formUnits = new ArrayList<Unit>();
+
+
+                                            // On fait la liste des unités à déplacer
+                                            for (int h = 0; h < Integer.parseInt(textInfantry.getText().toString()); h++) {
+                                                Infantry newInfantry = new Infantry();
+                                                formUnits.add(newInfantry);
+                                            }
+
+                                            for (int h = 0; h < Integer.parseInt(textCavalry.getText().toString()); h++) {
+                                                Cavalry newCavalry = new Cavalry();
+                                                formUnits.add(newCavalry);
+                                            }
+
+                                            for (int h = 0; h < Integer.parseInt(textArtillery.getText().toString()); h++) {
+                                                Artillery newArtillery = new Artillery();
+                                                formUnits.add(newArtillery);
+                                            }
+
+
+                                            ArrayList<Unit> totalUnitsZone = new ArrayList<Unit>();
+
+                                            // On récupère les unités dans la zone d'origine
+                                            totalUnitsZone = finalZ.getUnits();
+
+                                            int totalUnitStay = finalZ.getUnits().size() - 1;
+                                            Color originColor = finalZ.getColor();
+                                            if (totalUnitStay == 0) {
+                                                finalZ.setColor(colorNeutral);
+                                            }
+
+                                            Unit unitToRemove = new Infantry(); // L'unité à supprimer
+
+                                            int inf = 0, cav = 0, art = 0;
+
+                                            // Parmi toutes les unités du formulaire de déplacement
+                                            for (int in = 0; in < formUnits.size(); in++) {
+                                                unitToRemove = formUnits.get(in);
+                                                // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
+                                                if (unitToRemove.getClass().getSimpleName().equals("Infantry")) {
+                                                    Gdx.app.log("GameScreen", "Value of textInfantry = " + textInfantry.getText().toString());
+                                                    if (inf == Integer.parseInt(textInfantry.getText().toString())) {
+                                                        continue;
+                                                    }
+                                                    inf++;
+
+                                                } else if (unitsToMove.getClass().getSimpleName().equals("Cavalry")) {
+                                                    if (cav == Integer.parseInt(textCavalry.getText().toString())) {
+                                                        continue;
+                                                    }
+                                                    cav++;
+                                                } else if (unitsToMove.getClass().getSimpleName().equals("Artillery")) {
+                                                    if (art == Integer.parseInt(textArtillery.getText().toString())) {
+                                                        continue;
+                                                    }
+                                                    art++;
+                                                }
+                                                unitsToMove.add(unitToRemove); // On ajoute nos unités à déplacer
+                                            }
+
+                                            // totalUnitZone - unitsToMove
+
+                                            Gdx.app.log("unitsToMove", "totalUnitsZone = " + totalUnitsZone + " || unitsToMove" + unitsToMove);
+
+                                            // On met à jour la précédente zone avec le départ des unités
+
+                                            for (int ttU = 0; ttU < totalUnitsZone.size(); ttU++) {
+                                                for (int utM = 0; utM < unitsToMove.size(); utM++) {
+                                                    Unit unitToMove = unitsToMove.get(utM);
+                                                    Unit unitInTotal = totalUnitsZone.get(ttU);
+                                                    if (unitToMove.getClass().getSimpleName().equals(unitInTotal.getClass().getSimpleName())) {
+                                                        Gdx.app.log("unitsToMove", "Hello");
+                                                        totalUnitsZone.remove(ttU);
+                                                    }
+                                                }
+                                            }
+
+                                            Gdx.app.log("unitsToMove", "totalUnitsZone fin = " + totalUnitsZone);
+
+                                            //totalUnitsZone.remove(unitToRemove); // Nombre d'unité restante
+
+                                            finalZ.setUnits(totalUnitsZone);
+                                            zone.setUnits(unitsToMove);
+                                            zone.setColor(originColor);
+                                            zone.setDefaultColor(zone.getColor());
+                                            finalZ.setActive(false);
+                                            finalZ.setSelected(false);
+                                            zone.setActive(false);
+                                            zone.setSelected(false);
+                                            map.desactiveZones();
+                                            map.setZoneSelected(0);
+
+                                        } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
+
+                                        }
+
+
+                                    }
+                                    // On retire le keyboard dans tous les cas
                                     Gdx.input.setOnscreenKeyboardVisible(false);
                                 }
                             });
@@ -252,6 +372,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     table.remove();
                                     camera.zoom = 2.0f;
                                     showForm = false;
+                                    validForm = false;
                                     Gdx.input.setOnscreenKeyboardVisible(false);
                                 }
                             });
@@ -265,10 +386,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                             // Si on a cliqué sur le bouton "valider"
                             if (validForm) {
-                                validForm = false;
-                                Gdx.app.log("GameScreen", "zone.getColor = " + zone.getColor() + " || z.getColor = " + z.getColor() + " || getDefaultColor = " + zone.getDefaultColor() + " || colorNeutral = " + colorNeutral);
+                                /*validForm = false;
+
                                 // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                                if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral) || zone.getDefaultColor().equals(colorNeutral))) {
+                                if ((zone.getColor() == z.getColor()) || (zone.getColor().equals(colorNeutral) || (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b))) {
 
                                     // Pour le test on fait une liste d'unités à déplacer
                                     ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
@@ -290,26 +411,34 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     }
 
 
-                                    int inf = 0, cav = 0;
+                                    int inf = 0, cav = 0, art = 0;
 
                                     // Parmi toutes les unités de la zone d'origine
                                     for (int in = 0; in < z.getUnits().size(); in++) {
                                         unitToRemove = z.getUnit(in);
                                         // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
                                         if (unitToRemove.getClass().getSimpleName().equals("Infantry")) {
-                                            if (inf == Integer.valueOf(textInfantry.getText().toString())) {
+                                            Gdx.app.log("GameScreen", "Value of textInfantry = " + textInfantry.getText().toString());
+                                            if (inf == Integer.parseInt(textInfantry.getText().toString())) {
                                                 continue;
                                             }
                                             inf++;
                                             totalUnitsZone.remove(unitToRemove);
                                         } else if (unitsToMove.getClass().getSimpleName().equals("Cavalry")) {
-                                            if (cav == Integer.valueOf(textCavalry.getText().toString())) {
+                                            if (cav == Integer.parseInt(textCavalry.getText().toString())) {
                                                 continue;
                                             }
                                             cav++;
                                             totalUnitsZone.remove(unitToRemove);
+                                        } else if (unitsToMove.getClass().getSimpleName().equals("Artillery")) {
+                                            if (art == Integer.parseInt(textArtillery.getText().toString())) {
+                                                continue;
+                                            }
+                                            art++;
+                                            totalUnitsZone.remove(unitToRemove);
                                         }
                                     }
+
 
                                     //totalUnitsZone.remove(unitToRemove); // Nombre d'unité restante
 
@@ -326,7 +455,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                                 } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
 
-                                }
+                                }*/
                             } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
 
                             }
