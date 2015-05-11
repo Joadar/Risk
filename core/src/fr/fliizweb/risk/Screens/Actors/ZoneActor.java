@@ -34,12 +34,10 @@ public class ZoneActor extends Actor {
     TextureRegion region;
     CharSequence str;
     BitmapFont font;
-    Color color;
 
     float cosX;
 
     Zone zone;
-    ArrayList<Player> players;
 
     private static final int BORDERSIZE = 5;
 
@@ -55,13 +53,11 @@ public class ZoneActor extends Actor {
         str = String.valueOf(zone.getID());
         font = new BitmapFont();
         cosX = 0f;
-        //this.addListener(inputListener);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         cosX += 0.05f;
-        //super.draw(batch, parentAlpha);
         Player p = zone.getPlayer();
         CharSequence str = String.valueOf(zone.getID());
 
@@ -72,11 +68,12 @@ public class ZoneActor extends Actor {
         Color c = zone.getColor();
         c.a = 1.0f;
 
-        if(zone.isActive())
-            c.a = Math.abs(MathUtils.cos(cosX)) / 4 + 0.75f;
+        if(zone.isActive()) {
+            c.a = 0.7f;
+        }
 
         if(zone.isSelected())
-            c.a = Math.abs(MathUtils.cos(cosX)) / 2 + 0.5f;
+            c.a = Math.abs(MathUtils.cos(cosX * 2)) / 2 + 0.5f;
 
         batch.setColor(c);
         batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
@@ -84,26 +81,4 @@ public class ZoneActor extends Actor {
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
     }
-
-
-    private ActorGestureListener inputListener = new ActorGestureListener() {
-
-        @Override
-        public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            super.touchDown(event, x, y, pointer, button);
-        }
-
-        @Override
-        public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            super.touchUp(event, x, y, pointer, button);
-        }
-
-        @Override
-        public void tap(InputEvent event, float x, float y, int count, int button) {
-            super.tap(event, x, y, count, button);
-        }
-    };
-
-
-
 }

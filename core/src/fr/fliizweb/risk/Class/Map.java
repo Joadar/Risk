@@ -111,7 +111,6 @@ public class Map {
                 UnitPrototype anUnit = (UnitPrototype)u;
 
                 for(int z = 0; z < anUnit.number; z++){
-
                     /*
                     *
                     * GENERATION AUTOMATIQUE DES CLASSES D'UNITES
