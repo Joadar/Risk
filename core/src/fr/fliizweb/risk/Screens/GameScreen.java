@@ -16,11 +16,16 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -147,8 +152,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 }
                             }
                         } else if (zone.isActive()) { //Si la zone selectionnée est une zone active
-                            //On met la zone tapée de la couleur de la zone selectionnée au préalable.
-                            //Puis on désactive toutes les zones.
                             Zone z = map.getZone(0);
                             if (!showForm) {
                                 z = map.getZoneByID(map.getZoneSelected());
@@ -186,7 +189,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             // Pixmap ? C'est une bonne question ^
                             // On ne sais toujours pas à quoi ça sert mais c'est la pour une bonne raison :D
                             Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-                            pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
+                            pm1.setColor(new Color(0f, 0f, 0f, 0f));
                             pm1.fill();
                             table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
@@ -199,7 +202,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             final Hashtable textFields = new Hashtable();
 
                             // Boucle pour afficher le tableau d'unités du formulaire.
-                            for (Object key : ht.keySet()) {
+                            for (final Object key : ht.keySet()) {
                                 // Label
                                 Label label = new Label(key.toString(), skin);
                                 label.setFontScale(2);
@@ -214,6 +217,34 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 Label total = new Label("/" + ht.get(key), skin);
                                 total.setFontScale(2);
                                 table.add(total).width(50).height(50);
+
+                                TextButton BtnAdd = new TextButton("+", skin);
+                                BtnAdd.addListener(new InputListener() {
+                                    @Override
+                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                        int value = Integer.parseInt(text.getText().toString());
+                                        if(value < (Integer) ht.get(key))
+                                            value++;
+                                        text.setText(String.valueOf(value));
+                                        return super.touchDown(event, x, y, pointer, button);
+                                    }
+                                });
+                                table.add(BtnAdd).width(50).height(50);
+
+                                TextButton BtnDel = new TextButton("-", skin);
+                                BtnDel.addListener(new InputListener() {
+
+                                    @Override
+                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                        super.touchUp(event, x, y, pointer, button);
+                                        int value = Integer.parseInt(text.getText().toString());
+                                        if(value > 0)
+                                            value--;
+                                        text.setText(String.valueOf(value));
+                                        return super.touchDown(event, x, y, pointer, button);
+                                    }
+                                });
+                                table.add(BtnDel).width(50).height(50);
 
                                 table.row(); // On revient à la ligne dans le tableau
                             }
