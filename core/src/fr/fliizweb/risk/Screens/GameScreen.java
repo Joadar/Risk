@@ -330,32 +330,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                             }
                                         }
 
-
-                                        int totalUnitStay = finalZ.getUnits().size() - formUnits.size();
                                         Color originColor = finalZ.getColor();
-                                        if (totalUnitStay == 0) {
+                                        if (finalZ.getUnits().size() - formUnits.size() == 0) {
+                                            finalZ.setPlayer(null);
                                             finalZ.setColor(colorNeutral);
                                         }
 
-                                        // On récupère les unités dans la zone d'origine
-                                        ArrayList<Unit> totalUnitsZone = finalZ.getUnits();
-                                        //Création d'un liste temporaire clonée à partir des unités à déplacer
-                                        ArrayList<Unit> formUnitsTmp = (ArrayList<Unit>)formUnits.clone();
-
-                                        // On met à jour la précédente zone avec le départ des unités
-                                        for (int idxTotalUnit = 0; idxTotalUnit < totalUnitsZone.size(); idxTotalUnit++) {
-                                            for (int idxMoveUnit = 0; idxMoveUnit < formUnitsTmp.size(); idxMoveUnit++) {
-                                                Unit unitToMove = formUnitsTmp.get(idxMoveUnit);
-                                                Unit unitInTotal = totalUnitsZone.get(idxTotalUnit);
-                                                if (unitToMove.getClass().getSimpleName().equals(unitInTotal.getClass().getSimpleName())) {
-                                                    totalUnitsZone.remove(idxTotalUnit);
-                                                    formUnitsTmp.remove(idxMoveUnit); //On enlève les éléments de la liste temporaire
-                                                }
-                                            }
-                                        }
-
                                         //On donne à la zone selectionnée les unités restantes
-                                        finalZ.setUnits(totalUnitsZone);
+                                        finalZ.removeUnits(formUnits);
                                         finalZ.setActive(false);
                                         finalZ.setSelected(false);
 

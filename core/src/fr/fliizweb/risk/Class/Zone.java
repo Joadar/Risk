@@ -1,8 +1,12 @@
 package fr.fliizweb.risk.Class;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
@@ -42,6 +46,14 @@ public class Zone {
         return output;
     }
 
+    public ArrayList<Unit> removeUnits(ArrayList<Unit> unitsToRemove) {
+        Units.removeAll(unitsToRemove);
+        //Gros problème ici... La liste ne se supprime pas comme il faut.
+        // BREF faut juste bosser ce point et c'est parfait :)
+        Gdx.app.log("GameScreen", "Units " + Units);
+        return Units;
+    }
+
 
 
     /**
@@ -50,6 +62,16 @@ public class Zone {
 
     public void setUnits(ArrayList<Unit> units) { this.Units = units; }
     public ArrayList<Unit> getUnits() { return this.Units; }
+    public ArrayList<Unit> getSortedUnits() {
+        //Sorting
+        Collections.sort(Units, new Comparator<Unit>() {
+            @Override
+            public int compare(Unit unit1, Unit unit2) {
+                return unit1.getClass().getSimpleName().compareTo(unit2.getClass().getSimpleName());
+            }
+        });
+        return Units;
+    }
     public Unit getUnit(int index) { return (Unit)this.Units.get(index); }
 
     public void setPlayer(Player player) { this.player = player; }
@@ -58,7 +80,6 @@ public class Zone {
     public void setID(int id) {
         this.id = id;
     }
-
     public int getID() {
         return id;
     }
@@ -66,11 +87,9 @@ public class Zone {
     public int[] getNextZones() {
         return this.next;
     }
-
     public void setNextZones(int[] zones) {
         this.next = zones;
     }
-
     public int getNextZone(int id) {
         for(int i = 0; i < next.length; i++) {
             if(id == next[i])
@@ -97,15 +116,12 @@ public class Zone {
     public Color getColor() {
         return this.color;
     }
-
     public void setColor(Color color) {
         this.color = color;
     }
-
     public void setColor(String color) {
         setColor(color, 1.0f);
     }
-
     public void setColor(String color, float alpha) {
         if(color.equals("RED"))
             this.color = new Color(255, 0, 0, alpha);
@@ -128,7 +144,6 @@ public class Zone {
     public Boolean isSelected() {
         return this.selected;
     }
-
     public void setSelected(Boolean selected) {
         this.selected = selected;
     }

@@ -87,11 +87,17 @@ public class ZoneActor extends Actor {
         */
 
         //On dessine les icones des unités.
-        int i = 0;
+        int i = 0, yPos = 0;
         batch.setColor(Color.WHITE);
-        for(Unit unit : zone.getUnits()) {
+        String tmp = null;
+        for(Unit unit : zone.getSortedUnits()) {
             i++;
-            batch.draw(unit.getTexture(), zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2, getOriginX(), getOriginY(), unit.getTexture().getRegionWidth(), unit.getTexture().getRegionHeight(), 0.4f, 0.4f, getRotation());
+            if(tmp == null || !(tmp.equals(unit.getClass().getSimpleName()))) {
+                tmp = unit.getClass().getSimpleName();
+                yPos += 92;
+                i = 1;
+            }
+            batch.draw(unit.getTexture(), zone.getPosition().getX() + 20 * i, zone.getPosition().getY() + (zone.getSize().getY() - yPos - 20), getOriginX(), getOriginY(), 92, 92, getScaleX(), getScaleY(), getRotation());
         }
 
     }
