@@ -60,7 +60,6 @@ public class ZoneActor extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         cosX += 0.05f;
         Player p = zone.getPlayer();
-        CharSequence str = String.valueOf(zone.getID());
 
         batch.setColor(new Color(0, 0, 0, parentAlpha));
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
@@ -78,10 +77,15 @@ public class ZoneActor extends Actor {
         batch.setColor(c);
         batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
                 getWidth() - BORDERSIZE, getHeight() - BORDERSIZE, getScaleX(), getScaleY(), getRotation());
+
         /*
+        ECRIRE LE NUMERO DE LA ZONE AU CENTRE DE L'ECRAN
+
+        CharSequence str = String.valueOf(zone.getID());
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
         */
+
         //On dessine les icones des unités.
         int i = 0;
         batch.setColor(Color.WHITE);
