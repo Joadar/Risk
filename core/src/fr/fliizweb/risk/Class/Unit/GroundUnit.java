@@ -1,5 +1,9 @@
 package fr.fliizweb.risk.Class.Unit;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 /**
  * Created by rcdsm on 28/04/15.
  */
@@ -26,12 +30,24 @@ public class GroundUnit implements Unit {
      */
     protected int def = 1;
 
+    protected TextureRegion textureRegion;
+    protected Texture texture;
+
 
     /**
      * Constructeur Unit
      */
     public GroundUnit() {
+        setTexture("Icons/" + this.getClass().getSimpleName() + ".png");
+    }
 
+    public TextureRegion getTexture() {
+        return textureRegion;
+    }
+
+    public void setTexture(String path) {
+        texture = new Texture(Gdx.files.internal(path));
+        textureRegion = new TextureRegion(texture);
     }
 
 }

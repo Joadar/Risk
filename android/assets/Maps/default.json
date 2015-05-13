@@ -16,13 +16,13 @@
       "units": [
         {
           "type":"Infantry",
-          "number": 3
+          "number": 5
         },
         { "type":"Cavalry",
-          "number": 2
+          "number": 4
         },
         { "type":"Artillery",
-          "number": 1
+          "number": 4
         }
       ],
       "next": [5, 6],
@@ -39,7 +39,7 @@
       "units": [
         {
           "type":"Infantry",
-          "number": 3
+          "number": 6
         },
         { "type":"Cavalry",
           "number": 2
@@ -62,7 +62,7 @@
       "units": [
         {
           "type":"Infantry",
-          "number": 3
+          "number": 6
         },
         { "type":"Cavalry",
           "number": 2
@@ -85,7 +85,7 @@
       "units": [
         {
           "type":"Infantry",
-          "number": 3
+          "number": 5
         },
         { "type":"Cavalry",
           "number": 2

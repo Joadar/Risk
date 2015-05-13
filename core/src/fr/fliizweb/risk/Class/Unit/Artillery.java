@@ -7,4 +7,8 @@ public class Artillery extends GroundUnit {
     protected int value = 10;
     protected int attack = 10;
     protected int def = 2;
+
+    public Artillery() {
+        super();
+    }
 }

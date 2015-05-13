@@ -115,6 +115,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
             zoneShape.setName(String.valueOf(zone.getID()));
             zoneShape.addListener(new ActorGestureListener() {
+
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     super.tap(event, x, y, count, button);
@@ -301,8 +302,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                                     (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/
                                     {
 
-                                        // Pour le test on fait une liste d'unités à déplacer
-                                        ArrayList<Unit> unitsToMove = new ArrayList<Unit>();
                                         // On fait la liste des unités remplis par le formulaire
                                         ArrayList<Unit> formUnits = new ArrayList<Unit>();
 
@@ -331,71 +330,47 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                             }
                                         }
 
-                                        // On récupère les unités dans la zone d'origine
-                                        ArrayList<Unit> totalUnitsZone = finalZ.getUnits();
 
-                                        int totalUnitStay = finalZ.getUnits().size() - 1;
+                                        int totalUnitStay = finalZ.getUnits().size() - formUnits.size();
                                         Color originColor = finalZ.getColor();
                                         if (totalUnitStay == 0) {
                                             finalZ.setColor(colorNeutral);
                                         }
 
-                                        Unit unitToRemove; // L'unité à supprimer
-
-                                        int inf = 0, cav = 0, art = 0;
-
-                                        // Parmi toutes les unités du formulaire de déplacement
-                                        for (int in = 0; in < formUnits.size(); in++) {
-                                            unitToRemove = formUnits.get(in);
-                                            /*
-                                            // Si la class d'une des unité de la zone d'origine est égale à la class de l'unité qui part (ici une infanterie en test)
-                                            if (unitToRemove.getClass().getSimpleName().equals("Infantry")) {
-                                                Gdx.app.log("GameScreen", "Value of textInfantry = " + textInfantry.getText().toString());
-                                                if (inf == Integer.parseInt(textInfantry.getText().toString())) {
-                                                    continue;
-                                                }
-                                                inf++;
-
-                                            } else if (unitsToMove.getClass().getSimpleName().equals("Cavalry")) {
-                                                if (cav == Integer.parseInt(textCavalry.getText().toString())) {
-                                                    continue;
-                                                }
-                                                cav++;
-                                            } else if (unitsToMove.getClass().getSimpleName().equals("Artillery")) {
-                                                if (art == Integer.parseInt(textArtillery.getText().toString())) {
-                                                    continue;
-                                                }
-                                                art++;
-                                            }
-                                            */
-                                            unitsToMove.add(unitToRemove); // On ajoute nos unités à déplacer
-                                        }
+                                        // On récupère les unités dans la zone d'origine
+                                        ArrayList<Unit> totalUnitsZone = finalZ.getUnits();
+                                        //Création d'un liste temporaire clonée à partir des unités à déplacer
+                                        ArrayList<Unit> formUnitsTmp = (ArrayList<Unit>)formUnits.clone();
 
                                         // On met à jour la précédente zone avec le départ des unités
-                                        for (int ttU = 0; ttU < totalUnitsZone.size(); ttU++) {
-                                            for (int utM = 0; utM < unitsToMove.size(); utM++) {
-                                                Unit unitToMove = unitsToMove.get(utM);
-                                                Unit unitInTotal = totalUnitsZone.get(ttU);
+                                        for (int idxTotalUnit = 0; idxTotalUnit < totalUnitsZone.size(); idxTotalUnit++) {
+                                            for (int idxMoveUnit = 0; idxMoveUnit < formUnitsTmp.size(); idxMoveUnit++) {
+                                                Unit unitToMove = formUnitsTmp.get(idxMoveUnit);
+                                                Unit unitInTotal = totalUnitsZone.get(idxTotalUnit);
                                                 if (unitToMove.getClass().getSimpleName().equals(unitInTotal.getClass().getSimpleName())) {
-                                                    Gdx.app.log("unitsToMove", "Hello");
-                                                    totalUnitsZone.remove(ttU);
+                                                    totalUnitsZone.remove(idxTotalUnit);
+                                                    formUnitsTmp.remove(idxMoveUnit); //On enlève les éléments de la liste temporaire
                                                 }
                                             }
                                         }
 
-                                        Gdx.app.log("unitsToMove", "totalUnitsZone fin = " + totalUnitsZone);
-
-                                        //totalUnitsZone.remove(unitToRemove); // Nombre d'unité restante
-
+                                        //On donne à la zone selectionnée les unités restantes
                                         finalZ.setUnits(totalUnitsZone);
-                                        zone.setUnits(unitsToMove);
-                                        zone.setColor(originColor);
-                                        zone.setDefaultColor(zone.getColor());
                                         finalZ.setActive(false);
                                         finalZ.setSelected(false);
+
+                                        //On donne à la nouvelle zone acquise les unités passées dans le formulaire
+                                        zone.setUnits(formUnits);
+                                        //On assigne la couleur à la zone
+                                        zone.setColor(originColor);
+                                        zone.setDefaultColor(zone.getColor());
+                                        //On désactive la zone & on déselectionne
                                         zone.setActive(false);
                                         zone.setSelected(false);
+
+                                        //On désactive toutes les zones de la map
                                         map.desactiveZones();
+                                        //On donne une zone inexistante comme zone selectionnée
                                         map.setZoneSelected(0);
                                     }
                                     else

@@ -7,4 +7,8 @@ public class Cavalry extends GroundUnit {
     protected int value = 5;
     protected int attack = 4;
     protected int def = 3;
+
+    public Cavalry() {
+        super();
+    }
 }

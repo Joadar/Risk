@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Player.PlayerColor;
+import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 
 /**
@@ -68,17 +69,26 @@ public class ZoneActor extends Actor {
         Color c = zone.getColor();
         c.a = 1.0f;
 
-        if(zone.isActive()) {
-            c.a = 0.7f;
-        }
+        if(zone.isActive())
+            c.a = Math.abs(MathUtils.cos(cosX * 2)) / 2 + 0.5f;
 
         if(zone.isSelected())
-            c.a = Math.abs(MathUtils.cos(cosX * 2)) / 2 + 0.5f;
+            c.a = 0.5f;
 
         batch.setColor(c);
         batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
                 getWidth() - BORDERSIZE, getHeight() - BORDERSIZE, getScaleX(), getScaleY(), getRotation());
+        /*
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
+        */
+        //On dessine les icones des unités.
+        int i = 0;
+        batch.setColor(Color.WHITE);
+        for(Unit unit : zone.getUnits()) {
+            i++;
+            batch.draw(unit.getTexture(), zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2, getOriginX(), getOriginY(), unit.getTexture().getRegionWidth(), unit.getTexture().getRegionHeight(), 0.4f, 0.4f, getRotation());
+        }
+
     }
 }
