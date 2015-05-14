@@ -327,11 +327,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                             }
                                         }
 
+                                        //Couleur de la zone d'origine
                                         Color originColor = finalZ.getColor();
+
                                         Gdx.app.log("final", "getUnits.size = " + finalZ.getUnits().size() + " || forumUnits.size = " + formUnits.size());
                                         if (countUnitCurrentZone - formUnits.size() <= 0) {
                                             finalZ.setPlayer(null);
-                                            finalZ.setColor(colorNeutral);
+                                            finalZ.setColor(Color.WHITE);
                                         }
 
                                         //On donne à la zone selectionnée les unités restantes

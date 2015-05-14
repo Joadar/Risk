@@ -123,21 +123,23 @@ public class Zone {
     }
     public void setColor(String color, float alpha) {
         if(color.equals("RED"))
-            this.color = new Color(255, 0, 0, alpha);
+            this.color = Color.RED;
         else if(color.equals("GREEN"))
-            this.color = new Color(0, 255, 0, alpha);
+            this.color = Color.GREEN;
         else if (color.equals("BLUE"))
-            this.color = new Color(0, 0, 255, alpha);
+            this.color = Color.BLUE;
         else if (color.equals("YELLOW"))
-            this.color = new Color(255, 255, 0, alpha);
+            this.color = Color.YELLOW;
         else if (color.equals("MAJENTA"))
-            this.color = new Color(255, 0, 255, alpha);
+            this.color = Color.MAGENTA;
         else if (color.equals("PURPLE"))
-            this.color = new Color(128, 0, 128, alpha);
+            this.color = Color.PURPLE;
         else if (color.equals("NEUTRAL"))
-            this.color = new Color(200, 200, 200, alpha);
+            this.color = Color.WHITE;
         else if (color.equals("WHITE"))
-            this.color = new Color(255, 255, 255, alpha);
+            this.color = Color.WHITE;
+
+        this.color.a = alpha;
     }
 
     public Boolean isSelected() {
