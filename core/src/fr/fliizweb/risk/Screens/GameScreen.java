@@ -195,7 +195,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 table.add(label).width(150).padTop(10).padBottom(3);
 
                                 //TextField
-                                final TextField text = new TextField("0", skin);
+                                final Label text = new Label("0", skin);
                                 textFields.put(key.toString(), text); //Stockage du TextField dans notre Hashtable de textfields.
                                 table.add(text).width(50).height(50);
 
@@ -203,19 +203,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 Label total = new Label("/" + ht.get(key), skin);
                                 total.setFontScale(2);
                                 table.add(total).width(50).height(50);
-
-                                TextButton BtnAdd = new TextButton("+", skin);
-                                BtnAdd.addListener(new InputListener() {
-                                    @Override
-                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                        int value = Integer.parseInt(text.getText().toString());
-                                        if (value < (Integer) ht.get(key))
-                                            value++;
-                                        text.setText(String.valueOf(value));
-                                        return super.touchDown(event, x, y, pointer, button);
-                                    }
-                                });
-                                table.add(BtnAdd).width(50).height(50);
 
                                 TextButton BtnDel = new TextButton("-", skin);
                                 BtnDel.addListener(new InputListener() {
@@ -231,6 +218,19 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     }
                                 });
                                 table.add(BtnDel).width(50).height(50);
+
+                                TextButton BtnAdd = new TextButton("+", skin);
+                                BtnAdd.addListener(new InputListener() {
+                                    @Override
+                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                        int value = Integer.parseInt(text.getText().toString());
+                                        if (value < (Integer) ht.get(key))
+                                            value++;
+                                        text.setText(String.valueOf(value));
+                                        return super.touchDown(event, x, y, pointer, button);
+                                    }
+                                });
+                                table.add(BtnAdd).width(50).height(50);
 
                                 table.row(); // On revient à la ligne dans le tableau
                             }
@@ -255,9 +255,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 public void clicked(InputEvent event, float x, float y) {
                                     int counter = 0;
                                     int unitsInZone = 0;
-                                    TextField text;
+                                    Label text;
                                     for (Object key : textFields.keySet()) {
-                                        text = (TextField) textFields.get(key);
+                                        text = (Label) textFields.get(key);
                                         counter += Integer.parseInt(text.getText().toString());
                                         unitsInZone += (Integer) ht.get(key) - Integer.parseInt(text.getText().toString());
                                     }
@@ -291,7 +291,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                                         // On fait la liste des unités à déplacer
                                         for (Object key : textFields.keySet()) {
-                                            text = (TextField) textFields.get(key);
+                                            text = (Label) textFields.get(key);
                                             for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
                                                 try {
                                                     Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
@@ -312,7 +312,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                                             }
                                                         }
                                                     }
-
                                                 } catch (NoSuchMethodException e1) {
                                                     e1.printStackTrace();
                                                 } catch (InvocationTargetException e1) {
