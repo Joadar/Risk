@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
@@ -50,7 +49,7 @@ public class Zone {
         Units.removeAll(unitsToRemove);
         //Gros problème ici... La liste ne se supprime pas comme il faut.
         // BREF faut juste bosser ce point et c'est parfait :)
-        Gdx.app.log("GameScreen", "Units " + Units);
+        Gdx.app.log("GameScreen", "unitsToRemove = " + unitsToRemove + " ||  Units = "  + Units);
         return Units;
     }
 

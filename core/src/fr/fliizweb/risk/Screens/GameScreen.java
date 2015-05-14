@@ -2,7 +2,6 @@ package fr.fliizweb.risk.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,18 +13,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -36,23 +27,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Unit.Artillery;
-import fr.fliizweb.risk.Class.Unit.Cavalry;
-import fr.fliizweb.risk.Class.Unit.Infantry;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
-import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
 
@@ -315,7 +299,20 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                                     Constructor constructor = tmp.getConstructor(types);
                                                     Object[] params = {};
                                                     Object instanceOfUnit = constructor.newInstance(params);
-                                                    formUnits.add((Unit)instanceOfUnit);
+                                                    //formUnits.add((Unit)instanceOfUnit);
+
+                                                    int uu = 0;
+                                                    for(int ii = 0; ii < finalZ.getUnits().size(); ii++){
+                                                        Unit anUnit = finalZ.getUnits().get(ii);
+                                                        if(anUnit.getClass().getSimpleName().equals(key.toString())){
+                                                            if(uu == 0){
+                                                                formUnits.add(anUnit);
+                                                                finalZ.removeUnits(formUnits);
+                                                                uu++;
+                                                            }
+                                                        }
+                                                    }
+
                                                 } catch (NoSuchMethodException e1) {
                                                     e1.printStackTrace();
                                                 } catch (InvocationTargetException e1) {
@@ -385,7 +382,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                         // On ajoute le formulaire au stage
                         stage.addActor(table);
-                        Gdx.app.log("GameScreen", "validForm = " + validForm);
 
                         // Si on a cliqué sur le bouton "valider"
                         if (validForm) {
