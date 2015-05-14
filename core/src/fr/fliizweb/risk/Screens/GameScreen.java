@@ -103,39 +103,17 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                 @Override
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     super.tap(event, x, y, count, button);
-                    Boolean loop = false;
-                    int[] zones = zone.getNextZones();
-                    ArrayList<Zone> nextZones = new ArrayList<Zone>();
+                    int[] nextZonesID = zone.getNextZones();
+                    //ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
 
                     //Si aucune zone n'est selectionnée
                     if (!map.isZoneSelected() && !showForm) {
-                        zone.setSelected(true);
-                        map.setZoneSelected(zone.getID());
-                        for (int i = 0; i < stageActors.size; i++) {
-                            Actor zoneActor = stageActors.get(i);
-                            for (int j = 0; j < zones.length; j++) {
-                                if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
-                                    Zone z = map.getZoneByID(zones[j]);
-                                    z.setActive(true);
-                                }
-                            }
-                        }
+                        selectZone(zone, nextZonesID, stageActors);
                     } else { //Dans le cas où une zone est selectionnée
                         if (zone.getID() == map.getZoneSelected() && !showForm) { //Si la zone tapée est la même que celle selectionnée
                             //On désélectionne toutes les zones actives
-                            map.setZoneSelected(0);
-                            zone.setSelected(false);
-                            zone.setColor(zone.getDefaultColor());
-                            for (int i = 0; i < stageActors.size; i++) {
-                                Actor zoneActor = stageActors.get(i);
-                                for (int j = 0; j < zones.length; j++) {
-                                    if (zoneActor.getName().equals(String.valueOf(zones[j]))) {
-                                        Zone z = map.getZoneByID(zones[j]);
-                                        z.setActive(false);
-                                    }
-                                }
-                            }
+                            unselectZone(zone, nextZonesID, stageActors);
                         } else if (zone.isActive()) { //Si la zone selectionnée est une zone active
                             Zone z = map.getZone(0);
                             if (!showForm) {
@@ -403,6 +381,35 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
+    private void unselectZone(Zone selectedZone, int[] nextZonesID, Array<Actor> stageActors) {
+        map.setZoneSelected(0);
+        selectedZone.setSelected(false);
+        selectedZone.setColor(selectedZone.getDefaultColor());
+        for (int i = 0; i < stageActors.size; i++) {
+            Actor zoneActor = stageActors.get(i);
+            for (int j = 0; j < nextZonesID.length; j++) {
+                if (zoneActor.getName().equals(String.valueOf(nextZonesID[j]))) {
+                    Zone z = map.getZoneByID(nextZonesID[j]);
+                    z.setActive(false);
+                }
+            }
+        }
+    }
+
+    private void selectZone(Zone selectedZone, int[] nextZonesID, Array<Actor> stageActors) {
+        selectedZone.setSelected(true);
+        map.setZoneSelected(selectedZone.getID());
+        for (int i = 0; i < stageActors.size; i++) {
+            Actor zoneActor = stageActors.get(i);
+            for (int j = 0; j < nextZonesID.length; j++) {
+                if (zoneActor.getName().equals(String.valueOf(nextZonesID[j]))) {
+                    Zone z = map.getZoneByID(nextZonesID[j]);
+                    z.setActive(true);
+                }
+            }
+        }
     }
 
     @Override
