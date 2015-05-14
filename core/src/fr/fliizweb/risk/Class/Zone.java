@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
@@ -61,6 +62,21 @@ public class Zone {
 
     public void setUnits(ArrayList<Unit> units) { this.Units = units; }
     public ArrayList<Unit> getUnits() { return this.Units; }
+    public Hashtable getUnitsHashtable() {
+        //Création d'un Hashtable pour stocker temporairement les unités présentes sur la zone.
+        final Hashtable ht = new Hashtable();
+
+        // Parmi toutes les unités de la zone d'origine
+        // Génération automatique des unités dans le hashtable (ht)
+        for (int in = 0; in < this.getUnits().size(); in++) {
+            Unit unitDetail = this.getUnit(in);
+            if (ht.containsKey(unitDetail.getClass().getSimpleName()))
+                ht.put(unitDetail.getClass().getSimpleName(), (Integer) (ht.get(unitDetail.getClass().getSimpleName())) + 1);
+            else
+                ht.put(unitDetail.getClass().getSimpleName(), 1);
+        }
+        return ht;
+    }
     public ArrayList<Unit> getSortedUnits() {
         //Sorting
         Collections.sort(Units, new Comparator<Unit>() {

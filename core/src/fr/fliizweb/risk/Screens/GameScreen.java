@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -104,11 +105,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                 public void tap(InputEvent event, float x, float y, int count, int button) {
                     super.tap(event, x, y, count, button);
                     int[] nextZonesID = zone.getNextZones();
-                    //ArrayList<Zone> nextZones = new ArrayList<Zone>();
                     Array<Actor> stageActors = stage.getActors();
 
                     //Si aucune zone n'est selectionnée
                     if (!map.isZoneSelected() && !showForm) {
+                        //On selectionne la zone.
                         selectZone(zone, nextZonesID, stageActors);
                     } else { //Dans le cas où une zone est selectionnée
                         if (zone.getID() == map.getZoneSelected() && !showForm) { //Si la zone tapée est la même que celle selectionnée
@@ -123,20 +124,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             final Zone finalZ = z;
                             final int countUnitCurrentZone = finalZ.getUnits().size();
 
-                            final Color colorNeutral = new Color(200, 200, 200, 0.6f);
-
-                            //Création d'un Hashtable pour stocker temporairement les unités présentes sur la zone.
-                            final Hashtable ht = new Hashtable();
-
-                            // Parmi toutes les unités de la zone d'origine
-                            // Génération automatique des unités dans le hashtable (ht)
-                            for (int in = 0; in < z.getUnits().size(); in++) {
-                                Unit unitDetail = z.getUnit(in);
-                                if (ht.containsKey(unitDetail.getClass().getSimpleName()))
-                                    ht.put(unitDetail.getClass().getSimpleName(), (Integer) (ht.get(unitDetail.getClass().getSimpleName())) + 1);
-                                else
-                                    ht.put(unitDetail.getClass().getSimpleName(), 1);
-                            }
+                            final Hashtable ht = z.getUnitsHashtable();
 
                             //On affiche le formulaire
                             showForm = true;
@@ -146,89 +134,35 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                             final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
                             table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
-                            table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // On met la taille de la table à celle de l'écran
+                            table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
+                            table.setPosition(30, 30);
 
                             camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
-                            // Pixmap ? C'est une bonne question ^
-                            // On ne sais toujours pas à quoi ça sert mais c'est la pour une bonne raison :D
                             Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-                            pm1.setColor(new Color(0f, 0f, 0f, 0f));
+                            pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
                             pm1.fill();
                             table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-                            /*
-                             * Hashtable de TextField
-                             * Permet de stocker les textfields en fonction des unités disponibles sur la zone.
-                             *
-                             * ex : Si dans la zone il n'existe que des Artillery, nous n'auront que le champ artillery
-                             * */
+                            // Permet de stocker les textfields en fonction des unités disponibles sur la zone.
                             final Hashtable textFields = new Hashtable();
 
                             // Boucle pour afficher le tableau d'unités du formulaire.
                             for (final Object key : ht.keySet()) {
-                                // Label
-                                Label label = new Label(key.toString(), skin);
-                                label.setFontScale(2);
-                                table.add(label).width(150).padTop(10).padBottom(3);
-
-                                //TextField
-                                final Label text = new Label("0", skin);
-                                text.setFontScale(2);
-                                textFields.put(key.toString(), text); //Stockage du TextField dans notre Hashtable de textfields.
-                                table.add(text).width(50).height(50);
-
-                                // Nombre d'unités disponibles - Valeur récupérée du HashTable ht.
-                                Label total = new Label("/" + ht.get(key), skin);
-                                total.setFontScale(2);
-                                table.add(total).width(50).height(50);
-
-                                TextButton BtnDel = new TextButton("-", skin);
-                                BtnDel.addListener(new InputListener() {
-
-                                    @Override
-                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                        super.touchUp(event, x, y, pointer, button);
-                                        int value = Integer.parseInt(text.getText().toString());
-                                        if (value > 0)
-                                            value--;
-                                        text.setText(String.valueOf(value));
-                                        return super.touchDown(event, x, y, pointer, button);
-                                    }
-                                });
-                                table.add(BtnDel).width(50).height(50);
-
-                                TextButton BtnAdd = new TextButton("+", skin);
-                                BtnAdd.addListener(new InputListener() {
-                                    @Override
-                                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                        int value = Integer.parseInt(text.getText().toString());
-                                        if (value < (Integer) ht.get(key))
-                                            value++;
-                                        text.setText(String.valueOf(value));
-                                        return super.touchDown(event, x, y, pointer, button);
-                                    }
-                                });
-                                table.add(BtnAdd).width(50).height(50);
-
-                                table.row(); // On revient à la ligne dans le tableau
+                                addTableLine(table, key, ht, textFields, skin);
                             }
 
                             // Le bouton valider
+                            /*
                             BitmapFont font = new BitmapFont();
                             font.getData().scale(1.7f);
                             TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
                             style.font = font;
-
-                            /*
-                             * ATTENTION
-                             * Dans le cas du bleu c'est pas vraiment lisible...
-                             * Mais le principe est cool
-                             */
                             style.fontColor = new Color(z.getDefaultColor());
-
+                            */
                             TextButton valid = new TextButton("Valider", skin);
-                            valid.setStyle(style);
+                            valid.setColor(Color.RED);
+                            //valid.setStyle(style);
                             valid.addListener(new ClickListener() {
                                 @Override
                                 public void clicked(InputEvent event, float x, float y) {
@@ -343,10 +277,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 }
                             });
 
-                            table.add(valid).width(400).height(80).padTop(10);
+                            table.add(valid).width(300).height(60).padTop(30).padRight(5);
 
                             TextButton close = new TextButton("Annuler", skin);
-                            close.setStyle(style);
+                            //close.setStyle(style);
                             close.addListener(new ClickListener() {
                                 @Override
                                 public void clicked(InputEvent event, float x, float y) {
@@ -357,7 +291,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     Gdx.input.setOnscreenKeyboardVisible(false);
                                 }
                             });
-                            table.add(close).width(80).height(80).padTop(10);
+                            table.add(close).width(120).height(60).padTop(30);
 
                             table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
 
@@ -381,6 +315,55 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
+    private void addTableLine(Table T, final Object key, final Hashtable ht, Hashtable textFields, Skin skin) {
+        // Label
+        Label label = new Label(key.toString(), skin);
+        label.setFontScale(2);
+        label.setAlignment(Align.left);
+        T.add(label).width(200).padTop(10).padBottom(3);
+
+        //TextField
+        final Label text = new Label("0", skin);
+        text.setFontScale(2);
+        textFields.put(key.toString(), text); //Stockage du TextField dans notre Hashtable de textfields.
+        T.add(text).width(50).height(50);
+
+        // Nombre d'unités disponibles - Valeur récupérée du HashTable ht.
+        Label total = new Label("/" + ht.get(key), skin);
+        total.setFontScale(2);
+        T.add(total).width(50).height(50);
+
+        TextButton BtnDel = new TextButton("-", skin);
+        BtnDel.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                int value = Integer.parseInt(text.getText().toString());
+                if (value > 0)
+                    value--;
+                text.setText(String.valueOf(value));
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+        T.add(BtnDel).width(50).height(50);
+
+        TextButton BtnAdd = new TextButton("+", skin);
+        BtnAdd.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                int value = Integer.parseInt(text.getText().toString());
+                if (value < (Integer) ht.get(key))
+                    value++;
+                text.setText(String.valueOf(value));
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+        T.add(BtnAdd).width(50).height(50);
+
+        T.row(); // On revient à la ligne dans le tableau
     }
 
     private void unselectZone(Zone selectedZone, int[] nextZonesID, Array<Actor> stageActors) {
