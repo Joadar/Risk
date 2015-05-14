@@ -196,6 +196,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                                 //TextField
                                 final Label text = new Label("0", skin);
+                                text.setFontScale(2);
                                 textFields.put(key.toString(), text); //Stockage du TextField dans notre Hashtable de textfields.
                                 table.add(text).width(50).height(50);
 
@@ -246,7 +247,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                              * Dans le cas du bleu c'est pas vraiment lisible...
                              * Mais le principe est cool
                              */
-                            style.fontColor = new Color(z.getColor());
+                            style.fontColor = new Color(z.getDefaultColor());
 
                             TextButton valid = new TextButton("Valider", skin);
                             valid.setStyle(style);
