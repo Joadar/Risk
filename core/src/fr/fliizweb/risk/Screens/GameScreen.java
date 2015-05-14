@@ -143,6 +143,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                             }
 
                             final Zone finalZ = z;
+                            final int countUnitCurrentZone = finalZ.getUnits().size();
 
                             final Color colorNeutral = new Color(200, 200, 200, 0.6f);
 
@@ -208,7 +209,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     @Override
                                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                                         int value = Integer.parseInt(text.getText().toString());
-                                        if(value < (Integer) ht.get(key))
+                                        if (value < (Integer) ht.get(key))
                                             value++;
                                         text.setText(String.valueOf(value));
                                         return super.touchDown(event, x, y, pointer, button);
@@ -223,7 +224,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                                         super.touchUp(event, x, y, pointer, button);
                                         int value = Integer.parseInt(text.getText().toString());
-                                        if(value > 0)
+                                        if (value > 0)
                                             value--;
                                         text.setText(String.valueOf(value));
                                         return super.touchDown(event, x, y, pointer, button);
@@ -280,11 +281,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     validForm = true;
 
                                     // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                                    if((zone.getColor() == finalZ.getColor()) ||
+                                    if ((zone.getColor() == finalZ.getColor()) ||
                                             zone.getPlayer() == null)
                                             /*(zone.getColor().equals(colorNeutral) ||
-                                                    (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/
-                                    {
+                                                    (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/ {
 
                                         // On fait la liste des unités remplis par le formulaire
                                         ArrayList<Unit> formUnits = new ArrayList<Unit>();
@@ -292,7 +292,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         // On fait la liste des unités à déplacer
                                         for (Object key : textFields.keySet()) {
                                             text = (TextField) textFields.get(key);
-                                            for(int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
+                                            for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
                                                 try {
                                                     Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
                                                     Class[] types = {};
@@ -302,10 +302,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                                     //formUnits.add((Unit)instanceOfUnit);
 
                                                     int uu = 0;
-                                                    for(int ii = 0; ii < finalZ.getUnits().size(); ii++){
+                                                    for (int ii = 0; ii < finalZ.getUnits().size(); ii++) {
                                                         Unit anUnit = finalZ.getUnits().get(ii);
-                                                        if(anUnit.getClass().getSimpleName().equals(key.toString())){
-                                                            if(uu == 0){
+                                                        if (anUnit.getClass().getSimpleName().equals(key.toString())) {
+                                                            if (uu == 0) {
                                                                 formUnits.add(anUnit);
                                                                 finalZ.removeUnits(formUnits);
                                                                 uu++;
@@ -328,7 +328,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         }
 
                                         Color originColor = finalZ.getColor();
-                                        if (finalZ.getUnits().size() - formUnits.size() == 0) {
+                                        Gdx.app.log("final", "getUnits.size = " + finalZ.getUnits().size() + " || forumUnits.size = " + formUnits.size());
+                                        if (countUnitCurrentZone - formUnits.size() <= 0) {
                                             finalZ.setPlayer(null);
                                             finalZ.setColor(colorNeutral);
                                         }
@@ -337,6 +338,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         finalZ.removeUnits(formUnits);
                                         finalZ.setActive(false);
                                         finalZ.setSelected(false);
+
+                                        formUnits.addAll(zone.getUnits());
 
                                         //On donne à la nouvelle zone acquise les unités passées dans le formulaire
                                         zone.setUnits(formUnits);
@@ -351,47 +354,45 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         map.desactiveZones();
                                         //On donne une zone inexistante comme zone selectionnée
                                         map.setZoneSelected(0);
-                                    }
-                                    else
-                                    { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
+                                    } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
 
                                     }
 
-                                // On retire le keyboard dans tous les cas
-                                Gdx.input.setOnscreenKeyboardVisible(false);
+                                    // On retire le keyboard dans tous les cas
+                                    Gdx.input.setOnscreenKeyboardVisible(false);
+                                }
+                            });
+
+                            table.add(valid).width(400).height(80).padTop(10);
+
+                            TextButton close = new TextButton("Annuler", skin);
+                            close.setStyle(style);
+                            close.addListener(new ClickListener() {
+                                @Override
+                                public void clicked(InputEvent event, float x, float y) {
+                                    table.remove();
+                                    camera.zoom = 2.0f;
+                                    showForm = false;
+                                    validForm = false;
+                                    Gdx.input.setOnscreenKeyboardVisible(false);
+                                }
+                            });
+                            table.add(close).width(80).height(80).padTop(10);
+
+                            table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
+
+                            // On ajoute le formulaire au stage
+                            stage.addActor(table);
+
+                            // Si on a cliqué sur le bouton "valider"
+                            if (validForm) {
+
+                            } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
+
                             }
-                        });
-
-                        table.add(valid).width(400).height(80).padTop(10);
-
-                        TextButton close = new TextButton("Annuler", skin);
-                        close.setStyle(style);
-                        close.addListener(new ClickListener() {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                table.remove();
-                                camera.zoom = 2.0f;
-                                showForm = false;
-                                validForm = false;
-                                Gdx.input.setOnscreenKeyboardVisible(false);
-                            }
-                        });
-                        table.add(close).width(80).height(80).padTop(10);
-
-                        table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
-
-                        // On ajoute le formulaire au stage
-                        stage.addActor(table);
-
-                        // Si on a cliqué sur le bouton "valider"
-                        if (validForm) {
-
-                        } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
-
                         }
                     }
                 }
-            }
         });
             stage.addActor(zoneShape);
         }
