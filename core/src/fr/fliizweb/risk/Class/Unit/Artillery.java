@@ -11,4 +11,11 @@ public class Artillery extends GroundUnit {
     public Artillery() {
         super();
     }
+
+
+    public int getAttack() { return attack; }
+
+    public int getDef() { return def; }
+
+    public int getValue() { return value; }
 }

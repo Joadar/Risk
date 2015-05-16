@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -35,6 +34,7 @@ import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
+import fr.fliizweb.risk.Class.Unit.GroundUnit;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
@@ -259,54 +259,62 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     showForm = false;
                                     validForm = true;
 
+                                    // On fait la liste des unités remplis par le formulaire
+                                    ArrayList<Unit> formUnits = new ArrayList<Unit>();
+
+                                    // On fait la liste des unités à déplacer
+                                    for (Object key : textFields.keySet()) {
+                                        text = (Label) textFields.get(key);
+                                        for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
+                                            try {
+                                                Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
+                                                Class[] types = {};
+                                                Constructor constructor = tmp.getConstructor(types);
+                                                Object[] params = {};
+                                                Object instanceOfUnit = constructor.newInstance(params);
+                                                //formUnits.add((Unit)instanceOfUnit);
+
+                                                int uu = 0;
+                                                for (int ii = 0; ii < finalZ.getUnits().size(); ii++) {
+                                                    Unit anUnit = finalZ.getUnits().get(ii);
+                                                    if (anUnit.getClass().getSimpleName().equals(key.toString())) {
+                                                        if (uu == 0) {
+                                                            formUnits.add(anUnit);
+                                                            /*if ((zone.getColor() == finalZ.getColor()) ||
+                                                                    zone.getPlayer() == null) {*/
+                                                                finalZ.removeUnits(formUnits);
+                                                            //}
+                                                            uu++;
+
+                                                        }
+                                                    }
+                                                }
+                                            } catch (NoSuchMethodException e1) {
+                                                e1.printStackTrace();
+                                            } catch (InvocationTargetException e1) {
+                                                e1.printStackTrace();
+                                            } catch (InstantiationException e1) {
+                                                e1.printStackTrace();
+                                            } catch (IllegalAccessException e1) {
+                                                e1.printStackTrace();
+                                            } catch (ClassNotFoundException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+                                    }
+
                                     // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
                                     if ((zone.getColor() == finalZ.getColor()) ||
                                             zone.getPlayer() == null)
                                             /*(zone.getColor().equals(colorNeutral) ||
                                                     (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/ {
 
-                                        // On fait la liste des unités remplis par le formulaire
-                                        ArrayList<Unit> formUnits = new ArrayList<Unit>();
-
-                                        // On fait la liste des unités à déplacer
-                                        for (Object key : textFields.keySet()) {
-                                            text = (Label) textFields.get(key);
-                                            for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
-                                                try {
-                                                    Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
-                                                    Class[] types = {};
-                                                    Constructor constructor = tmp.getConstructor(types);
-                                                    Object[] params = {};
-                                                    Object instanceOfUnit = constructor.newInstance(params);
-                                                    //formUnits.add((Unit)instanceOfUnit);
-
-                                                    int uu = 0;
-                                                    for (int ii = 0; ii < finalZ.getUnits().size(); ii++) {
-                                                        Unit anUnit = finalZ.getUnits().get(ii);
-                                                        if (anUnit.getClass().getSimpleName().equals(key.toString())) {
-                                                            if (uu == 0) {
-                                                                formUnits.add(anUnit);
-                                                                finalZ.removeUnits(formUnits);
-                                                                uu++;
-                                                            }
-                                                        }
-                                                    }
-                                                } catch (NoSuchMethodException e1) {
-                                                    e1.printStackTrace();
-                                                } catch (InvocationTargetException e1) {
-                                                    e1.printStackTrace();
-                                                } catch (InstantiationException e1) {
-                                                    e1.printStackTrace();
-                                                } catch (IllegalAccessException e1) {
-                                                    e1.printStackTrace();
-                                                } catch (ClassNotFoundException e1) {
-                                                    e1.printStackTrace();
-                                                }
-                                            }
-                                        }
 
                                         //Couleur de la zone d'origine
                                         Color originColor = finalZ.getColor();
+
+                                        // On assigne le joueur à la zone
+                                        zone.setPlayer(finalZ.getPlayer());
 
                                         Gdx.app.log("final", "getUnits.size = " + finalZ.getUnits().size() + " || forumUnits.size = " + formUnits.size());
                                         if (countUnitCurrentZone - formUnits.size() <= 0) {
@@ -335,6 +343,60 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         //On donne une zone inexistante comme zone selectionnée
                                         map.setZoneSelected(0);
                                     } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
+
+                                        ArrayList<Unit> attacker = formUnits;
+                                        ArrayList<Unit> defender = zone.getUnits();
+                                        int powerAttack = 0;
+                                        int powerDefense = 0;
+
+                                        // On récupère la valeur d'attaque générale sans bonus (dès)
+                                        for (int nbAt = 0; nbAt < formUnits.size(); nbAt++) {
+                                            GroundUnit unit = (GroundUnit) formUnits.get(nbAt);
+                                            powerAttack += unit.getAttack();
+                                        }
+
+                                        // On récupère la valeur de défense générale sans bonus (dès)
+                                        for (int nbDef = 0; nbDef < zone.getUnits().size(); nbDef++) {
+                                            GroundUnit unit = (GroundUnit) zone.getUnits().get(nbDef);
+                                            powerDefense += unit.getDef();
+                                        }
+
+                                        Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
+
+                                        int diffAtDef = powerAttack - powerDefense;
+
+                                        // Si l'attaquant est plus fort que le défenseur
+                                        if (diffAtDef > 0) {
+                                            // On retire les troupes adverses
+                                            zone.getUnits().clear();
+
+                                            // On déplace ses troupes conquérentes
+                                            finalZ.getUnits().removeAll(formUnits);
+                                            zone.setUnits(formUnits);
+
+                                            zone.setPlayer(finalZ.getPlayer());
+                                            zone.setColor(finalZ.getColor());
+                                            zone.setDefaultColor(finalZ.getColor());
+
+                                            if (finalZ.getUnits().size() - formUnits.size() < 0) {
+                                                finalZ.setPlayer(null);
+                                                finalZ.setColor(Color.WHITE);
+                                            }
+                                        } else { // Si le défenseur est plus fort que l'attaquant
+                                            // On retire les troupes de l'attaquant
+                                            finalZ.getUnits().clear();
+                                            finalZ.setPlayer(null);
+                                            finalZ.setColor(Color.WHITE);
+                                        }
+
+                                        //On désactive la zone & on déselectionne
+                                        finalZ.setActive(false);
+                                        finalZ.setSelected(false);
+
+                                        //On désactive toutes les zones de la map
+                                        map.desactiveZones();
+                                        //On donne une zone inexistante comme zone selectionnée
+                                        map.setZoneSelected(0);
 
                                     }
 
@@ -373,7 +435,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                         }
                     }
                 }
-        });
+            });
             stage.addActor(zoneShape);
         }
 
