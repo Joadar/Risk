@@ -243,89 +243,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                             /*(zone.getColor().equals(colorNeutral) ||
                                                     (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/ {
 
-
-                                        //Couleur de la zone d'origine
-                                        Color originColor = finalZ.getColor();
-
-                                        // On assigne le joueur à la zone
-                                        zone.setPlayer(finalZ.getPlayer());
-
-                                        Gdx.app.log("final", "getUnits.size = " + finalZ.getUnits().size() + " || forumUnits.size = " + formUnits.size());
-                                        if (countUnitCurrentZone - formUnits.size() <= 0) {
-                                            finalZ.setPlayer(null);
-                                            finalZ.setColor(Color.WHITE);
-                                        }
-
-                                        //On donne à la zone selectionnée les unités restantes
-                                        finalZ.removeUnits(formUnits);
-                                        finalZ.setActive(false);
-                                        finalZ.setSelected(false);
-
-                                        formUnits.addAll(zone.getUnits());
-
-                                        //On donne à la nouvelle zone acquise les unités passées dans le formulaire
-                                        zone.setUnits(formUnits);
-                                        //On assigne la couleur à la zone
-                                        zone.setColor(originColor);
-                                        zone.setDefaultColor(zone.getColor());
-                                        //On désactive la zone & on déselectionne
-                                        zone.setActive(false);
-                                        zone.setSelected(false);
-
-                                        //On désactive toutes les zones de la map
-                                        map.desactiveZones();
-                                        //On donne une zone inexistante comme zone selectionnée
-                                        map.setZoneSelected(0);
+                                        moveTo(finalZ, zone, formUnits);
                                     } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
-
-                                        ArrayList<Unit> attacker = formUnits;
-                                        ArrayList<Unit> defender = zone.getUnits();
-                                        int powerAttack = 0;
-                                        int powerDefense = 0;
-
-                                        // On récupère la valeur d'attaque générale sans bonus (dès)
-                                        for (int idxATK = 0; idxATK < formUnits.size(); idxATK++)
-                                            powerAttack = formUnits.get(idxATK).getAttack();
-
-                                        // On récupère la valeur de défense générale sans bonus (dès)
-                                        for (int idxDEF = 0; idxDEF < zone.getUnits().size(); idxDEF++)
-                                            powerDefense = zone.getUnits().get(idxDEF).getDef();
-
-                                        Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
-
-                                        // Si l'attaquant est plus fort que le défenseur
-                                        if (powerAttack - powerDefense > 0) {
-                                            // On retire les troupes adverses
-                                            zone.getUnits().clear();
-
-                                            // On déplace ses troupes conquérentes
-                                            finalZ.getUnits().removeAll(formUnits);
-                                            zone.setUnits(formUnits);
-
-                                            zone.setPlayer(finalZ.getPlayer());
-                                            zone.setColor(finalZ.getColor());
-                                            zone.setDefaultColor(finalZ.getColor());
-
-                                            if (finalZ.getUnits().size() - formUnits.size() < 0) {
-                                                finalZ.setPlayer(null);
-                                                finalZ.setColor(Color.WHITE);
-                                            }
-                                        } else { // Si le défenseur est plus fort que l'attaquant
-                                            // On retire les troupes de l'attaquant
-                                            finalZ.getUnits().clear();
-                                            finalZ.setPlayer(null);
-                                            finalZ.setColor(Color.WHITE);
-                                        }
-
-                                        //On désactive la zone & on déselectionne
-                                        finalZ.setActive(false);
-                                        finalZ.setSelected(false);
-
-                                        //On désactive toutes les zones de la map
-                                        map.desactiveZones();
-                                        //On donne une zone inexistante comme zone selectionnée
-                                        map.setZoneSelected(0);
-
+                                        doAttack(formUnits, finalZ, zone);
                                     }
 
                                     // On retire le keyboard dans tous les cas
@@ -371,6 +291,93 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
+    private void moveTo(Zone zoneFrom, Zone zoneTo, ArrayList<Unit> units) {
+        //Couleur de la zone d'origine
+        Color originColor = zoneFrom.getColor();
+
+        // On assigne le joueur à la zone
+        zoneTo.setPlayer(zoneFrom.getPlayer());
+
+        Gdx.app.log("final", "getUnits.size = " + zoneFrom.getUnits().size() + " || forumUnits.size = " + units.size());
+        //Si la zone de départ devient vide.
+        if (zoneFrom.getUnits().size() - units.size() <= 0) {
+            zoneFrom.setPlayer(null);
+            zoneFrom.setColor(Color.WHITE);
+        }
+
+        //On donne à la zoneTo selectionnée les unités restantes
+        zoneFrom.removeUnits(units);
+        zoneFrom.setActive(false);
+        zoneFrom.setSelected(false);
+
+        units.addAll(zoneTo.getUnits());
+
+        //On donne à la nouvelle zone acquise les unités passées dans le formulaire
+        zoneTo.setUnits(units);
+        //On assigne la couleur à la zone
+        zoneTo.setColor(originColor);
+        zoneTo.setDefaultColor(zoneTo.getColor());
+        //On désactive la zone & on déselectionne
+        zoneTo.setActive(false);
+        zoneTo.setSelected(false);
+
+        //On désactive toutes les zones de la map
+        map.desactiveZones();
+        //On donne une zone inexistante comme zone selectionnée
+        map.setZoneSelected(0);
+    }
+
+    private void doAttack(ArrayList<Unit> attackUnits, Zone zoneFrom, Zone zoneTo) {
+        ArrayList<Unit> attacker = attackUnits;
+        ArrayList<Unit> defender = zoneTo.getUnits();
+        int powerAttack = 0;
+        int powerDefense = 0;
+
+        // On récupère la valeur d'attaque générale sans bonus (dès)
+        for (int idxATK = 0; idxATK < attackUnits.size(); idxATK++)
+            powerAttack = attackUnits.get(idxATK).getAttack();
+
+        // On récupère la valeur de défense générale sans bonus (dès)
+        for (int idxDEF = 0; idxDEF < zoneTo.getUnits().size(); idxDEF++)
+            powerDefense = zoneTo.getUnits().get(idxDEF).getDef();
+
+        Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
+
+        // Si l'attaquant est plus fort que le défenseur
+        if (powerAttack - powerDefense > 0) {
+            // On retire les troupes adverses
+            zoneTo.getUnits().clear();
+
+            // On déplace ses troupes conquérentes
+            zoneFrom.getUnits().removeAll(attackUnits);
+            zoneTo.setUnits(attackUnits);
+
+            zoneTo.setPlayer(zoneFrom.getPlayer());
+            zoneTo.setColor(zoneFrom.getColor());
+            zoneTo.setDefaultColor(zoneFrom.getColor());
+
+            if (zoneFrom.getUnits().size() - attackUnits.size() < 0) {
+                zoneFrom.setPlayer(null);
+                zoneFrom.setColor(Color.WHITE);
+            }
+        } else { // Si le défenseur est plus fort que l'attaquant
+            // On retire les troupes de l'attaquant
+            zoneFrom.getUnits().clear();
+            zoneFrom.setPlayer(null);
+            zoneFrom.setColor(Color.WHITE);
+        }
+
+        //On désactive la zoneTo & on déselectionne
+        zoneFrom.setActive(false);
+        zoneFrom.setSelected(false);
+
+        //On désactive toutes les zones de la map
+        map.desactiveZones();
+        //On donne une zone inexistante comme zone selectionnée
+        map.setZoneSelected(0);
+
     }
 
     private void addTableLine(Table T, final Object key, final Hashtable ht, Hashtable textFields, Skin skin) {
