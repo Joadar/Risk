@@ -11,4 +11,11 @@ public class Infantry extends GroundUnit {
     public Infantry() {
         super();
     }
+
+
+    public int getAttack() { return attack; }
+
+    public int getDef() { return def; }
+
+    public int getValue() { return value; }
 }
