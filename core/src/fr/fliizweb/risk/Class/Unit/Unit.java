@@ -11,4 +11,7 @@ public interface Unit {
     public TextureRegion getTexture();
     public void setTexture(String path);
 
+    public int getAttack();
+    public int getDef();
+    public int getValue();
 }
