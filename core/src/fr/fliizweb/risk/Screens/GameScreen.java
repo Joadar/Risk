@@ -284,23 +284,17 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         int powerDefense = 0;
 
                                         // On récupère la valeur d'attaque générale sans bonus (dès)
-                                        for (int nbAt = 0; nbAt < formUnits.size(); nbAt++) {
-                                            GroundUnit unit = (GroundUnit) formUnits.get(nbAt);
-                                            powerAttack += unit.getAttack();
-                                        }
+                                        for (int idxATK = 0; idxATK < formUnits.size(); idxATK++)
+                                            powerAttack = formUnits.get(idxATK).getAttack();
 
                                         // On récupère la valeur de défense générale sans bonus (dès)
-                                        for (int nbDef = 0; nbDef < zone.getUnits().size(); nbDef++) {
-                                            GroundUnit unit = (GroundUnit) zone.getUnits().get(nbDef);
-                                            powerDefense += unit.getDef();
-                                        }
+                                        for (int idxDEF = 0; idxDEF < zone.getUnits().size(); idxDEF++)
+                                            powerDefense = zone.getUnits().get(idxDEF).getDef();
 
                                         Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
 
-                                        int diffAtDef = powerAttack - powerDefense;
-
                                         // Si l'attaquant est plus fort que le défenseur
-                                        if (diffAtDef > 0) {
+                                        if (powerAttack - powerDefense > 0) {
                                             // On retire les troupes adverses
                                             zone.getUnits().clear();
 
