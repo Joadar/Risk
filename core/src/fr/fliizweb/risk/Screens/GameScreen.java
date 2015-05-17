@@ -47,8 +47,8 @@ import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private Stage stage;
-    private FitViewport vp;
-    private SpriteBatch batch;
+        private FitViewport vp;
+        private SpriteBatch batch;
 
     private OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
