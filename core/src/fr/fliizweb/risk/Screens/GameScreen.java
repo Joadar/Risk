@@ -300,13 +300,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         // On assigne le joueur à la zone
         zoneTo.setPlayer(zoneFrom.getPlayer());
 
-        Gdx.app.log("final", "getUnits.size = " + zoneFrom.getUnits().size() + " || forumUnits.size = " + units.size());
-        //Si la zone de départ devient vide.
-        if (zoneFrom.getUnits().size() - units.size() <= 0) {
-            zoneFrom.setPlayer(null);
-            zoneFrom.setColor(Color.WHITE);
-        }
-
         //On donne à la zoneTo selectionnée les unités restantes
         zoneFrom.removeUnits(units);
         zoneFrom.setActive(false);
@@ -323,6 +316,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         zoneTo.setActive(false);
         zoneTo.setSelected(false);
 
+        Gdx.app.log("final", "getUnits.size = " + zoneFrom.getUnits().size() + " || forumUnits.size = " + units.size());
+        //Si la zone de départ devient vide.
+        if (zoneFrom.getUnits().size() <= 0) {
+            zoneFrom.setPlayer(null);
+            zoneFrom.setColor(Color.WHITE);
+        }
+
         //On désactive toutes les zones de la map
         map.desactiveZones();
         //On donne une zone inexistante comme zone selectionnée
@@ -337,11 +337,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         // On récupère la valeur d'attaque générale sans bonus (dès)
         for (int idxATK = 0; idxATK < attackUnits.size(); idxATK++)
-            powerAttack = attackUnits.get(idxATK).getAttack();
+            powerAttack += attackUnits.get(idxATK).getAttack();
 
         // On récupère la valeur de défense générale sans bonus (dès)
         for (int idxDEF = 0; idxDEF < zoneTo.getUnits().size(); idxDEF++)
-            powerDefense = zoneTo.getUnits().get(idxDEF).getDef();
+            powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
 
         Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
 
