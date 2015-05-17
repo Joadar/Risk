@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -35,7 +34,6 @@ import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Unit.GroundUnit;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
@@ -300,7 +298,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         // On assigne le joueur à la zone
         zoneTo.setPlayer(zoneFrom.getPlayer());
 
-        Gdx.app.log("final", "getUnits.size = " + zoneFrom.getUnits().size() + " || forumUnits.size = " + units.size());
         //Si la zone de départ devient vide.
         if (zoneFrom.getUnits().size() - units.size() <= 0) {
             zoneFrom.setPlayer(null);
@@ -337,13 +334,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         // On récupère la valeur d'attaque générale sans bonus (dès)
         for (int idxATK = 0; idxATK < attackUnits.size(); idxATK++)
-            powerAttack = attackUnits.get(idxATK).getAttack();
+            powerAttack += attackUnits.get(idxATK).getAttack();
 
         // On récupère la valeur de défense générale sans bonus (dès)
         for (int idxDEF = 0; idxDEF < zoneTo.getUnits().size(); idxDEF++)
-            powerDefense = zoneTo.getUnits().get(idxDEF).getDef();
+            powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
 
-        Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
 
         // Si l'attaquant est plus fort que le défenseur
         if (powerAttack - powerDefense > 0) {
