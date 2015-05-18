@@ -327,8 +327,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         zoneTo.setSelected(false);
 
         // On met à jour le fichier de la partie :
-        mngPartie.editZone(zoneFrom.getID() - 1, /*zoneFrom.getColor().toString()*/ "RED", zoneFrom.getUnits());
-        mngPartie.editZone(zoneTo.getID() - 1, /*zoneTo.getColor().toString()*/ "RED", zoneTo.getUnits());
+        mngPartie.editZone(zoneFrom.getID() - 1, zoneFrom.getStrColor(), zoneFrom.getUnits());
+        mngPartie.editZone(zoneTo.getID() - 1, zoneTo.getStrColor(), zoneTo.getUnits());
 
         //On désactive toutes les zones de la map
         map.desactiveZones();

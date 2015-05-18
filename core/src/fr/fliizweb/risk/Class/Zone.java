@@ -127,6 +127,23 @@ public class Zone {
         this.defaultColor = color;
     }
 
+    public String getStrColor() {
+        if(color.equals(Color.RED))
+            return "RED";
+        else if(color.equals(Color.GREEN))
+            return "GREEN";
+        else if (color.equals(Color.BLUE))
+            return "BLUE";
+        else if (color.equals(Color.YELLOW))
+            return "YELLOW";
+        else if (color.equals(Color.MAGENTA))
+            return "MAGENTA";
+        else if (color.equals(Color.PURPLE))
+            return "PURPLE";
+        else
+            return "WHITE";
+
+    }
     public Color getColor() {
         return this.color;
     }
