@@ -66,9 +66,9 @@ public class ZoneActor extends Actor {
 
         //ECRIRE LE NUMERO DE LA ZONE AU CENTRE DE L'ECRAN
 
-        CharSequence str = String.valueOf(zone.getID());
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
+        //CharSequence str = String.valueOf(zone.getID());
+        //font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        //font.draw(batch, str, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2);
 
 
         //On dessine les icones des unités.
