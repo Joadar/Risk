@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -33,9 +32,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import fr.fliizweb.risk.Class.ManagePartie;
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Unit.GroundUnit;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
@@ -59,9 +58,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     Map map;
     ArrayList<Player> players;
 
+    private ManagePartie mngPartie;
+
     public GameScreen() throws ClassNotFoundException {
         map = new Map();
         players = new ArrayList<Player>();
+        mngPartie = new ManagePartie();
 
         players.add(new Player("g0rp", Color.RED));
         players.add(new Player("Joadar", Color.GREEN));
@@ -294,6 +296,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     }
 
     private void moveTo(Zone zoneFrom, Zone zoneTo, ArrayList<Unit> units) {
+
         //Couleur de la zone d'origine
         Color originColor = zoneFrom.getColor();
 
@@ -321,6 +324,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         //On désactive la zone & on déselectionne
         zoneTo.setActive(false);
         zoneTo.setSelected(false);
+
+        // On met à jour le fichier de la partie :
+        mngPartie.editZone(zoneFrom.getID() - 1, /*zoneFrom.getColor().toString()*/ "RED", zoneFrom.getUnits());
+        mngPartie.editZone(zoneTo.getID() - 1, /*zoneTo.getColor().toString()*/ "RED", zoneTo.getUnits());
 
         //On désactive toutes les zones de la map
         map.desactiveZones();

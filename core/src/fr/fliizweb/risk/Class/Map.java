@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
 import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
+import fr.fliizweb.risk.Class.Unit.Infantry;
 import fr.fliizweb.risk.Class.Unit.Unit;
 
 /**
@@ -30,6 +31,8 @@ public class Map {
     public void setZones(ArrayList<Zone> zones) { Zones = zones; }
 
     public ArrayList getTexture() { return texture; }
+
+    private ManagePartie mngPartie;
 
 
     public Map() throws ClassNotFoundException {
@@ -78,9 +81,33 @@ public class Map {
 
     public void loadJSON() throws ClassNotFoundException {
         String content = null;
+        String fileContent = null;
+        mngPartie = new ManagePartie();
 
-        FileHandle handle = Gdx.files.internal("Maps/default.json");
-        String fileContent = handle.readString(); // Lecture du fichier
+
+        Boolean gameExist = mngPartie.fileExist();
+        FileHandle gameToLoad = mngPartie.getFile();
+
+        Gdx.app.log("gameExist", "gameExist = " + gameExist);
+
+        // Si une partie existe déjà on joue sur cette map
+        if(gameExist){
+            fileContent = gameToLoad.readString(); // Lecture du fichier
+
+        } else { // sinon on copie la map d'origine et on créé une nouvelle map
+            FileHandle handle = Gdx.files.internal("Maps/default.json");
+            fileContent = handle.readString(); // Lecture du fichier
+
+            mngPartie.copy(handle); // copie la nouvelle map
+            gameToLoad = mngPartie.getFile();
+            fileContent = gameToLoad.readString(); // On joue sur la nouvelle partie créée
+        }
+
+        ArrayList<Unit> listUnitss = new ArrayList<Unit>();
+        Infantry newInfantry = new Infantry();
+        listUnitss.add(newInfantry);
+        listUnitss.add(newInfantry);
+        listUnitss.add(newInfantry);
 
         Json json = new Json();
         json.setElementType(MapFilePrototype.class, "zones", ZonePrototype.class);
@@ -104,6 +131,7 @@ public class Map {
             zone.setDefaultColor(zone.getColor());
             zone.setID(p.id);
             zone.setNextZones(p.next);
+            zone.setTexture(p.texture);
 
             ArrayList<Unit> listUnits = new ArrayList<Unit>();
 

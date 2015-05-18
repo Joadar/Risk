@@ -1,6 +1,5 @@
 package fr.fliizweb.risk.Class;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import fr.fliizweb.risk.Class.Unit.Unit;
 public class Zone {
 
     private int             id;
+    private ArrayList       texture;
     private ArrayList       Units;
     private int[]           next;
     private Position        position;
@@ -50,7 +50,6 @@ public class Zone {
         Units.removeAll(unitsToRemove);
         //Gros problème ici... La liste ne se supprime pas comme il faut.
         // BREF faut juste bosser ce point et c'est parfait :)
-        Gdx.app.log("GameScreen", "unitsToRemove = " + unitsToRemove + " ||  Units = "  + Units);
         return Units;
     }
 
@@ -157,6 +156,9 @@ public class Zone {
 
         this.color.a = alpha;
     }
+
+    public void setTexture(ArrayList texture) { this.texture = texture; }
+    public ArrayList getTexture() { return this.texture; }
 
     public Boolean isSelected() {
         return this.selected;

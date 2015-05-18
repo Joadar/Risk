@@ -1,7 +1,7 @@
 {
   "name": "Default",
   "map": {
-    "texture": [{}],
+    "texture":[],
     "x": 0,
     "y": 0,
     "sizex": 2560,
@@ -12,7 +12,7 @@
       "id": 1,
       "name": "{Name}",
       "color": "RED",
-      "texture": [{}],
+      "texture":[],
       "units": [
         {
           "type":"Infantry",
@@ -35,7 +35,7 @@
       "id": 2,
       "name": "{Name}",
       "color": "GREEN",
-      "texture": [{}],
+      "texture":[],
       "units": [
         {
           "type":"Infantry",
@@ -58,7 +58,7 @@
       "id": 3,
       "name": "{Name}",
       "color": "BLUE",
-      "texture": [{}],
+      "texture":[],
       "units": [
         {
           "type":"Infantry",
@@ -81,7 +81,7 @@
       "id": 4,
       "name": "{Name}",
       "color": "YELLOW",
-      "texture": [{}],
+      "texture":[],
       "units": [
         {
           "type":"Infantry",
@@ -104,7 +104,7 @@
       "id": 5,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [1, 7, 6],
       "x": 0,
@@ -116,7 +116,7 @@
       "id": 6,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [1, 5, 8, 9],
       "x": 370,
@@ -128,7 +128,7 @@
       "id": 7,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [3, 5, 8],
       "x": 0,
@@ -140,7 +140,7 @@
       "id": 8,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [2, 7, 6, 9],
       "x": 370,
@@ -152,7 +152,7 @@
       "id": 9,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [6, 8, 10, 11],
       "x": 970,
@@ -164,7 +164,7 @@
       "id": 10,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [4, 9, 11, 12],
       "x": 1770,
@@ -176,7 +176,7 @@
       "id": 11,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [2, 9, 10, 12],
       "x": 1770,
@@ -188,7 +188,7 @@
       "id": 12,
       "name": "{Name}",
       "color": "NEUTRAL",
-      "texture": [{}],
+      "texture":[],
       "units": [{}],
       "next": [2, 4, 10, 11],
       "x": 2190,
