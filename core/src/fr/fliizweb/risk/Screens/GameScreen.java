@@ -47,8 +47,8 @@ import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private Stage stage;
-        private FitViewport vp;
-        private SpriteBatch batch;
+    private FitViewport vp;
+    private SpriteBatch batch;
 
     private OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
@@ -300,6 +300,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         // On assigne le joueur à la zone
         zoneTo.setPlayer(zoneFrom.getPlayer());
 
+        //Si la zone de départ devient vide.
+        if (zoneFrom.getUnits().size() - units.size() <= 0) {
+            zoneFrom.setPlayer(null);
+            zoneFrom.setColor(Color.WHITE);
+        }
+
         //On donne à la zoneTo selectionnée les unités restantes
         zoneFrom.removeUnits(units);
         zoneFrom.setActive(false);
@@ -315,13 +321,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         //On désactive la zone & on déselectionne
         zoneTo.setActive(false);
         zoneTo.setSelected(false);
-
-        Gdx.app.log("final", "getUnits.size = " + zoneFrom.getUnits().size() + " || forumUnits.size = " + units.size());
-        //Si la zone de départ devient vide.
-        if (zoneFrom.getUnits().size() <= 0) {
-            zoneFrom.setPlayer(null);
-            zoneFrom.setColor(Color.WHITE);
-        }
 
         //On désactive toutes les zones de la map
         map.desactiveZones();
