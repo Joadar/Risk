@@ -88,17 +88,14 @@ public class Map {
         Boolean gameExist = mngPartie.fileExist();
         FileHandle gameToLoad = mngPartie.getFile();
 
-        Gdx.app.log("gameExist", "gameExist = " + gameExist);
-
         // Si une partie existe déjà on joue sur cette map
         if(gameExist){
             fileContent = gameToLoad.readString(); // Lecture du fichier
 
         } else { // sinon on copie la map d'origine et on créé une nouvelle map
             FileHandle handle = Gdx.files.internal("Maps/default.json");
-            fileContent = handle.readString(); // Lecture du fichier
 
-            mngPartie.copy(handle); // copie la nouvelle map
+            mngPartie.newGame(handle); // nouvelle partie avec la map choisie
             gameToLoad = mngPartie.getFile();
             fileContent = gameToLoad.readString(); // On joue sur la nouvelle partie créée
         }

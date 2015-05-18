@@ -29,10 +29,11 @@ public class ManagePartie {
         DateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         titleFile = currentDate.format(date);
         fileCreated = Gdx.files.external("Risk/Partie/" + titleFile + ".json"); // On créé un fichier ayant pour nom la date du début de la partie
-        Gdx.app.log("absolute", "absolute path = " + fileCreated.file().getAbsolutePath());
     }
 
-    public void copy(FileHandle src){
+    public void newGame(FileHandle src){
+
+
         if(!Gdx.files.external("Risk/Partie").exists()){
             Gdx.files.external("Risk/Partie").file().mkdirs(); // On créé le dossier "Partie"
         }
@@ -43,8 +44,17 @@ public class ManagePartie {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }  else { // Si une partie existe déjà, on la supprime.
+            this.getFile().delete();
         }
         src.copyTo(fileCreated); // On copie le fichier source dans le fichier de la partie
+    }
+
+    public void delete(FileHandle file){
+        // Si le fichier qu'on veut supprimer existe bel et bien
+        if(file.exists()){
+            file.delete();
+        }
     }
 
     public boolean fileExist(){

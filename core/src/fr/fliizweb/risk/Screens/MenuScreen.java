@@ -15,12 +15,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import fr.fliizweb.risk.Class.ManagePartie;
 import fr.fliizweb.risk.Risk;
 
 /**
@@ -32,6 +34,8 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     private OrthographicCamera camera;
     private FitViewport vp;
     private SpriteBatch batch;
+
+    private ManagePartie mngPartie;
 
     public Risk game;
 
@@ -47,6 +51,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     }
 
     public void init() {
+        mngPartie = new ManagePartie();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
     }
@@ -81,24 +86,44 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         pm1.fill();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-        TextButton start = new TextButton("Commencer !", skin);
+        TextButton start = new TextButton("Reprendre", skin);
         table.add(start).width(120).height(60);
-        start.addListener(new InputListener() {
+        if(mngPartie.fileExist()){
+            start.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    game.setScreen(game.getGameScreen());
+                    return super.touchDown(event, x, y, pointer, button);
+                }
+            });
+        } else {
+            start.setTouchable(Touchable.disabled);
+        }
+
+        table.row();
+
+        TextButton newGame = new TextButton("Nouvelle partie", skin);
+        table.add(newGame).width(120).height(60);
+        newGame.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                mngPartie.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
+                game.setScreen(game.getGameScreen());
+
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+
+        table.row();
+
+        TextButton stats = new TextButton("Statistiques", skin);
+        table.add(stats).width(120).height(60);
+        stats.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(game.getGameScreen());
 
-
-
-                /*Screen gameScreen = null;
-                try {
-                    gameScreen = new GameScreen();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                setScreen(gameScreen);*/
-                return true;
-                //return super.touchDown(event, x, y, pointer, button);
+                return super.touchDown(event, x, y, pointer, button);
             }
         });
 
