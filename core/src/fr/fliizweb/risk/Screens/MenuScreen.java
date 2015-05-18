@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import fr.fliizweb.risk.Risk;
+
 /**
  * Created by rcdsm on 17/05/15.
  */
@@ -31,9 +33,20 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     private FitViewport vp;
     private SpriteBatch batch;
 
+    public Risk game;
+
     InputMultiplexer inputMultiplexer;
 
     public MenuScreen() {
+        init();
+    }
+
+    public MenuScreen(Risk game){
+        this.game = game;
+        init();
+    }
+
+    public void init() {
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
     }
@@ -73,13 +86,17 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         start.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Screen gameScreen = null;
+                game.setScreen(game.getGameScreen());
+
+
+
+                /*Screen gameScreen = null;
                 try {
                     gameScreen = new GameScreen();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                setScreen(gameScreen);
+                setScreen(gameScreen);*/
                 return true;
                 //return super.touchDown(event, x, y, pointer, button);
             }

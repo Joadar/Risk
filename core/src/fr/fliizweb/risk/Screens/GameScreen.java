@@ -37,6 +37,7 @@ import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
+import fr.fliizweb.risk.Risk;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
 
@@ -58,10 +59,25 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     Map map;
     ArrayList<Player> players;
 
+    private Risk game;
+
     private ManagePartie mngPartie;
 
-    public GameScreen() throws ClassNotFoundException {
-        map = new Map();
+    public GameScreen(Risk game){
+        this.game = game;
+        init();
+    }
+
+    public GameScreen() {
+        init();
+    }
+
+    public void init(){
+        try {
+            map = new Map();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         players = new ArrayList<Player>();
         mngPartie = new ManagePartie();
 
