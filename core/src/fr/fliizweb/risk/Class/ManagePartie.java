@@ -24,17 +24,20 @@ public class ManagePartie {
     private String titleFile;
     private FileHandle fileCreated;
 
+    private final String FILE_PATH = "Risk/Partie";
+    private final String FULL_FILE_PATH = FILE_PATH + "/";
+
     public ManagePartie(){
         Date date = new Date();
         DateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         titleFile = currentDate.format(date);
-        fileCreated = Gdx.files.external("Risk/Partie/" + titleFile + ".json"); // On créé un fichier ayant pour nom la date du début de la partie
+        fileCreated = Gdx.files.external(FULL_FILE_PATH + titleFile + ".json"); // On créé un fichier ayant pour nom la date du début de la partie
         Gdx.app.log("absolute", "absolute path = " + fileCreated.file().getAbsolutePath());
     }
 
     public void copy(FileHandle src){
-        if(!Gdx.files.external("Risk/Partie").exists()){
-            Gdx.files.external("Risk/Partie").file().mkdirs(); // On créé le dossier "Partie"
+        if(!Gdx.files.external(FILE_PATH).exists()){
+            Gdx.files.external(FILE_PATH).file().mkdirs(); // On créé le dossier "Partie"
         }
 
         if(!this.fileExist()){ // Si aucune partie n'est en cours
@@ -48,9 +51,9 @@ public class ManagePartie {
     }
 
     public boolean fileExist(){
-        if(Gdx.files.external("Risk/Partie/").list(".json").length > 0){ // Si il existe déjà un fichier .json
+        if(Gdx.files.external(FULL_FILE_PATH).list(".json").length > 0){ // Si il existe déjà un fichier .json
 
-            for (FileHandle entry: Gdx.files.external("Risk/Partie/").list()) {
+            for (FileHandle entry: Gdx.files.external(FULL_FILE_PATH).list()) {
                 fileCreated = Gdx.files.external("" + entry + ""); // On récupère la partie
             }
 
@@ -79,6 +82,7 @@ public class ManagePartie {
 
         ZonePrototype zoneProto = (ZonePrototype) data.zones.get(idZone);
         zoneProto.color = colorZone;
+        Zone zone = new Zone();
         // Convertir la liste des unités
 
         int nbInf = 0, nbCav = 0, nbArt = 0;
@@ -130,8 +134,6 @@ public class ManagePartie {
         String textArt = newJsonArt.toJson(unitProtoArt, UnitPrototype.class);
 
         listUnits.add(new Json().fromJson(UnitPrototype.class, textArt));
-
-
 
         zoneProto.units = listUnits;
         data.zones.set(idZone, zoneProto); // On modifie la zone

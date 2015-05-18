@@ -31,6 +31,14 @@ public class Zone {
     public Zone(int x, int y, int sizex, int sizey) {
         position = new Position(x, y);
         size = new Size(sizex, sizey);
+        init();
+    }
+
+    public Zone() {
+        init();
+    }
+
+    public void init() {
         selected = false;
         active = false;
         player = null;
@@ -76,15 +84,15 @@ public class Zone {
         }
         return ht;
     }
-    public ArrayList<Unit> getSortedUnits() {
+    public ArrayList<Unit> getSortedUnits(ArrayList<Unit> units) {
         //Sorting
-        Collections.sort(Units, new Comparator<Unit>() {
+        Collections.sort(units, new Comparator<Unit>() {
             @Override
             public int compare(Unit unit1, Unit unit2) {
                 return unit1.getClass().getSimpleName().compareTo(unit2.getClass().getSimpleName());
             }
         });
-        return Units;
+        return units;
     }
     public Unit getUnit(int index) { return (Unit)this.Units.get(index); }
 
