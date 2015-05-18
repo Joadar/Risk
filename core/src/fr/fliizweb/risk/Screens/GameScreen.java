@@ -312,6 +312,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         if (zoneFrom.getUnits().size() <= 0) {
             zoneFrom.setPlayer(null);
             zoneFrom.setColor(Color.WHITE);
+            zoneFrom.setDefaultColor(zoneFrom.getColor());
         }
 
         units.addAll(zoneTo.getUnits());
