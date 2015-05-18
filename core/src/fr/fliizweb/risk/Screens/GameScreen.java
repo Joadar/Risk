@@ -300,16 +300,16 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         // On assigne le joueur à la zone
         zoneTo.setPlayer(zoneFrom.getPlayer());
 
-        //Si la zone de départ devient vide.
-        if (zoneFrom.getUnits().size() - units.size() <= 0) {
-            zoneFrom.setPlayer(null);
-            zoneFrom.setColor(Color.WHITE);
-        }
-
         //On donne à la zoneTo selectionnée les unités restantes
         zoneFrom.removeUnits(units);
         zoneFrom.setActive(false);
         zoneFrom.setSelected(false);
+
+        //Si la zone de départ devient vide.
+        if (zoneFrom.getUnits().size() <= 0) {
+            zoneFrom.setPlayer(null);
+            zoneFrom.setColor(Color.WHITE);
+        }
 
         units.addAll(zoneTo.getUnits());
 
@@ -335,11 +335,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         int powerDefense = 0;
 
         // On récupère la valeur d'attaque générale sans bonus (dès)
-        for (int idxATK = 0; idxATK < attackUnits.size(); idxATK++)
+        for (int idxATK = 0; idxATK < attacker.size(); idxATK++)
             powerAttack += attackUnits.get(idxATK).getAttack();
 
         // On récupère la valeur de défense générale sans bonus (dès)
-        for (int idxDEF = 0; idxDEF < zoneTo.getUnits().size(); idxDEF++)
+        for (int idxDEF = 0; idxDEF < defender.size(); idxDEF++)
             powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
 
         // Si l'attaquant est plus fort que le défenseur
@@ -348,14 +348,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             zoneTo.getUnits().clear();
 
             // On déplace ses troupes conquérentes
-            zoneFrom.getUnits().removeAll(attackUnits);
-            zoneTo.setUnits(attackUnits);
+            zoneFrom.getUnits().removeAll(attacker);
+            zoneTo.setUnits(attacker);
 
             zoneTo.setPlayer(zoneFrom.getPlayer());
             zoneTo.setColor(zoneFrom.getColor());
             zoneTo.setDefaultColor(zoneFrom.getColor());
 
-            if (zoneFrom.getUnits().size() - attackUnits.size() < 0) {
+            if (zoneFrom.getUnits().size() - attacker.size() < 0) {
                 zoneFrom.setPlayer(null);
                 zoneFrom.setColor(Color.WHITE);
             }
