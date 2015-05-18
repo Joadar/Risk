@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public interface Unit {
 
-    public TextureRegion getTexture();
-    public void setTexture(String path);
+    TextureRegion getTexture();
+    void setTexture(String path);
 
-    public int getAttack();
-    public int getDef();
-    public int getValue();
+    int getAttack();
+    int getDef();
+    int getValue();
 }

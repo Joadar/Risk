@@ -342,8 +342,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         for (int idxDEF = 0; idxDEF < zoneTo.getUnits().size(); idxDEF++)
             powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
 
-        Gdx.app.log("combat", "Attack = " + powerAttack + " || Defense = " + powerDefense);
-
         // Si l'attaquant est plus fort que le défenseur
         if (powerAttack - powerDefense > 0) {
             // On retire les troupes adverses

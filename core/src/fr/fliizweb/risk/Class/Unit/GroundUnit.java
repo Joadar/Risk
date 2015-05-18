@@ -50,10 +50,10 @@ public class GroundUnit implements Unit {
         textureRegion = new TextureRegion(texture);
     }
 
-    public int getAttack() { return attack; }
+    public int getAttack() { return this.attack; }
 
-    public int getDef() { return def; }
+    public int getDef() { return this.def; }
 
-    public int getValue() { return value; }
+    public int getValue() { return this.value; }
 
 }

@@ -11,4 +11,10 @@ public class Cavalry extends GroundUnit {
     public Cavalry() {
         super();
     }
+
+    public int getAttack() { return this.attack; }
+
+    public int getDef() { return this.def; }
+
+    public int getValue() { return this.value; }
 }

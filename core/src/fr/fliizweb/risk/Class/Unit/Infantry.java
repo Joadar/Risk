@@ -9,4 +9,10 @@ public class Infantry extends GroundUnit {
     protected int def = 1;
 
     public Infantry() {super();}
+
+    public int getAttack() { return this.attack; }
+
+    public int getDef() { return this.def; }
+
+    public int getValue() { return this.value; }
 }
