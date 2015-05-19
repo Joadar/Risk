@@ -144,159 +144,164 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                             final Hashtable ht = z.getUnitsHashtable();
 
-                            //On affiche le formulaire
-                            showForm = true;
+                            // Si le formulaire n'est pas affiché, alors on peut l'afficher, pas besoin de l'afficher à chaque tap sur une zone
+                            if (!showForm) {
 
-                            // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
-                            Skin skin = new Skin(Gdx.files.internal("ui/defaultskin.json"));
+                                //On affiche le formulaire
+                                showForm = true;
 
-                            final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
-                            table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
-                            table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
-                            table.setPosition(30, 30);
+                                // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
+                                Skin skin = new Skin(Gdx.files.internal("ui/defaultskin.json"));
 
-                            camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+                                final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
+                                table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
+                                table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
+                                table.setPosition(30, 30);
 
-                            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-                            pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
-                            pm1.fill();
-                            table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+                                camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
-                            // Permet de stocker les textfields en fonction des unités disponibles sur la zone.
-                            final Hashtable textFields = new Hashtable();
+                                Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+                                pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
+                                pm1.fill();
+                                table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-                            // Boucle pour afficher le tableau d'unités du formulaire.
-                            for (final Object key : ht.keySet()) {
-                                addTableLine(table, key, ht, textFields, skin);
-                            }
+                                // Permet de stocker les textfields en fonction des unités disponibles sur la zone.
+                                final Hashtable textFields = new Hashtable();
 
-                            // Le bouton valider
-                            /*
-                            BitmapFont font = new BitmapFont();
-                            font.getData().scale(1.7f);
-                            TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-                            style.font = font;
-                            style.fontColor = new Color(z.getDefaultColor());
-                            */
-                            TextButton valid = new TextButton("Valider", skin);
-                            valid.setColor(Color.RED);
-                            //valid.setStyle(style);
-                            valid.addListener(new ClickListener() {
-                                @Override
-                                public void clicked(InputEvent event, float x, float y) {
-                                    int counter = 0;
-                                    int unitsInZone = 0;
-                                    Label text;
-                                    for (Object key : textFields.keySet()) {
-                                        text = (Label) textFields.get(key);
-                                        counter += Integer.parseInt(text.getText().toString());
-                                        unitsInZone += (Integer) ht.get(key) - Integer.parseInt(text.getText().toString());
-                                    }
+                                // Boucle pour afficher le tableau d'unités du formulaire.
+                                for (final Object key : ht.keySet()) {
+                                    addTableLine(table, key, ht, textFields, skin);
+                                }
 
-                                    // Si aucune unité n'est rentrée, on affiche un message au joueur
-                                    if (counter == 0) {
-                                        return;
-                                    }
+                                    // Le bouton valider
+                                /*
+                                BitmapFont font = new BitmapFont();
+                                font.getData().scale(1.7f);
+                                TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+                                style.font = font;
+                                style.fontColor = new Color(z.getDefaultColor());
+                                */
 
-                                    // Si le nombre  d'unités rentrées dépasse le nombre d'unité disponible dans la zone, on affiche un message au joueur comme quoi sa zone va devenir neutre
-                                    //if (Integer.parseInt(textInfantry.getText().toString()) > numInf || Integer.parseInt(textArtillery.getText().toString()) > numCav || Integer.parseInt(textArtillery.getText().toString()) > numArt) {
+                                TextButton valid = new TextButton("Valider", skin);
+                                valid.setColor(Color.RED);
+                                //valid.setStyle(style);
+                                valid.addListener(new ClickListener() {
+                                    @Override
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        int counter = 0;
+                                        int unitsInZone = 0;
+                                        Label text;
+                                        for (Object key : textFields.keySet()) {
+                                            text = (Label) textFields.get(key);
+                                            counter += Integer.parseInt(text.getText().toString());
+                                            unitsInZone += (Integer) ht.get(key) - Integer.parseInt(text.getText().toString());
+                                        }
+
+                                        // Si aucune unité n'est rentrée, on affiche un message au joueur
+                                        if (counter == 0) {
+                                            return;
+                                        }
+
+                                        // Si le nombre  d'unités rentrées dépasse le nombre d'unité disponible dans la zone, on affiche un message au joueur comme quoi sa zone va devenir neutre
+                                        //if (Integer.parseInt(textInfantry.getText().toString()) > numInf || Integer.parseInt(textArtillery.getText().toString()) > numCav || Integer.parseInt(textArtillery.getText().toString()) > numArt) {
                                     /*if (unitsInZone == 0) {
                                         Gdx.app.log("GameScreen", "Unités restantes sur la zone : 0");
                                         return;
                                     }
                                     */
 
-                                    table.remove();
-                                    camera.zoom = 2.0f;
-                                    showForm = false;
-                                    validForm = true;
+                                        table.remove();
+                                        camera.zoom = 2.0f;
+                                        showForm = false;
+                                        validForm = true;
 
-                                    // On fait la liste des unités remplis par le formulaire
-                                    ArrayList<Unit> formUnits = new ArrayList<Unit>();
+                                        // On fait la liste des unités remplis par le formulaire
+                                        ArrayList<Unit> formUnits = new ArrayList<Unit>();
 
-                                    // On fait la liste des unités à déplacer
-                                    for (Object key : textFields.keySet()) {
-                                        text = (Label) textFields.get(key);
-                                        for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
-                                            try {
-                                                Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
-                                                Class[] types = {};
-                                                Constructor constructor = tmp.getConstructor(types);
-                                                Object[] params = {};
-                                                Object instanceOfUnit = constructor.newInstance(params);
-                                                //formUnits.add((Unit)instanceOfUnit);
+                                        // On fait la liste des unités à déplacer
+                                        for (Object key : textFields.keySet()) {
+                                            text = (Label) textFields.get(key);
+                                            for (int i = 0; i < Integer.parseInt(text.getText().toString()); i++) {
+                                                try {
+                                                    Class tmp = Class.forName("fr.fliizweb.risk.Class.Unit." + key.toString());
+                                                    Class[] types = {};
+                                                    Constructor constructor = tmp.getConstructor(types);
+                                                    Object[] params = {};
+                                                    Object instanceOfUnit = constructor.newInstance(params);
+                                                    //formUnits.add((Unit)instanceOfUnit);
 
-                                                int uu = 0;
-                                                for (int ii = 0; ii < finalZ.getUnits().size(); ii++) {
-                                                    Unit anUnit = finalZ.getUnits().get(ii);
-                                                    if (anUnit.getClass().getSimpleName().equals(key.toString())) {
-                                                        if (uu == 0) {
-                                                            formUnits.add(anUnit);
+                                                    int uu = 0;
+                                                    for (int ii = 0; ii < finalZ.getUnits().size(); ii++) {
+                                                        Unit anUnit = finalZ.getUnits().get(ii);
+                                                        if (anUnit.getClass().getSimpleName().equals(key.toString())) {
+                                                            if (uu == 0) {
+                                                                formUnits.add(anUnit);
                                                             /*if ((zone.getColor() == finalZ.getColor()) ||
                                                                     zone.getPlayer() == null) {*/
                                                                 finalZ.removeUnits(formUnits);
-                                                            //}
-                                                            uu++;
+                                                                //}
+                                                                uu++;
 
+                                                            }
                                                         }
                                                     }
+                                                } catch (NoSuchMethodException e1) {
+                                                    e1.printStackTrace();
+                                                } catch (InvocationTargetException e1) {
+                                                    e1.printStackTrace();
+                                                } catch (InstantiationException e1) {
+                                                    e1.printStackTrace();
+                                                } catch (IllegalAccessException e1) {
+                                                    e1.printStackTrace();
+                                                } catch (ClassNotFoundException e1) {
+                                                    e1.printStackTrace();
                                                 }
-                                            } catch (NoSuchMethodException e1) {
-                                                e1.printStackTrace();
-                                            } catch (InvocationTargetException e1) {
-                                                e1.printStackTrace();
-                                            } catch (InstantiationException e1) {
-                                                e1.printStackTrace();
-                                            } catch (IllegalAccessException e1) {
-                                                e1.printStackTrace();
-                                            } catch (ClassNotFoundException e1) {
-                                                e1.printStackTrace();
                                             }
                                         }
-                                    }
 
-                                    // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
-                                    if ((zone.getColor() == finalZ.getColor()) ||
-                                            zone.getPlayer() == null)
+                                        // Si on rencontre une zone sous le control du joueur (pour déplacer ses troupes) ou neutre (pour acquerir)
+                                        if ((zone.getColor() == finalZ.getColor()) ||
+                                                zone.getPlayer() == null)
                                             /*(zone.getColor().equals(colorNeutral) ||
                                                     (zone.getDefaultColor().r == colorNeutral.r && zone.getDefaultColor().g == colorNeutral.g && zone.getDefaultColor().b == colorNeutral.b)))*/ {
 
-                                        moveTo(finalZ, zone, formUnits);
-                                    } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
-                                        doAttack(formUnits, finalZ, zone);
+                                            moveTo(finalZ, zone, formUnits);
+                                        } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
+                                            doAttack(formUnits, finalZ, zone);
+                                        }
+
+                                        // On retire le keyboard dans tous les cas
+                                        Gdx.input.setOnscreenKeyboardVisible(false);
                                     }
+                                });
 
-                                    // On retire le keyboard dans tous les cas
-                                    Gdx.input.setOnscreenKeyboardVisible(false);
+                                table.add(valid).width(300).height(60).padTop(30).padRight(5);
+
+                                TextButton close = new TextButton("Annuler", skin);
+                                //close.setStyle(style);
+                                close.addListener(new ClickListener() {
+                                    @Override
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        table.remove();
+                                        camera.zoom = 2.0f;
+                                        showForm = false;
+                                        validForm = false;
+                                        Gdx.input.setOnscreenKeyboardVisible(false);
+                                    }
+                                });
+                                table.add(close).width(120).height(60).padTop(30);
+
+                                table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
+
+                                // On ajoute le formulaire au stage
+                                stage.addActor(table);
+
+                                // Si on a cliqué sur le bouton "valider"
+                                if (validForm) {
+
+                                } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
+
                                 }
-                            });
-
-                            table.add(valid).width(300).height(60).padTop(30).padRight(5);
-
-                            TextButton close = new TextButton("Annuler", skin);
-                            //close.setStyle(style);
-                            close.addListener(new ClickListener() {
-                                @Override
-                                public void clicked(InputEvent event, float x, float y) {
-                                    table.remove();
-                                    camera.zoom = 2.0f;
-                                    showForm = false;
-                                    validForm = false;
-                                    Gdx.input.setOnscreenKeyboardVisible(false);
-                                }
-                            });
-                            table.add(close).width(120).height(60).padTop(30);
-
-                            table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
-
-                            // On ajoute le formulaire au stage
-                            stage.addActor(table);
-
-                            // Si on a cliqué sur le bouton "valider"
-                            if (validForm) {
-
-                            } else { // On a cliqué sur le bouton "annuler", on peut continuer l'action mouvement
-
                             }
                         }
                     }

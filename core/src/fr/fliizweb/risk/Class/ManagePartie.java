@@ -6,8 +6,6 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,8 +24,7 @@ public class ManagePartie {
 
     public ManagePartie(){
         Date date = new Date();
-        DateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
-        titleFile = currentDate.format(date);
+        titleFile = "new_game";
         fileCreated = Gdx.files.external("Risk/Partie/" + titleFile + ".json"); // On créé un fichier ayant pour nom la date du début de la partie
     }
 
@@ -45,7 +42,7 @@ public class ManagePartie {
                 e.printStackTrace();
             }
         }  else { // Si une partie existe déjà, on la supprime.
-            this.getFile().delete();
+            this.delete(this.getFile());
         }
         src.copyTo(fileCreated); // On copie le fichier source dans le fichier de la partie
     }

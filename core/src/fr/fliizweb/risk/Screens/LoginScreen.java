@@ -39,6 +39,8 @@ public class LoginScreen implements Screen {
 
     InputMultiplexer inputMultiplexer;
 
+    private boolean btnRegisterClicked;
+
     public LoginScreen() {
         init();
     }
@@ -49,6 +51,7 @@ public class LoginScreen implements Screen {
     }
 
     public void init() {
+        btnRegisterClicked = false;
         mngPartie = new ManagePartie();
         inputMultiplexer = new InputMultiplexer();
         //inputMultiplexer.addProcessor(new GestureDetector(this));
@@ -110,6 +113,19 @@ public class LoginScreen implements Screen {
         pwdInput.setPasswordMode(true);
         table.add(pwdInput);
 
+        table.row();
+
+        // Label repeat password
+        final Label pwdRepeatLabel = new Label("Repeat Password", skin);
+        pwdRepeatLabel.setVisible(false);
+        table.add(pwdRepeatLabel);
+
+        // Input repeat password
+        final TextField pwdRepeatInput = new TextField("", skin);
+        pwdRepeatInput.setPasswordCharacter('*');
+        pwdRepeatInput.setPasswordMode(true);
+        pwdRepeatInput.setVisible(false);
+        table.add(pwdRepeatInput);
 
         table.row();
 
@@ -118,13 +134,42 @@ public class LoginScreen implements Screen {
         connexion.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                // Si le login (email) et le mot de passe existent dans la base de données
+                    // On assigne à l'utilisateur un token et on le connecte directement
+                    // Puis on le redirige sur l'écran de menu
+                // Sinon on affiche une erreur
+
                 //if(loginInput.getText().equals("toto") && pwdInput.getText().equals("toto")){
-                    game.setScreen(game.getMenuScreen());
+                game.setScreen(game.getMenuScreen());
                 //}
 
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
+
+        final TextButton register = new TextButton("S'enregistrer", skin);
+        table.add(register).width(120).height(60);
+        register.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // Si le bouton "register" n'a pas encore été cliqué
+                if(!btnRegisterClicked){
+                    btnRegisterClicked = true;
+                    register.setText("Valider");
+                    pwdRepeatLabel.setVisible(true);
+                    pwdRepeatInput.setVisible(true);
+                } else {
+                    // Si l'inscription est un succès
+                        // On assigne à l'utilisateur un token et on le connecte directement
+                        // Puis on le redirige sur l'écran de menu
+                    // Sinon on affiche une erreur
+                }
+
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+
 
         stage.addActor(table);
 
