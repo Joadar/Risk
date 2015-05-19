@@ -3,6 +3,7 @@ package fr.fliizweb.risk.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,26 +11,25 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import fr.fliizweb.risk.Class.GameSave;
 import fr.fliizweb.risk.Risk;
 
 /**
- * Created by rcdsm on 17/05/15.
+ * Created by rcdsm on 19/05/15.
  */
-public class MenuScreen extends com.badlogic.gdx.Game implements Screen, GestureDetector.GestureListener {
-
+public class GameParametersScreen implements Screen {
     private Stage stage;
     private OrthographicCamera camera;
     private FitViewport vp;
@@ -39,18 +39,21 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
 
     InputMultiplexer inputMultiplexer;
 
-    public MenuScreen() {
+    private boolean btnRegisterClicked;
+
+    public GameParametersScreen() {
         init();
     }
 
-    public MenuScreen(Risk game){
+    public GameParametersScreen(Risk game){
         this.game = game;
         init();
     }
 
     public void init() {
+        btnRegisterClicked = false;
         inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(new GestureDetector(this));
+        //inputMultiplexer.addProcessor(new GestureDetector(this));
     }
 
     @Override
@@ -83,46 +86,34 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         pm1.fill();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-        TextButton start = new TextButton("Reprendre", skin);
-        table.add(start).width(120).height(60);
-        if(GameSave.fileExist()){
-            start.addListener(new InputListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    game.setScreen(game.getGameScreen());
-                    return super.touchDown(event, x, y, pointer, button);
-                }
-            });
-        } else {
-            start.setTouchable(Touchable.disabled);
+        Label label = new Label("Choix de la carte", skin);
+        label.setWrap(true);
+        table.add(label).center();
+
+        table.row();
+
+        final SelectBox selectMap = new SelectBox(skin);
+        Array listMap = new Array();
+        for (FileHandle entry: Gdx.files.local("Maps").list()) {
+            Gdx.app.log("ex", "extension = " + entry.nameWithoutExtension()); // On récupère la partie
+            listMap.add(entry.nameWithoutExtension());
         }
+        selectMap.setItems(listMap);
+        table.add(selectMap);
 
         table.row();
 
-        TextButton newGame = new TextButton("Nouvelle partie", skin);
-        table.add(newGame).width(120).height(60);
-        newGame.addListener(new InputListener() {
+        final TextButton register = new TextButton("Lancer", skin);
+        table.add(register).width(120).height(60);
+        register.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //GameSave.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
-                game.setScreen(game.getGameParametersScreen());
-
+                GameSave.newGame(Gdx.files.internal("Maps/" + selectMap.getSelected() + ".json")); // On lance une nouvelle partie avec la carte default.json
+               game.setScreen(game.getGameScreen());
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
 
-        table.row();
-
-        TextButton stats = new TextButton("Statistiques", skin);
-        table.add(stats).width(120).height(60);
-        stats.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(game.getGameScreen());
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
 
         stage.addActor(table);
 
@@ -142,11 +133,6 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
 
         stage.act(delta);
         stage.draw();
-    }
-
-    @Override
-    public void create() {
-
     }
 
     @Override
@@ -172,45 +158,5 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     @Override
     public void dispose() {
 
-    }
-
-    @Override
-    public boolean touchDown(float x, float y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean tap(float x, float y, int count, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean longPress(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public boolean fling(float velocityX, float velocityY, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean pan(float x, float y, float deltaX, float deltaY) {
-        return false;
-    }
-
-    @Override
-    public boolean panStop(float x, float y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean zoom(float initialDistance, float distance) {
-        return false;
-    }
-
-    @Override
-    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        return false;
     }
 }

@@ -1,6 +1,5 @@
 package fr.fliizweb.risk.Class;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
@@ -88,13 +87,13 @@ public class Map {
         if(gameExist){
             fileContent = gameToLoad.readString(); // Lecture du fichier
 
-        } else { // sinon on copie la map d'origine et on créé une nouvelle map
-            FileHandle handle = Gdx.files.internal("Maps/default.json");
-
+        } /*else { // sinon on copie la map d'origine et on créé une nouvelle map
+            FileHandle handle = Gdx.files.internal("Maps/mini.json");
+            Gdx.app.log("map", "Create default");
             GameSave.newGame(handle); // nouvelle partie avec la map choisie
             gameToLoad = GameSave.getFile();
             fileContent = gameToLoad.readString(); // On joue sur la nouvelle partie créée
-        }
+        }*/
 
         ArrayList<Unit> listUnitss = new ArrayList<Unit>();
         Infantry newInfantry = new Infantry();

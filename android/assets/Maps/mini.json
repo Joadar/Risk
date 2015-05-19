@@ -1,0 +1,104 @@
+{
+  "name": "Mini",
+  "map": {
+    "texture":[],
+    "x": 0,
+    "y": 0,
+    "sizex": 1000,
+    "sizey": 400
+  },
+  "zones": [
+    {
+      "id": 1,
+      "name": "{Name}",
+      "color": "RED",
+      "texture":[],
+      "units": [
+        {
+          "type":"Infantry",
+          "number": 5
+        },
+        { "type":"Cavalry",
+          "number": 4
+        },
+        { "type":"Artillery",
+          "number": 4
+        }
+      ],
+      "next": [2, 4],
+      "x": 0,
+      "y": 0,
+      "sizex": 500,
+      "sizey": 200
+    },
+    {
+      "id": 2,
+      "name": "{Name}",
+      "color": "GREEN",
+      "texture":[],
+      "units": [
+        {
+          "type":"Infantry",
+          "number": 6
+        },
+        { "type":"Cavalry",
+          "number": 2
+        },
+        { "type":"Artillery",
+          "number": 1
+        }
+      ],
+      "next": [1, 2],
+      "x": 500,
+      "y": 0,
+      "sizex": 500,
+      "sizey": 200
+    },
+    {
+      "id": 3,
+      "name": "{Name}",
+      "color": "BLUE",
+      "texture":[],
+      "units": [
+        {
+          "type":"Infantry",
+          "number": 6
+        },
+        { "type":"Cavalry",
+          "number": 2
+        },
+        { "type":"Artillery",
+          "number": 1
+        }
+      ],
+      "next": [2, 4],
+      "x": 500,
+      "y": 500,
+      "sizex": 500,
+      "sizey": 200
+    },
+    {
+      "id": 4,
+      "name": "{Name}",
+      "color": "YELLOW",
+      "texture":[],
+      "units": [
+        {
+          "type":"Infantry",
+          "number": 5
+        },
+        { "type":"Cavalry",
+          "number": 2
+        },
+        { "type":"Artillery",
+          "number": 1
+        }
+      ],
+      "next": [1, 3],
+      "x": 0,
+      "y": 500,
+      "sizex": 500,
+      "sizey": 200
+    }
+  ]
+}

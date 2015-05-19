@@ -1,16 +1,12 @@
 package fr.fliizweb.risk.Class;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
@@ -44,6 +40,13 @@ public final class GameSave {
             }
         } else { // Si une partie existe déjà, on la supprime.
             delete(GameSave.getFile());
+            try {
+                fileCreated = Gdx.files.local(FULL_FILE_PATH + FILENAME + ".json");
+                fileCreated.file().createNewFile(); // On créé la partie
+                src.copyTo(fileCreated); // On copie le fichier source dans le fichier de la partie
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
