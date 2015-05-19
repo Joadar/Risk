@@ -1,5 +1,6 @@
 package fr.fliizweb.risk.Class;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
@@ -20,42 +21,39 @@ import fr.fliizweb.risk.Class.Unit.Unit;
 /**
  * Created by rcdsm on 17/05/15.
  */
-public class ManagePartie {
+public final class GameSave {
 
-    private FileHandle fileCreated;
+    private static FileHandle fileCreated;
 
-    private final String FILE_PATH = "Risk/Partie";
-    private final String FULL_FILE_PATH = FILE_PATH + "/";
-    private final String FILENAME = "new_game";
+    private static final String FILE_PATH = "Risk/Partie";
+    private static final String FULL_FILE_PATH = FILE_PATH + "/";
+    private static final String FILENAME = "new_game";
 
-    public ManagePartie(){
-        fileCreated = Gdx.files.local(FULL_FILE_PATH + FILENAME + ".json"); // On créé un fichier ayant pour nom la date du début de la partie
-    }
-
-    public void newGame(FileHandle src){
+    public static void newGame(FileHandle src){
         if(!Gdx.files.local(FILE_PATH).exists()){
             Gdx.files.local(FILE_PATH).file().mkdirs(); // On créé le dossier "Partie"
         }
 
-        if(!this.fileExist()){ // Si aucune partie n'est en cours
+        if(!fileExist()){ // Si aucune partie n'est en cours
             try {
+                fileCreated = Gdx.files.local(FULL_FILE_PATH + FILENAME + ".json");
                 fileCreated.file().createNewFile(); // On créé la partie
                 src.copyTo(fileCreated); // On copie le fichier source dans le fichier de la partie
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else { // Si une partie existe déjà, on la supprime.
-            this.delete(this.getFile());
+            delete(GameSave.getFile());
         }
     }
 
-    public void delete(FileHandle file){
+    public static void delete(FileHandle file){
         // Si le fichier qu'on veut supprimer existe bel et bien
         if(file.exists())
             file.delete();
     }
 
-    public boolean fileExist(){
+    public static boolean fileExist(){
         if(Gdx.files.local(FULL_FILE_PATH).list(".json").length > 0){ // Si il existe déjà un fichier .json
             for (FileHandle entry: Gdx.files.local(FULL_FILE_PATH).list())
                 fileCreated = Gdx.files.local(entry.toString()); // On récupère la partie
@@ -64,11 +62,11 @@ public class ManagePartie {
         return false;
     }
 
-    public FileHandle getFile(){
+    public static FileHandle getFile(){
         return fileCreated;
     }
 
-    public void editZone(int idZone, String colorZone, ArrayList<Unit> units){
+    public static void saveZone(int idZone, String colorZone, ArrayList<Unit> units){
         // On édite la zone du fichier selon l'id correspondant.
         // On remplace sa couleur et les unités qui y sont présentes avec les bonnes valeurs
         // Appeler cette méthode à la fin d'un tap sur une zone

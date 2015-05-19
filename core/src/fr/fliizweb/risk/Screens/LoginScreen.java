@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import fr.fliizweb.risk.Class.ManagePartie;
 import fr.fliizweb.risk.Risk;
 
 /**
@@ -32,8 +31,6 @@ public class LoginScreen implements Screen {
     private OrthographicCamera camera;
     private FitViewport vp;
     private SpriteBatch batch;
-
-    private ManagePartie mngPartie;
 
     public Risk game;
 
@@ -52,7 +49,6 @@ public class LoginScreen implements Screen {
 
     public void init() {
         btnRegisterClicked = false;
-        mngPartie = new ManagePartie();
         inputMultiplexer = new InputMultiplexer();
         //inputMultiplexer.addProcessor(new GestureDetector(this));
     }

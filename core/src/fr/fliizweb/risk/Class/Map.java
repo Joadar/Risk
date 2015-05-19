@@ -32,9 +32,6 @@ public class Map {
 
     public ArrayList getTexture() { return texture; }
 
-    private ManagePartie mngPartie;
-
-
     public Map() throws ClassNotFoundException {
         Zones = new ArrayList<Zone>();
         zoneSelected = 0;
@@ -82,11 +79,10 @@ public class Map {
     public void loadJSON() throws ClassNotFoundException {
         String content = null;
         String fileContent = null;
-        mngPartie = new ManagePartie();
 
 
-        Boolean gameExist = mngPartie.fileExist();
-        FileHandle gameToLoad = mngPartie.getFile();
+        Boolean gameExist = GameSave.fileExist();
+        FileHandle gameToLoad = GameSave.getFile();
 
         // Si une partie existe déjà on joue sur cette map
         if(gameExist){
@@ -95,8 +91,8 @@ public class Map {
         } else { // sinon on copie la map d'origine et on créé une nouvelle map
             FileHandle handle = Gdx.files.internal("Maps/default.json");
 
-            mngPartie.newGame(handle); // nouvelle partie avec la map choisie
-            gameToLoad = mngPartie.getFile();
+            GameSave.newGame(handle); // nouvelle partie avec la map choisie
+            gameToLoad = GameSave.getFile();
             fileContent = gameToLoad.readString(); // On joue sur la nouvelle partie créée
         }
 

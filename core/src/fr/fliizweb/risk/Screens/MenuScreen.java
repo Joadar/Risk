@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import fr.fliizweb.risk.Class.ManagePartie;
+import fr.fliizweb.risk.Class.GameSave;
 import fr.fliizweb.risk.Risk;
 
 /**
@@ -34,8 +34,6 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     private OrthographicCamera camera;
     private FitViewport vp;
     private SpriteBatch batch;
-
-    private ManagePartie mngPartie;
 
     public Risk game;
 
@@ -51,7 +49,6 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     }
 
     public void init() {
-        mngPartie = new ManagePartie();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
     }
@@ -88,7 +85,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
 
         TextButton start = new TextButton("Reprendre", skin);
         table.add(start).width(120).height(60);
-        if(mngPartie.fileExist()){
+        if(GameSave.fileExist()){
             start.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -107,7 +104,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         newGame.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                mngPartie.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
+                GameSave.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
                 game.setScreen(game.getGameScreen());
 
                 return super.touchDown(event, x, y, pointer, button);

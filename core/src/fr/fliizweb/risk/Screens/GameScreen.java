@@ -32,7 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import fr.fliizweb.risk.Class.ManagePartie;
+import fr.fliizweb.risk.Class.GameSave;
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
@@ -61,8 +61,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private Risk game;
 
-    private ManagePartie mngPartie;
-
     public GameScreen(Risk game){
         this.game = game;
         init();
@@ -79,7 +77,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             e.printStackTrace();
         }
         players = new ArrayList<Player>();
-        mngPartie = new ManagePartie();
 
         players.add(new Player("g0rp", Color.RED));
         players.add(new Player("Joadar", Color.GREEN));
@@ -348,8 +345,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         zoneTo.setSelected(false);
 
         // On met à jour le fichier de la partie :
-        mngPartie.editZone(zoneFrom.getID() - 1, zoneFrom.getStrColor(), zoneFrom.getUnits());
-        mngPartie.editZone(zoneTo.getID() - 1, zoneTo.getStrColor(), zoneTo.getUnits());
+        GameSave.saveZone(zoneFrom.getID() - 1, zoneFrom.getStrColor(), zoneFrom.getUnits());
+        GameSave.saveZone(zoneTo.getID() - 1, zoneTo.getStrColor(), zoneTo.getUnits());
 
         //On désactive toutes les zones de la map
         map.desactiveZones();
