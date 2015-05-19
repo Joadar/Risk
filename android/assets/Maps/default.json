@@ -142,7 +142,7 @@
       "color": "NEUTRAL",
       "texture":[],
       "units": [{}],
-      "next": [2, 7, 6, 9],
+      "next": [3, 7, 6, 9],
       "x": 370,
       "y": 720,
       "sizex": 600,

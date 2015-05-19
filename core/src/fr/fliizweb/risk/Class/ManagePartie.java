@@ -46,8 +46,17 @@ public class ManagePartie {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }  else { // Si une partie existe déjà, on la supprime.
+            this.getFile().delete();
         }
         src.copyTo(fileCreated); // On copie le fichier source dans le fichier de la partie
+    }
+
+    public void delete(FileHandle file){
+        // Si le fichier qu'on veut supprimer existe bel et bien
+        if(file.exists()){
+            file.delete();
+        }
     }
 
     public boolean fileExist(){

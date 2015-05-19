@@ -6,7 +6,7 @@ import android.view.Display;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import fr.fliizweb.risk.Game;
+import fr.fliizweb.risk.Risk;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -16,7 +16,7 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useGLSurfaceView20API18 = true;
 		config.useAccelerometer = false;
 		config.useCompass = false;
-		Game game = new Game();
+		Risk game = new Risk();
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		initialize(game, config);

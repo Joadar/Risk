@@ -10,15 +10,14 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -26,10 +25,9 @@ import fr.fliizweb.risk.Class.ManagePartie;
 import fr.fliizweb.risk.Risk;
 
 /**
- * Created by rcdsm on 17/05/15.
+ * Created by rcdsm on 18/05/15.
  */
-public class MenuScreen extends com.badlogic.gdx.Game implements Screen, GestureDetector.GestureListener {
-
+public class LoginScreen implements Screen {
     private Stage stage;
     private OrthographicCamera camera;
     private FitViewport vp;
@@ -41,11 +39,11 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
 
     InputMultiplexer inputMultiplexer;
 
-    public MenuScreen() {
+    public LoginScreen() {
         init();
     }
 
-    public MenuScreen(Risk game){
+    public LoginScreen(Risk game){
         this.game = game;
         init();
     }
@@ -53,7 +51,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     public void init() {
         mngPartie = new ManagePartie();
         inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(new GestureDetector(this));
+        //inputMultiplexer.addProcessor(new GestureDetector(this));
     }
 
     @Override
@@ -86,42 +84,43 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         pm1.fill();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-        TextButton start = new TextButton("Reprendre", skin);
-        table.add(start).width(120).height(60);
-        if(mngPartie.fileExist()){
-            start.addListener(new InputListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    game.setScreen(game.getGameScreen());
-                    return super.touchDown(event, x, y, pointer, button);
-                }
-            });
-        } else {
-            start.setTouchable(Touchable.disabled);
-        }
+        Label label = new Label("Connexion", skin);
+        label.setWrap(true);
+        table.add(label);
 
         table.row();
 
-        TextButton newGame = new TextButton("Nouvelle partie", skin);
-        table.add(newGame).width(120).height(60);
-        newGame.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                mngPartie.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
-                game.setScreen(game.getGameScreen());
+        // Label login
+        Label loginLabel = new Label("Login", skin);
+        table.add(loginLabel);
 
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
+        // Input login
+        final TextField loginInput = new TextField("", skin);
+        table.add(loginInput);
 
         table.row();
 
-        TextButton stats = new TextButton("Statistiques", skin);
-        table.add(stats).width(120).height(60);
-        stats.addListener(new InputListener() {
+        // Label password
+        Label pwdLabel = new Label("Password", skin);
+        table.add(pwdLabel);
+
+        // Input password
+        final TextField pwdInput = new TextField("", skin);
+        pwdInput.setPasswordCharacter('*');
+        pwdInput.setPasswordMode(true);
+        table.add(pwdInput);
+
+
+        table.row();
+
+        TextButton connexion = new TextButton("Se connecter", skin);
+        table.add(connexion).width(120).height(60);
+        connexion.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(game.getGameScreen());
+                //if(loginInput.getText().equals("toto") && pwdInput.getText().equals("toto")){
+                    game.setScreen(game.getMenuScreen());
+                //}
 
                 return super.touchDown(event, x, y, pointer, button);
             }
@@ -148,11 +147,6 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     }
 
     @Override
-    public void create() {
-
-    }
-
-    @Override
     public void resize(int width, int height) {
 
     }
@@ -175,45 +169,5 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     @Override
     public void dispose() {
 
-    }
-
-    @Override
-    public boolean touchDown(float x, float y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean tap(float x, float y, int count, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean longPress(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public boolean fling(float velocityX, float velocityY, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean pan(float x, float y, float deltaX, float deltaY) {
-        return false;
-    }
-
-    @Override
-    public boolean panStop(float x, float y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean zoom(float initialDistance, float distance) {
-        return false;
-    }
-
-    @Override
-    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        return false;
     }
 }

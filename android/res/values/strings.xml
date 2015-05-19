@@ -2,5 +2,9 @@
 <resources>
 
     <string name="app_name">Risk</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
