@@ -75,8 +75,8 @@ public class Zone {
 
         // Parmi toutes les unités de la zone d'origine
         // Génération automatique des unités dans le hashtable (ht)
-        for (int in = 0; in < this.getUnits().size(); in++) {
-            Unit unitDetail = this.getUnit(in);
+        for (int idx = 0; idx < this.getUnits().size(); idx++) {
+            Unit unitDetail = this.getUnit(idx);
             if (ht.containsKey(unitDetail.getClass().getSimpleName()))
                 ht.put(unitDetail.getClass().getSimpleName(), (Integer) (ht.get(unitDetail.getClass().getSimpleName())) + 1);
             else
@@ -84,15 +84,15 @@ public class Zone {
         }
         return ht;
     }
-    public ArrayList<Unit> getSortedUnits(ArrayList<Unit> units) {
+    public ArrayList<Unit> getSortedUnits() {
         //Sorting
-        Collections.sort(units, new Comparator<Unit>() {
+        Collections.sort(Units, new Comparator<Unit>() {
             @Override
             public int compare(Unit unit1, Unit unit2) {
                 return unit1.getClass().getSimpleName().compareTo(unit2.getClass().getSimpleName());
             }
         });
-        return units;
+        return Units;
     }
     public Unit getUnit(int index) { return (Unit)this.Units.get(index); }
 
