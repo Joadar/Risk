@@ -180,7 +180,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 */
 
                                 TextButton valid = new TextButton("Valider", skin);
-                                valid.setColor(Color.RED);
+                                valid.align(Align.center);
                                 //valid.setStyle(style);
                                 valid.addListener(new ClickListener() {
                                     @Override
@@ -286,6 +286,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         Gdx.input.setOnscreenKeyboardVisible(false);
                                     }
                                 });
+                                close.align(Align.center);
+                                table.align(Align.center);
                                 table.add(close).width(120).height(60).padTop(30);
 
                                 table.setPosition(camera.position.x - (Gdx.graphics.getWidth() / 2), camera.position.y - (Gdx.graphics.getHeight() / 2));
@@ -406,19 +408,19 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     private void addTableLine(Table T, final Object key, final Hashtable ht, Hashtable textFields, Skin skin) {
         // Label
         Label label = new Label(key.toString(), skin);
-        label.setFontScale(2);
+        label.setFontScale(1.3f);
         label.setAlignment(Align.left);
-        T.add(label).width(200).padTop(10).padBottom(3);
+        T.add(label).width(200).padTop(10).padBottom(5);
 
         //TextField
         final Label text = new Label("0", skin);
-        text.setFontScale(2);
+        text.setFontScale(1.3f);
         textFields.put(key.toString(), text); //Stockage du TextField dans notre Hashtable de textfields.
         T.add(text).width(50).height(50);
 
         // Nombre d'unités disponibles - Valeur récupérée du HashTable ht.
         Label total = new Label("/" + ht.get(key), skin);
-        total.setFontScale(2);
+        total.setFontScale(1.3f);
         T.add(total).width(50).height(50);
 
         TextButton BtnDel = new TextButton("-", skin);
@@ -434,7 +436,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
-        T.add(BtnDel).width(50).height(50);
+        T.add(BtnDel).width(50).height(50).padRight(5).padBottom(5);
 
         TextButton BtnAdd = new TextButton("+", skin);
         BtnAdd.addListener(new InputListener() {
@@ -447,7 +449,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
-        T.add(BtnAdd).width(50).height(50);
+        T.add(BtnAdd).width(50).height(50).padRight(5).padBottom(5);
 
         T.row(); // On revient à la ligne dans le tableau
     }
