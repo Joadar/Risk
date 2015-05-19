@@ -1,5 +1,6 @@
 package fr.fliizweb.risk.android;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -12,6 +13,8 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//Lancement du jeu
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useGLSurfaceView20API18 = true;
 		config.useAccelerometer = false;

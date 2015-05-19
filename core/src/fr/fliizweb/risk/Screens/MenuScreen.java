@@ -51,21 +51,23 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
     public void init() {
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
+        camera = new OrthographicCamera();
+        batch = new SpriteBatch();
+        stage = new Stage();
+        this.show();
     }
 
     @Override
     public void show() {
         //camera
-        camera = new OrthographicCamera();
-        camera.zoom = 1.693f;
-        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
-        camera.update();
-
 
         //viewport & stage
         vp = new FitViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera );
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
+
+        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+        camera.update();
 
         batch = new SpriteBatch();
         // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
@@ -76,7 +78,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
         table.setPosition(30, 30);
 
-        camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+        camera.zoom = 0.4f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
         Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
         pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
@@ -84,7 +86,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
         TextButton start = new TextButton("Reprendre", skin);
-        table.add(start).width(120).height(60);
+        table.add(start).width(200).height(60).pad(5);
         if(GameSave.fileExist()){
             start.addListener(new InputListener() {
                 @Override
@@ -100,7 +102,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         table.row();
 
         TextButton newGame = new TextButton("Nouvelle partie", skin);
-        table.add(newGame).width(120).height(60);
+        table.add(newGame).width(200).height(60).pad(5);
         newGame.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -114,7 +116,7 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         table.row();
 
         TextButton stats = new TextButton("Statistiques", skin);
-        table.add(stats).width(120).height(60);
+        table.add(stats).width(200).height(60).pad(5);
         stats.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

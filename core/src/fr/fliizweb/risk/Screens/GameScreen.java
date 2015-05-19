@@ -470,6 +470,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     }
 
     private void selectZone(Zone selectedZone, int[] nextZonesID, Array<Actor> stageActors) {
+        if(selectedZone.getPlayer() == null)
+            return;
         selectedZone.setSelected(true);
         map.setZoneSelected(selectedZone.getID());
         for (int i = 0; i < stageActors.size; i++) {

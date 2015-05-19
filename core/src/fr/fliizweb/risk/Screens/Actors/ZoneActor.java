@@ -88,6 +88,7 @@ public class ZoneActor extends Actor {
 
         //On dessine les icones des unités.
         int i = 0, yPos = 0;
+        c.a = 1.0f;
         batch.setColor(Color.WHITE);
         String tmp = null;
         for(Unit unit : zone.getSortedUnits()) {
