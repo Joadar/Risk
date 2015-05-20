@@ -131,12 +131,6 @@ public class Map {
                 UnitPrototype anUnit = (UnitPrototype)u;
 
                 for(int z = 0; z < anUnit.number; z++){
-                    /*
-                    *
-                    * GENERATION AUTOMATIQUE DES CLASSES D'UNITES
-                    * Methode appelée "Reflection"
-                    *
-                    */
                     Class test = Class.forName("fr.fliizweb.risk.Class.Unit." + anUnit.type);
                     Class[] types = {};
                     try {

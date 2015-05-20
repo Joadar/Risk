@@ -31,6 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.ListIterator;
 
 import fr.fliizweb.risk.Class.GameSave;
 import fr.fliizweb.risk.Class.Map;
@@ -58,6 +59,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     Map map;
     ArrayList<Player> players;
+    ListIterator<Player> playersIterator;
+    Player player;
+
 
     private Risk game;
 
@@ -89,12 +93,15 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     @Override
     public void show() {
+
+        player = players.get(0); //Selection du joueur 1
+        playersIterator = players.listIterator();
+
         //camera
         camera = new OrthographicCamera();
         camera.zoom = 1.693f;
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
         camera.update();
-
 
         //viewport & stage
         vp = new FitViewport( 1024, 576, camera );
@@ -170,7 +177,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     addTableLine(table, key, ht, textFields, skin);
                                 }
 
-                                    // Le bouton valider
+                                // Le bouton valider
                                 /*
                                 BitmapFont font = new BitmapFont();
                                 font.getData().scale(1.7f);
@@ -201,11 +208,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
                                         // Si le nombre  d'unités rentrées dépasse le nombre d'unité disponible dans la zone, on affiche un message au joueur comme quoi sa zone va devenir neutre
                                         //if (Integer.parseInt(textInfantry.getText().toString()) > numInf || Integer.parseInt(textArtillery.getText().toString()) > numCav || Integer.parseInt(textArtillery.getText().toString()) > numArt) {
-                                    /*if (unitsInZone == 0) {
-                                        Gdx.app.log("GameScreen", "Unités restantes sur la zone : 0");
-                                        return;
-                                    }
-                                    */
+                                        /*if (unitsInZone == 0) {
+                                            Gdx.app.log("GameScreen", "Unités restantes sur la zone : 0");
+                                            return;
+                                        }
+                                        */
 
                                         table.remove();
                                         camera.zoom = 2.0f;
@@ -266,6 +273,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         } else { // Sinon on rencontre un joueur adverse (d'une autre couleur donc) : on peut donc l'attaquer
                                             doAttack(formUnits, finalZ, zone);
                                         }
+
+                                        player.setActive(false);
 
                                         // On retire le keyboard dans tous les cas
                                         Gdx.input.setOnscreenKeyboardVisible(false);
@@ -472,6 +481,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     private void selectZone(Zone selectedZone, int[] nextZonesID, Array<Actor> stageActors) {
         if(selectedZone.getPlayer() == null)
             return;
+
+        if(selectedZone.getPlayer() != player)
+            return;
+
         selectedZone.setSelected(true);
         map.setZoneSelected(selectedZone.getID());
         for (int i = 0; i < stageActors.size; i++) {
@@ -488,6 +501,15 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if(!player.isActive()) {
+            if(playersIterator.hasNext()) {
+                player = playersIterator.next();
+                player.setActive(true);
+            } else {
+                playersIterator = players.listIterator();
+            }
+        }
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
