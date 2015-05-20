@@ -64,7 +64,6 @@ public class GameParametersScreen implements Screen {
         camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
         camera.update();
 
-
         //viewport & stage
         vp = new FitViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera );
         stage = new Stage( vp );
@@ -94,10 +93,8 @@ public class GameParametersScreen implements Screen {
 
         final SelectBox selectMap = new SelectBox(skin);
         Array listMap = new Array();
-        for (FileHandle entry: Gdx.files.local("Maps").list()) {
-            Gdx.app.log("ex", "extension = " + entry.nameWithoutExtension()); // On récupère la partie
-            listMap.add(entry.nameWithoutExtension());
-        }
+        for (FileHandle entry: Gdx.files.internal("Maps").list())
+            listMap.add(entry.nameWithoutExtension()); // On récupère la partie
         selectMap.setItems(listMap);
         table.add(selectMap);
 
