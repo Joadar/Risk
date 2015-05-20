@@ -10,6 +10,7 @@ public class Player {
 
     private String      username;
     private Boolean     active;
+    private Boolean     dead;
 
     private Color color;
 
@@ -17,6 +18,7 @@ public class Player {
         this.username = username;
         this.color = color;
         this.active = false;
+        this.dead = false;
     }
 
     public String toString() {
@@ -43,6 +45,17 @@ public class Player {
 
     public Boolean isActive() {
         return active;
+    }
+
+    public void setDead(Boolean set) { this.dead = set; }
+    public Boolean isDead() {
+        return dead;
+    }
+
+    public Boolean isAlive() {
+        if(dead)
+            return false;
+        return true;
     }
 
 }

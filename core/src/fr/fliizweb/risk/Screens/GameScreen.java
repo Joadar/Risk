@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -339,8 +340,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         btnFinish.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -531,7 +530,20 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(30.f/255.f, 30.f/255.f, 30.f/255.f, 0.1f);
 
-        if(!player.isActive()) {
+        int countAlive = 0;
+        for(Player p : players) {
+            if(p.isAlive())
+                countAlive++;
+        }
+
+        if(countAlive == 1) //Fin du jeu
+            showEnd();
+
+        if(map.getPlayerZones( player ) == 0) {
+            player.setDead(true);
+        }
+
+        if(!player.isActive() || player.isDead()) {
             if(playersIterator.hasNext()) {
                 player = playersIterator.next();
                 player.setActive(true);
@@ -546,6 +558,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         stage.act(delta);
         stage.draw();
+    }
+
+    private void showEnd() {
+
     }
 
     @Override

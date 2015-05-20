@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
 import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
@@ -78,6 +79,15 @@ public class Map {
                 zones.add(zone);
         }
         return zones;
+    }
+
+    public int getPlayerZones(Player player) {
+        int i = 0;
+        for(Zone zone : Zones) {
+            if(zone.getPlayer() == player)
+                i++;
+        }
+        return i;
     }
 
     public void desactiveZones() {
