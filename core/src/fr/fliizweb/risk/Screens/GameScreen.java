@@ -122,7 +122,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         for(int i = 0; i < map.getZones().size(); i++) {
             final Zone zone = map.getZone(i);
-            final ZoneActor zoneShape = new ZoneActor(zone);
+            final ZoneActor zoneShape = new ZoneActor(zone, map);
 
             //On associe un joueur à une zone en fonction de la couleur
             for(Player player: players) {

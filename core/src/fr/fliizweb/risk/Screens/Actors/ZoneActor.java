@@ -19,7 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Map;
 import fr.fliizweb.risk.Class.Player.Player;
@@ -39,15 +42,18 @@ public class ZoneActor extends Actor {
     float cosX;
 
     Zone zone;
+    Map map;
 
     private static final int BORDERSIZE = 10;
+    private static final int UNIT_ICON_SIZE = 92;
 
-    public ZoneActor(Zone zone) {
+    public ZoneActor(Zone zone, Map map) {
         super();
 
         region = new TextureRegion( new Texture("blank.jpg") );
 
         this.zone = zone;
+        this.map = map;
         setWidth(zone.getSize().getX());
         setHeight(zone.getSize().getY());
         this.setBounds(zone.getPosition().getX(), zone.getPosition().getY(), getWidth(), getHeight());
@@ -75,6 +81,14 @@ public class ZoneActor extends Actor {
 
         if(zone.isSelected()) {
             c.a = 1.0f;
+            /*
+            for(Zone z : map.getActiveZones()) {
+                Gdx.app.log("ZoneActor", "DRAW LINE");
+                batch.setColor(Color.BLACK);
+                this.setZIndex(12);
+                drawLine(batch, region, zone.getPosition().getX() + zone.getSize().getX() / 2, zone.getPosition().getY() + zone.getSize().getY() / 2, z.getPosition().getX() + z.getSize().getX() / 2, z.getPosition().getY() + z.getSize().getY() / 2, 10.f);
+            }
+            */
             this.setZIndex(11);
         }
 
@@ -91,19 +105,50 @@ public class ZoneActor extends Actor {
         */
 
         //On dessine les icones des unités.
-        int i = 0, yPos = 0;
+        Hashtable unitsHashtable = zone.getUnitsHashtable();
+        int i = 0;
+        int countTypeUnits = unitsHashtable.size();
+
+        String tmp = null;
         c.a = 1.0f;
         batch.setColor(Color.WHITE);
-        String tmp = null;
         for(Unit unit : zone.getSortedUnits()) {
-            i++;
             if(tmp == null || !(tmp.equals(unit.getClass().getSimpleName()))) {
                 tmp = unit.getClass().getSimpleName();
-                yPos += 92;
-                i = 1;
+                i++;
+                if(this.getHeight() > this.getWidth()) {
+                    float total = UNIT_ICON_SIZE * countTypeUnits;
+                    float posX = ((zone.getPosition().getX() + zone.getSize().getX() / 2) - (UNIT_ICON_SIZE / 2));
+                    float posY = ((zone.getPosition().getY() + (zone.getSize().getY() / 2)) - (UNIT_ICON_SIZE / 2)) + (total / 2) - (UNIT_ICON_SIZE * i) + (15 / countTypeUnits);
+
+                    batch.draw(unit.getTexture(), posX, posY, getOriginX(), getOriginY(), UNIT_ICON_SIZE, UNIT_ICON_SIZE, getScaleX(), getScaleY(), getRotation());
+
+                    CharSequence str = String.valueOf(unitsHashtable.get(unit.getClass().getSimpleName()));
+                    font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                    font.getData().setScale(2, 2);
+                    font.draw(batch, str, posX + UNIT_ICON_SIZE + 20, posY + UNIT_ICON_SIZE / 2 + 10);
+                } else {
+                    float total = UNIT_ICON_SIZE * countTypeUnits;
+                    float posX = ((zone.getPosition().getX() + zone.getSize().getX() / 2) - (UNIT_ICON_SIZE / 2)) + (total / 2) - (UNIT_ICON_SIZE * i);
+                    float posY = (zone.getPosition().getY() + zone.getSize().getY() / 2) - (UNIT_ICON_SIZE / 2);
+
+                    batch.draw(unit.getTexture(), posX, posY, getOriginX(), getOriginY(), UNIT_ICON_SIZE, UNIT_ICON_SIZE, getScaleX(), getScaleY(), getRotation());
+
+                    CharSequence str = String.valueOf(unitsHashtable.get(unit.getClass().getSimpleName()));
+                    font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                    font.getData().setScale(2, 2);
+                    font.draw(batch, str, posX + UNIT_ICON_SIZE / 2, posY - 20);
+                }
             }
-            batch.draw(unit.getTexture(), zone.getPosition().getX() + 20 * i, zone.getPosition().getY() + (zone.getSize().getY() - yPos - 20), getOriginX(), getOriginY(), 92, 92, getScaleX(), getScaleY(), getRotation());
         }
 
+    }
+
+    void drawLine(Batch batch, TextureRegion region, float x1, float y1, float x2, float y2, float thickness) {
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        float dist = (float)Math.sqrt(dx*dx + dy*dy);
+        float rad = (float)Math.atan2(dy, dx);
+        batch.draw(region, x1, y1, x2, y2, dist, thickness, 1.f, 1.f, rad);
     }
 }

@@ -107,9 +107,9 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 //GameSave.newGame(Gdx.files.internal("Maps/default.json")); // On lance une nouvelle partie avec la carte default.json
+                super.touchDown(event, x, y, pointer, button);
                 game.setScreen(game.getGameParametersScreen());
-
-                return super.touchDown(event, x, y, pointer, button);
+                return true;
             }
         });
 
@@ -121,7 +121,6 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(game.getGameScreen());
-
                 return super.touchDown(event, x, y, pointer, button);
             }
         });

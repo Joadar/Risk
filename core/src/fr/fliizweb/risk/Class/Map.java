@@ -71,6 +71,15 @@ public class Map {
         this.zoneSelected = ID;
     }
 
+    public ArrayList<Zone> getActiveZones() {
+        ArrayList<Zone> zones = new ArrayList<Zone>();
+        for(Zone zone : Zones) {
+            if(zone.isActive())
+                zones.add(zone);
+        }
+        return zones;
+    }
+
     public void desactiveZones() {
         for(Zone z: Zones) {
             z.setActive(false);
