@@ -120,7 +120,8 @@ public class MenuScreen extends com.badlogic.gdx.Game implements Screen, Gesture
         stats.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(game.getGameScreen());
+                game.setScreen(game.getStatsScreen());
+
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
