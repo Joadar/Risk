@@ -40,7 +40,7 @@ public class ZoneActor extends Actor {
 
     Zone zone;
 
-    private static final int BORDERSIZE = 5;
+    private static final int BORDERSIZE = 10;
 
     public ZoneActor(Zone zone) {
         super();
@@ -60,23 +60,27 @@ public class ZoneActor extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         cosX += 0.05f;
         Player p = zone.getPlayer();
+        Color c = zone.getColor();
+        this.setZIndex(10);
 
-        batch.setColor(new Color(0, 0, 0, parentAlpha));
+        c.a = 0.5f;
+        batch.setColor(c);
         batch.draw(region, zone.getPosition().getX(), zone.getPosition().getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 
-        Color c = zone.getColor();
-        c.a = 1.0f;
+        c.a = 0.1f;
 
         if(zone.isActive())
             c.a = Math.abs(MathUtils.cos(cosX * 2)) / 2 + 0.5f;
 
-        if(zone.isSelected())
-            c.a = 0.5f;
+        if(zone.isSelected()) {
+            c.a = 1.0f;
+            this.setZIndex(11);
+        }
 
         batch.setColor(c);
         batch.draw(region, zone.getPosition().getX() + BORDERSIZE, zone.getPosition().getY() + BORDERSIZE, getOriginX(), getOriginY(),
-                getWidth() - BORDERSIZE, getHeight() - BORDERSIZE, getScaleX(), getScaleY(), getRotation());
+                getWidth() - BORDERSIZE * 2, getHeight() - BORDERSIZE * 2, getScaleX(), getScaleY(), getRotation());
 
         /*
         ECRIRE LE NUMERO DE LA ZONE AU CENTRE DE L'ECRAN

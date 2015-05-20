@@ -25,6 +25,8 @@ public class Map {
     private int sizex;
     private int sizey;
 
+    public final static int MARGIN = 500;
+
     private int zoneSelected;
 
     public void setZones(ArrayList<Zone> zones) { Zones = zones; }

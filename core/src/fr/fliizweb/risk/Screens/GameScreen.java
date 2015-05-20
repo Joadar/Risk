@@ -39,6 +39,7 @@ import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Risk;
+import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
 
@@ -54,6 +55,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     private OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
 
+    private final static float ZOOM_MAX = 3.0f;
+    private final static float ZOOM_MIN = 1.f;
+    private final static float ZOOM_DEFAULT = 1.693f;
+
     private float origDistance, baseDistance, origZoom;
     private boolean showForm = false, validForm = false;
 
@@ -63,7 +68,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     Player player;
 
     Skin skin;
-
 
     private Risk game;
 
@@ -104,7 +108,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         //camera
         camera = new OrthographicCamera();
-        camera.zoom = 1.693f;
+        camera.zoom = ZOOM_DEFAULT;
         origZoom = camera.zoom;
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
         camera.update();
@@ -113,9 +117,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         vp = new FitViewport( 1024, 576, camera );
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
-
-
-
 
         batch = new SpriteBatch();
 
@@ -165,11 +166,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
 
                                 final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
+                                table.setZIndex(100);
                                 table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
                                 table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
                                 table.setPosition(30, 30);
 
-                                camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+                                camera.zoom = ZOOM_MIN; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
                                 Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
                                 pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
@@ -296,7 +298,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                     @Override
                                     public void clicked(InputEvent event, float x, float y) {
                                         table.remove();
-                                        camera.zoom = 2.0f;
+                                        camera.zoom = origZoom;
                                         showForm = false;
                                         validForm = false;
                                         Gdx.input.setOnscreenKeyboardVisible(false);
@@ -401,6 +403,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         // On récupère la valeur de défense générale sans bonus (dès)
         for (int idxDEF = 0; idxDEF < defender.size(); idxDEF++)
             powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
+
+        if(powerAttack < powerDefense)
+            return;
 
         // Si l'attaquant est plus fort que le défenseur
         if (powerAttack - powerDefense > 0) {
@@ -524,6 +529,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(30.f/255.f, 30.f/255.f, 30.f/255.f, 0.1f);
 
         if(!player.isActive()) {
             if(playersIterator.hasNext()) {
@@ -620,13 +626,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             float ratio = baseDistance/distance;
             float newZoom = origZoom * ratio;
 
-            if (newZoom >= 2.5f) {
-                camera.zoom = 2.5f;
-                origZoom = 2.5f;
+            if (newZoom >= ZOOM_MAX) {
+                camera.zoom = ZOOM_MAX;
+                origZoom = ZOOM_MAX;
                 baseDistance = distance;
-            } else if (newZoom <= 1.0) {
-                camera.zoom = (float) 1.0;
-                origZoom = (float) 1.0;
+            } else if (newZoom <= ZOOM_MIN) {
+                camera.zoom = (float) ZOOM_MIN;
+                origZoom = (float) ZOOM_MIN;
                 baseDistance = distance;
             } else {
                 camera.zoom = newZoom;
@@ -645,7 +651,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     public void moveCamera (boolean add, float x, float y) {
         float newX, newY;
-        int paddingMap = 500;
 
         if (add)
         {
@@ -657,14 +662,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             newY = y;
         }
 
-        if (newX - camera.viewportWidth/2*camera.zoom < (Math.abs(paddingMap) * -1))
-            newX = (Math.abs(paddingMap) * -1) + camera.viewportWidth/2*camera.zoom;
-        if (newX + camera.viewportWidth/2*camera.zoom > map.getSizex() + paddingMap)
-            newX = map.getSizex() - camera.viewportWidth/2*camera.zoom + paddingMap;
-        if (newY + camera.viewportHeight/2*camera.zoom > map.getSizey() + paddingMap)
-            newY = map.getSizey() - camera.viewportHeight/2*camera.zoom + paddingMap;
-        if (newY - camera.viewportHeight/2*camera.zoom < (Math.abs(paddingMap) * -1))
-            newY = (Math.abs(paddingMap) * -1) + camera.viewportHeight/2*camera.zoom;
+        if (newX - camera.viewportWidth/2*camera.zoom < (Math.abs(map.MARGIN) * -1))
+            newX = (Math.abs(map.MARGIN) * -1) + camera.viewportWidth/2*camera.zoom;
+        if (newX + camera.viewportWidth/2*camera.zoom > map.getSizex() + map.MARGIN)
+            newX = map.getSizex() - camera.viewportWidth/2*camera.zoom + map.MARGIN;
+        if (newY + camera.viewportHeight/2*camera.zoom > map.getSizey() + map.MARGIN)
+            newY = map.getSizey() - camera.viewportHeight/2*camera.zoom + map.MARGIN;
+        if (newY - camera.viewportHeight/2*camera.zoom < (Math.abs(map.MARGIN) * -1))
+            newY = (Math.abs(map.MARGIN) * -1) + camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = newX;
         camera.position.y = newY;
