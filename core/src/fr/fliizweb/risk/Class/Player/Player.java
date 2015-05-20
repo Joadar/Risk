@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.Color;
 public class Player {
 
     private String      username;
+    private Boolean     active;
 
     private Color color;
 
     public Player(String username, Color color) {
         this.username = username;
         this.color = color;
+        this.active = false;
     }
 
     public String toString() {
@@ -33,6 +35,14 @@ public class Player {
 
     public Color getColor() {
         return color;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean isActive() {
+        return active;
     }
 
 }
