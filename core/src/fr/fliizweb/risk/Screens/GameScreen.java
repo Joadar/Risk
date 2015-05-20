@@ -114,7 +114,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         camera.update();
 
         //viewport & stage
-        vp = new FitViewport( 1024, 576, camera );
+        vp = new FitViewport( 800, 450, camera );
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
 
