@@ -62,6 +62,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     ListIterator<Player> playersIterator;
     Player player;
 
+    Skin skin;
+
 
     private Risk game;
 
@@ -89,6 +91,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
+
+        // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
+        skin = new Skin(Gdx.files.internal("ui/defaultskin.json"));
     }
 
     @Override
@@ -100,6 +105,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         //camera
         camera = new OrthographicCamera();
         camera.zoom = 1.693f;
+        origZoom = camera.zoom;
         camera.position.set(map.getSizex() / 2, map.getSizey() / 2, 0);
         camera.update();
 
@@ -107,6 +113,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         vp = new FitViewport( 1024, 576, camera );
         stage = new Stage( vp );
         stage.getViewport().setCamera(camera);
+
+
+
 
         batch = new SpriteBatch();
 
@@ -154,8 +163,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                 //On affiche le formulaire
                                 showForm = true;
 
-                                // On récupère le skin qu'on veut donner à notre formulaire (android.assets/ui/defaultskin.json)
-                                Skin skin = new Skin(Gdx.files.internal("ui/defaultskin.json"));
 
                                 final Table table = new Table(); // On créé une table pour mettre nos éléments du formulaire
                                 table.setVisible(true); // Visible à vrai (ici c'est juste un test, par défaut c'est vrai)
@@ -215,7 +222,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
                                         */
 
                                         table.remove();
-                                        camera.zoom = 2.0f;
+                                        camera.zoom = origZoom;
                                         showForm = false;
                                         validForm = true;
 
@@ -322,6 +329,22 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        TextButton btnFinish = new TextButton("Terminé", skin);
+        btnFinish.setPosition(0, Gdx.graphics.getHeight() / 2);
+        btnFinish.setWidth(150);
+        btnFinish.setHeight(60);
+        btnFinish.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+
+        btnFinish.setName("finish");
+        stage.addActor(btnFinish);
     }
 
     private void moveTo(Zone zoneFrom, Zone zoneTo, ArrayList<Unit> units) {
@@ -597,9 +620,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             float ratio = baseDistance/distance;
             float newZoom = origZoom * ratio;
 
-            if (newZoom >= 2.0f) {
-                camera.zoom = 2.0f;
-                origZoom = 2.0f;
+            if (newZoom >= 2.5f) {
+                camera.zoom = 2.5f;
+                origZoom = 2.5f;
                 baseDistance = distance;
             } else if (newZoom <= 1.0) {
                 camera.zoom = (float) 1.0;
@@ -620,9 +643,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         return false;
     }
 
-    public void moveCamera (boolean add, float x, float y)
-    {
+    public void moveCamera (boolean add, float x, float y) {
         float newX, newY;
+        int paddingMap = 500;
 
         if (add)
         {
@@ -634,14 +657,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             newY = y;
         }
 
-        if (newX - camera.viewportWidth/2*camera.zoom < 0)
-            newX = 0 + camera.viewportWidth/2*camera.zoom;
-        if (newX + camera.viewportWidth/2*camera.zoom > map.getSizex())
-            newX = map.getSizex() - camera.viewportWidth/2*camera.zoom;
-        if (newY + camera.viewportHeight/2*camera.zoom > map.getSizey())
-            newY = map.getSizey() - camera.viewportHeight/2*camera.zoom;
-        if (newY - camera.viewportHeight/2*camera.zoom < 0)
-            newY = 0 + camera.viewportHeight/2*camera.zoom;
+        if (newX - camera.viewportWidth/2*camera.zoom < (Math.abs(paddingMap) * -1))
+            newX = (Math.abs(paddingMap) * -1) + camera.viewportWidth/2*camera.zoom;
+        if (newX + camera.viewportWidth/2*camera.zoom > map.getSizex() + paddingMap)
+            newX = map.getSizex() - camera.viewportWidth/2*camera.zoom + paddingMap;
+        if (newY + camera.viewportHeight/2*camera.zoom > map.getSizey() + paddingMap)
+            newY = map.getSizey() - camera.viewportHeight/2*camera.zoom + paddingMap;
+        if (newY - camera.viewportHeight/2*camera.zoom < (Math.abs(paddingMap) * -1))
+            newY = (Math.abs(paddingMap) * -1) + camera.viewportHeight/2*camera.zoom;
 
         camera.position.x = newX;
         camera.position.y = newY;

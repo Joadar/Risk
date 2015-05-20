@@ -1,28 +1,12 @@
 package fr.fliizweb.risk.Screens.Actors;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-
-import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Map;
-import fr.fliizweb.risk.Class.Player.Player;
-import fr.fliizweb.risk.Class.Player.PlayerColor;
-import fr.fliizweb.risk.Class.Zone;
 
 /**
  * Created by rcdsm on 29/04/15.
@@ -36,8 +20,8 @@ public class BackgroundActor extends Actor {
 
         region = new TextureRegion( new Texture("blank.jpg") );
 
-        setWidth(map.getSizex());
-        setHeight(map.getSizey());
+        setWidth(map.getSizex() * 2);
+        setHeight(map.getSizey() * 2);
         this.setBounds(0, 0, getWidth(), getHeight());
     }
 

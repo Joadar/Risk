@@ -78,7 +78,7 @@ public class GameParametersScreen implements Screen {
         table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
         table.setPosition(30, 30);
 
-        camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+        camera.zoom = 0.4f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
         Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
         pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
@@ -87,7 +87,7 @@ public class GameParametersScreen implements Screen {
 
         Label label = new Label("Choix de la carte", skin);
         label.setWrap(true);
-        table.add(label).center();
+        table.add(label).width(200).height(60).pad(5);
 
         table.row();
 
@@ -96,12 +96,12 @@ public class GameParametersScreen implements Screen {
         for (FileHandle entry: Gdx.files.internal("Maps").list())
             listMap.add(entry.nameWithoutExtension()); // On récupère la partie
         selectMap.setItems(listMap);
-        table.add(selectMap);
+        table.add(selectMap).width(200).height(60).pad(5);
 
         table.row();
 
         final TextButton register = new TextButton("Lancer", skin);
-        table.add(register).width(120).height(60);
+        table.add(register).width(200).height(60).pad(5);
         register.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
