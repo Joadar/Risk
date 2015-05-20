@@ -78,7 +78,7 @@ public class GameParametersScreen implements Screen {
         table.setSize(Gdx.graphics.getWidth() - 30, Gdx.graphics.getHeight() - 30); // On met la taille de la table à celle de l'écran
         table.setPosition(30, 30);
 
-        camera.zoom = 1.0f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
+        camera.zoom = 0.4f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
 
         Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
         pm1.setColor(new Color(0f, 0f, 0f, 0.1f));
