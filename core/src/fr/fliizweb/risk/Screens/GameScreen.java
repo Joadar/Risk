@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -40,7 +39,6 @@ import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Unit.Unit;
 import fr.fliizweb.risk.Class.Zone;
 import fr.fliizweb.risk.Risk;
-import fr.fliizweb.risk.Screens.Actors.BackgroundActor;
 import fr.fliizweb.risk.Screens.Actors.ZoneActor;
 
 
@@ -403,9 +401,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         for (int idxDEF = 0; idxDEF < defender.size(); idxDEF++)
             powerDefense += zoneTo.getUnits().get(idxDEF).getDef();
 
-        if(powerAttack < powerDefense)
-            return;
-
         // Si l'attaquant est plus fort que le défenseur
         if (powerAttack - powerDefense > 0) {
             // On retire les troupes adverses
@@ -429,6 +424,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             zoneFrom.setPlayer(null);
             zoneFrom.setColor(Color.WHITE);
         }
+
+        // On met à jour le fichier de la partie :
+        GameSave.saveZone(zoneFrom.getID() - 1, zoneFrom.getStrColor(), zoneFrom.getUnits());
+        GameSave.saveZone(zoneTo.getID() - 1, zoneTo.getStrColor(), zoneTo.getUnits());
 
         //On désactive la zoneTo & on déselectionne
         zoneFrom.setActive(false);
