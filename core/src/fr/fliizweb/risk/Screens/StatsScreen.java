@@ -19,7 +19,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
 
+import javax.naming.Context;
+
 import fr.fliizweb.risk.Class.Player.Score;
+import fr.fliizweb.risk.Class.Tools;
 import fr.fliizweb.risk.Risk;
 
 /**
@@ -70,7 +73,7 @@ public class StatsScreen implements Screen {
         skin = new Skin(Gdx.files.internal("ui/defaultskin.json"));
 
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        final Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://172.31.1.54/Risk/scores/32").build();
+        final Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(Tools.API_SCORES_USER + "32").build();
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -125,8 +128,6 @@ public class StatsScreen implements Screen {
         table.setPosition(30, 30);
 
         camera.zoom = 0.6f; // Faire un zoom lorsqu'on affiche le formulaire et le placer correctement par rapport à l'écran ? Désactiver le scroll et zoom lorsque le formulaire est affiché ?
-
-
 
         Label labelScore = new Label("Liste de scores", skin);
         labelScore.setWrap(true);

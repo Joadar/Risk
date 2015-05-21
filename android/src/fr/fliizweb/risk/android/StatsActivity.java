@@ -3,6 +3,7 @@ package fr.fliizweb.risk.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,13 +16,14 @@ import com.androidquery.callback.AjaxStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import fr.fliizweb.risk.Class.Tools;
+
 
 public class StatsActivity extends Activity {
 
     Context context;
 
     AQuery aQuery;
-    private final String FEED_URL = "http://172.31.1.54/Risk/scores/32";
 
     public StatsActivity(){
         this.context = getApplicationContext();
@@ -38,8 +40,13 @@ public class StatsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
+        SharedPreferences prefs = StatsActivity.this.getSharedPreferences(Tools.PACKAGE_ROOT, Context.MODE_PRIVATE);
+
+        String token = prefs.getString(Tools.PACKAGE_ROOT + ".token", "token");
+        int id = prefs.getInt(Tools.PACKAGE_ROOT + ".id", 0);
+
         aQuery = new AQuery(this.getApplicationContext());
-        aQuery.ajax(FEED_URL, JSONObject.class, new AjaxCallback<JSONObject>() {
+        aQuery.ajax(Tools.API_SCORES_USER + String.valueOf(id), JSONObject.class, new AjaxCallback<JSONObject>() {
 
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {

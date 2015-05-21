@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.fliizweb.risk.Class.Tools;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -64,17 +66,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mPasswordVerifyView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mSubscribe;
 
     AQuery aq;
+    private Boolean subscribe = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = LoginActivity.this.getSharedPreferences("fr.fliizweb.risk", Context.MODE_PRIVATE);
-        String token = prefs.getString("fr.fliizweb.risk.token", "token");
+        SharedPreferences prefs = LoginActivity.this.getSharedPreferences(Tools.PACKAGE_ROOT, Context.MODE_PRIVATE);
+        String token = prefs.getString(Tools.PACKAGE_ROOT + ".token", "token");
+        int id = prefs.getInt(Tools.PACKAGE_ROOT + ".id", 0);
         if(!token.equals("token")) {
             Intent it = new Intent(LoginActivity.this, AndroidLauncher.class);
             LoginActivity.this.startActivity(it);
@@ -98,6 +104,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mPasswordVerifyView = (EditText) findViewById(R.id.password_verify);
+        mPasswordVerifyView.setVisibility(View.GONE);
+
+        mSubscribe = (Button) findViewById(R.id.subscribe);
+        mSubscribe.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribe = true;
+                mPasswordVerifyView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -321,52 +339,94 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            String url = "http://172.31.1.54/Risk/user/connect";
             Map<String, Object> p = new HashMap<String, Object>();
 
             p.put("email", mEmail);
             p.put("password", mPassword);
 
-            try {
-                aq.ajax(url, p, JSONObject.class, new AjaxCallback<JSONObject>() {
-                    @Override
-                    public void callback(String url, JSONObject json, AjaxStatus status) {
-                        if (json != null) {
-                            //successful ajax call, show status code and json content
-                            Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
-                            String token = null;
+            if(!subscribe) {
+                try {
+                    aq.ajax(Tools.API_USER_CONNECT, p, JSONObject.class, new AjaxCallback<JSONObject>() {
+                        @Override
+                        public void callback(String url, JSONObject json, AjaxStatus status) {
+                            if (json != null) {
+                                //successful ajax call, show status code and json content
+                                Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
+                                String token = null;
+                                int id = 0;
 
-                            try {
-                                JSONObject user = (JSONObject) json.get("user");
-                                token = (String) user.get("token");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                try {
+                                    JSONObject user = (JSONObject) json.get("user");
+                                    token = (String) user.get("token");
+                                    id = (int) user.get("id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                SharedPreferences prefs = LoginActivity.this.getSharedPreferences(Tools.PACKAGE_ROOT, Context.MODE_PRIVATE);
+
+                                if (token != null) {
+                                    prefs.edit().putString(Tools.PACKAGE_ROOT + ".token", token).apply();
+                                    prefs.edit().putInt(Tools.PACKAGE_ROOT + ".id", id).apply();
+                                }
+                            } else {
+                                //ajax error, show error code
+                                Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
                             }
-
-                            SharedPreferences prefs = LoginActivity.this.getSharedPreferences("fr.fliizweb.risk", Context.MODE_PRIVATE);
-
-                            if(token != null) {
-                                prefs.edit().putString("fr.fliizweb.risk.token", token).apply();
-                            }
-
-                            String tmp = prefs.getString("fr.fliizweb.risk.token", "token");
-
-                            //Connexion
-                            Intent it = new Intent(LoginActivity.this, AndroidLauncher.class);
-                            LoginActivity.this.startActivity(it);
-                            finish();
-                        } else {
-                            //ajax error, show error code
-                            Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    });
+                    Thread.sleep(2000);
+                    Intent it = new Intent(LoginActivity.this, AndroidLauncher.class);
+                    LoginActivity.this.startActivity(it);
+                    finish();
+                    return false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    aq.ajax(Tools.API_USER_SUBSCRIBE, p, JSONObject.class, new AjaxCallback<JSONObject>() {
+                        @Override
+                        public void callback(String url, JSONObject json, AjaxStatus status) {
+                            if (json != null) {
+                                //successful ajax call, show status code and json content
+                                Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
+                                String token = null;
+                                int id = 0;
+
+                                try {
+                                    JSONObject user = (JSONObject) json.get("user");
+                                    token = (String) user.get("token");
+                                    id = (int) user.get("id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                SharedPreferences prefs = LoginActivity.this.getSharedPreferences(Tools.PACKAGE_ROOT, Context.MODE_PRIVATE);
+
+                                if (token != null) {
+                                    prefs.edit().putString(Tools.PACKAGE_ROOT + ".token", token).apply();
+                                    prefs.edit().putInt(Tools.PACKAGE_ROOT + ".id", id).apply();
+                                }
+                            } else {
+                                //ajax error, show error code
+                                Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    Thread.sleep(2000);
+                    Intent it = new Intent(LoginActivity.this, AndroidLauncher.class);
+                    LoginActivity.this.startActivity(it);
+                    finish();
+                    return false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             // TODO: register the new account here.
+            //Connexion
+
             return false;
         }
 

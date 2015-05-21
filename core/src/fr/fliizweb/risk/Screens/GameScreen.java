@@ -330,20 +330,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
-
-        TextButton btnFinish = new TextButton("Terminé", skin);
-        btnFinish.setPosition(0, Gdx.graphics.getHeight() / 2);
-        btnFinish.setWidth(150);
-        btnFinish.setHeight(60);
-        btnFinish.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
-
-        btnFinish.setName("finish");
-        stage.addActor(btnFinish);
     }
 
     private void moveTo(Zone zoneFrom, Zone zoneTo, ArrayList<Unit> units) {
