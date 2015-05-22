@@ -85,12 +85,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        players = new ArrayList<Player>();
 
-        players.add(new Player("g0rp", Color.RED));
-        players.add(new Player("Joadar", Color.GREEN));
-        players.add(new Player("Thierry", Color.BLUE));
-        players.add(new Player("Peric", Color.YELLOW));
+        players = new ArrayList<Player>();
+        players.addAll(map.getPlayers());
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new GestureDetector(this));
@@ -104,6 +101,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
         player = players.get(0); //Selection du joueur 1
         playersIterator = players.listIterator();
+        player = playersIterator.next();
+
 
         //camera
         camera = new OrthographicCamera();
@@ -326,6 +325,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             stage.addActor(zoneShape);
         }
 
+        playerWhoPlay();
+
         Gdx.input.isTouched();
 
         inputMultiplexer.addProcessor(stage);
@@ -481,6 +482,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         selectedZone.setColor(selectedZone.getDefaultColor());
         for (int i = 0; i < stageActors.size; i++) {
             Actor zoneActor = stageActors.get(i);
+
+            // Si l'acteur n'est pas une zone mais un text button ou un label
+            if(zoneActor.getClass().getSimpleName().equals("TextButton") || zoneActor.getClass().getSimpleName().equals("Label"))
+                continue;
+
             for (int j = 0; j < nextZonesID.length; j++) {
                 if (zoneActor.getName().equals(String.valueOf(nextZonesID[j]))) {
                     Zone z = map.getZoneByID(nextZonesID[j]);
@@ -501,6 +507,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
         map.setZoneSelected(selectedZone.getID());
         for (int i = 0; i < stageActors.size; i++) {
             Actor zoneActor = stageActors.get(i);
+            // Si l'acteur n'est pas une zone mais un text button ou un label
+            if(zoneActor.getClass().getSimpleName().equals("TextButton") || zoneActor.getClass().getSimpleName().equals("Label"))
+                continue;
+
             for (int j = 0; j < nextZonesID.length; j++) {
                 if (zoneActor.getName().equals(String.valueOf(nextZonesID[j]))) {
                     Zone z = map.getZoneByID(nextZonesID[j]);
@@ -513,7 +523,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(30.f/255.f, 30.f/255.f, 30.f/255.f, 0.1f);
+        Gdx.gl.glClearColor(30.f / 255.f, 30.f / 255.f, 30.f / 255.f, 0.1f);
 
         int countAlive = 0;
         for(Player p : players) {
@@ -528,16 +538,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
             player.setDead(true);
         }
 
-        if(!player.isActive() || player.isDead()) {
-            if(playersIterator.hasNext()) {
-                player = playersIterator.next();
-                player.setActive(true);
-            } else {
-                playersIterator = players.listIterator();
-            }
-        }
 
-        batch.setProjectionMatrix(camera.combined);
+        if(!playersIterator.hasNext())
+            playersIterator = players.listIterator();
+
+
+            batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.end();
 
@@ -547,6 +553,50 @@ public class GameScreen implements Screen, GestureDetector.GestureListener {
 
     private void showEnd() {
 
+    }
+
+    private void playerWhoPlay(){
+
+        // On affiche l'information du joueur qui joue
+        final Label playerToPlay = new Label("Joueur " + player.getUsername(), skin);
+        playerToPlay.setColor(player.getColor());
+        playerToPlay.setSize(200, 50);
+        playerToPlay.setPosition(map.getSizex() / 2, map.getSizey() + 150);
+        playerToPlay.setFontScale(4);
+        stage.addActor(playerToPlay);
+
+        TextButton btnFinish = new TextButton("Terminer", skin);
+        btnFinish.setPosition(map.getSizex() / 2, map.getSizey() + 50);
+        btnFinish.setWidth(300);
+        btnFinish.setHeight(80);
+        btnFinish.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (playersIterator.hasNext()) {
+                    player = playersIterator.next();
+                    player.setActive(true);
+
+                    // On désactive toutes les zones de la map
+                    for(Zone z: map.getZones()){
+                        //On désactive la zoneTo & on déselectionne
+                        z.setActive(false);
+                        z.setSelected(false);
+                    }
+                    map.desactiveZones();
+
+                    //On donne une zone inexistante comme zone selectionnée
+                    map.setZoneSelected(0);
+
+                    // On modifie l'information du joueur qui joue
+                    playerToPlay.setColor(player.getColor());
+                    playerToPlay.setText("Joueur " + player.getUsername());
+                } else {
+                    playersIterator = players.listIterator();
+                }
+            }
+        });
+
+        stage.addActor(btnFinish);
     }
 
     @Override

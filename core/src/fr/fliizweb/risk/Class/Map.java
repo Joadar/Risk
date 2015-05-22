@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import fr.fliizweb.risk.Class.Player.Player;
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
+import fr.fliizweb.risk.Class.Prototype.PlayerPrototype;
 import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
 import fr.fliizweb.risk.Class.Unit.Infantry;
@@ -20,6 +21,8 @@ import fr.fliizweb.risk.Class.Unit.Unit;
 public class Map {
 
     private ArrayList<Zone> Zones;
+    private ArrayList<Player> Players;
+    private ArrayList<com.badlogic.gdx.graphics.Color> ColorsZones;
     private ArrayList texture;
     private int x;
     private int y;
@@ -37,8 +40,12 @@ public class Map {
     public Map() throws ClassNotFoundException {
         Zones = new ArrayList<Zone>();
         zoneSelected = 0;
+        Players = new ArrayList<Player>();
+        ColorsZones = new ArrayList<com.badlogic.gdx.graphics.Color>();
         this.loadJSON();
     }
+
+    public ArrayList<Player> getPlayers() { return Players; }
     
     public ArrayList<Zone> getZones() {
         return this.Zones;
@@ -125,9 +132,20 @@ public class Map {
         Json json = new Json();
         json.setElementType(MapFilePrototype.class, "zones", ZonePrototype.class);
         json.setElementType(ZonePrototype.class, "units", UnitPrototype.class);
+        json.setElementType(MapFilePrototype.class, "players", PlayerPrototype.class);
 
         MapFilePrototype data;
         data = json.fromJson(MapFilePrototype.class, fileContent);
+
+
+        for(Object p: data.players){
+            PlayerPrototype pl = (PlayerPrototype) p;
+            Player player = new Player(pl.name, GameColor.getColor(pl.color));
+            player.setActive(true);
+            player.setDead(false);
+            Players.add(player);
+        }
+
 
         // Implementation des données de map
         this.setTexture(data.map.texture);

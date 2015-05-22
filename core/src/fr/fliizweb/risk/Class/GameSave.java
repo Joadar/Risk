@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import fr.fliizweb.risk.Class.Prototype.MapFilePrototype;
+import fr.fliizweb.risk.Class.Prototype.PlayerPrototype;
 import fr.fliizweb.risk.Class.Prototype.UnitPrototype;
 import fr.fliizweb.risk.Class.Prototype.ZonePrototype;
 import fr.fliizweb.risk.Class.Unit.Unit;
@@ -78,6 +79,7 @@ public final class GameSave {
         json.setOutputType(JsonWriter.OutputType.json);
         json.setElementType(MapFilePrototype.class, "zones", ZonePrototype.class);
         json.setElementType(ZonePrototype.class, "units", UnitPrototype.class);
+        json.setElementType(MapFilePrototype.class, "players", PlayerPrototype.class);
 
         MapFilePrototype data;
         data = json.fromJson(MapFilePrototype.class, fileCreated);

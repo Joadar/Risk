@@ -7,6 +7,28 @@
     "sizex": 2560,
     "sizey": 1440
   },
+  "players": [
+    {
+      "id": 1,
+      "name": "g0rp",
+      "color": "RED"
+    },
+    {
+      "id":2,
+      "name" : "Joadar",
+      "color": "BLUE"
+    },
+    {
+      "id": 3,
+      "name" : "Thierry",
+      "color": "YELLOW"
+    },
+    {
+      "id": 4,
+      "name": "Peric",
+      "color": "GREEN"
+    }
+  ],
   "zones": [
     {
       "id": 1,

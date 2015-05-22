@@ -24,6 +24,7 @@ public class Player {
     public String toString() {
         String output = "Player\n";
         output += "Username:" + username + "\n";
+        output += "Color:" + color + "\n";
         return output;
     }
 
